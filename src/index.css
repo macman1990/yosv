@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+@layer base {
+  :root,
+  .dark {
+    --background: #090a0f;
+    --foreground: #f3f4f8;
+    --surface: #12141c;
+    --surface-elevated: #1a1d29;
+    --surface-muted: #151722;
+    --border: rgba(255, 255, 255, 0.09);
+    --border-subtle: rgba(255, 255, 255, 0.04);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --muted: #8e95a8;
+    --muted-foreground: #5e6477;
+    --hero-background: #090a0f;
+    --hero-foreground: #ffffff;
+    --card-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    --cursor-border: rgba(255, 255, 255, 0.25);
+    
+    /* Liquid Glass - Dark */
+    --glass-bg: rgba(18, 20, 28, 0.65);
+    --glass-surface: rgba(26, 29, 41, 0.45);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-highlight: rgba(255, 255, 255, 0.03);
+    
+    /* Default accents if not overridden dynamically by dashboard */
+    --color-accent: #10b981;
+    --color-accent-secondary: #06b6d4;
+    --accent-muted: rgba(16, 185, 129, 0.12);
+    --accent-glow: rgba(16, 185, 129, 0.25);
+  }
+
+  .light {
+    --background: #fcfcfc;
+    --foreground: #10121a;
+    --surface: #ffffff;
+    --surface-elevated: #f4f5f8;
+    --surface-muted: #f0f1f5;
+    --border: rgba(16, 18, 26, 0.12);
+    --border-subtle: rgba(16, 18, 26, 0.06);
+    --border-hover: rgba(16, 18, 26, 0.22);
+    --muted: #565d70;
+    --muted-foreground: #7e879e;
+    --hero-background: #f4f5f8;
+    --hero-foreground: #0c0e14;
+    --card-shadow: 0 10px 28px -10px rgba(20, 24, 38, 0.06), 0 2px 6px rgba(20, 24, 38, 0.03);
+    --cursor-border: rgba(16, 18, 26, 0.35);
+    
+    /* Liquid Glass - Light */
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-surface: rgba(255, 255, 255, 0.55);
+    --glass-border: rgba(16, 18, 26, 0.08);
+    --glass-highlight: rgba(255, 255, 255, 0.5);
+    
+    --accent-muted: rgba(16, 185, 129, 0.12);
+    --accent-glow: rgba(16, 185, 129, 0.15);
+  }
+
+  :root {
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-syne: 'Syne', sans-serif;
+    --font-arabic-heading: 'Alexandria', 'Cairo', sans-serif;
+    --font-arabic-body: 'IBM Plex Sans Arabic', 'Cairo', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+    background-color: var(--background);
+    color: var(--foreground);
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    min-height: 100vh;
+  }
+
+  /* Arabic / RTL Typography Rules */
+  [dir="rtl"] {
+    font-family: var(--font-arabic-body);
+    line-height: 1.75;
+    letter-spacing: normal !important;
+  }
+
+  [dir="rtl"] h1,
+  [dir="rtl"] h2,
+  [dir="rtl"] h3,
+  [dir="rtl"] h4,
+  [dir="rtl"] .font-syne {
+    font-family: var(--font-arabic-heading);
+    letter-spacing: -0.015em;
+    line-height: 1.35;
+  }
+
+  [dir="rtl"] .font-mono {
+    font-family: var(--font-arabic-body);
+    letter-spacing: normal;
+  }
+}
+
+.font-syne {
+  font-family: var(--font-syne);
+}
+
+.font-arabic-heading {
+  font-family: var(--font-arabic-heading);
+}
+
+.font-arabic-body {
+  font-family: var(--font-arabic-body);
+}
+
+/* Liquid Glass Utilities */
+.glass-panel {
+  background: var(--glass-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  box-shadow: inset 0 1px 0 0 var(--glass-highlight), var(--card-shadow);
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Custom subtle scrollbar with theme awareness */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* RTL icon mirroring */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}

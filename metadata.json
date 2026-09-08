@@ -1,0 +1,6 @@
+{
+  "name": "Aetheria Studio - Cinematic Portfolio & CMS",
+  "description": "Next-generation 2030+ creative portfolio and integrated CMS for professional Video Editors, Script Writers, and Content Creators with Arabic/English bilingual support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
