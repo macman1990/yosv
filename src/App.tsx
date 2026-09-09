@@ -10,6 +10,7 @@ import { AdminDashboard } from './components/admin/AdminDashboard';
 import { Header } from './components/portfolio/Header';
 import { BlogHubPage } from './components/portfolio/BlogHubPage';
 import { Footer } from './components/portfolio/Footer';
+import { SplashScreen } from './components/common/SplashScreen';
 
 // Portfolio Sections
 import { HeroSection } from './components/portfolio/HeroSection';
@@ -28,6 +29,12 @@ import { CustomSectionsRenderer } from './components/portfolio/CustomSectionsRen
 const PortfolioApp: React.FC = () => {
   const { data, isAdminMode, language, showAdminLogin, setShowAdminLogin } = usePortfolio();
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [showSplash, setShowSplash] = useState(true);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => setShowSplash(false), 1800);
+    return () => window.clearTimeout(timeout);
+  }, []);
 
   // Synchronize route on popstate (browser back/forward)
   useEffect(() => {
@@ -77,6 +84,7 @@ const PortfolioApp: React.FC = () => {
       className="min-h-screen transition-colors duration-300 bg-[var(--background)] text-[var(--foreground)] selection:bg-[var(--color-accent)]/30 selection:text-[var(--foreground)]"
       dir={language === 'ar' ? 'rtl' : 'ltr'}
     >
+      <SplashScreen visible={showSplash} />
       <CustomCursor />
       <ToastContainer />
       <VideoPlayerModal />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { Play, Lock, ArrowUp } from 'lucide-react';
 
@@ -6,6 +7,7 @@ export const Footer: React.FC = () => {
   const { data, language, t, setShowAdminLogin } = usePortfolio();
   const profile = data.profile;
   const name = profile.name[language] || profile.name.en;
+  const shouldReduceMotion = useReducedMotion();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -14,7 +16,13 @@ export const Footer: React.FC = () => {
   return (
     <footer className="relative overflow-hidden pt-16 pb-12 text-[var(--muted)]">
       <div className="section-shell">
-        <div className="glass-card border border-[var(--border)] p-6 sm:p-8">
+        <motion.div
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="glass-card border border-[var(--border)] p-6 sm:p-8"
+        >
           <div className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
             <div className="max-w-md space-y-3 text-start">
               <div className="flex items-center gap-2.5">
@@ -67,7 +75,7 @@ export const Footer: React.FC = () => {
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );

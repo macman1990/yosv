@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { Mail, MessageCircle, Send, Sparkles, CheckCircle2, ArrowUpRight } from 'lucide-react';
 import { StorageService } from '../../lib/storage';
@@ -6,6 +7,7 @@ import { StorageService } from '../../lib/storage';
 export const ContactSection: React.FC = () => {
   const { data, language, t, addToast } = usePortfolio();
   const contact = data.contact;
+  const shouldReduceMotion = useReducedMotion();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -48,7 +50,13 @@ export const ContactSection: React.FC = () => {
   return (
     <section id="contact" className="py-24 relative overflow-hidden">
       <div className="section-shell space-y-12">
-        <div className="text-center max-w-3xl mx-auto space-y-4 reveal">
+        <motion.div
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+          whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center max-w-3xl mx-auto space-y-4"
+        >
           <div
             className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--color-accent)]"
           >
@@ -61,10 +69,16 @@ export const ContactSection: React.FC = () => {
           <p className="text-[var(--muted)] text-sm sm:text-base leading-relaxed">
             {t('contact.subtitle')}
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-5 space-y-5 reveal reveal-delay-1">
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-5 space-y-5"
+          >
             <div className="glass-card border border-[var(--border)] p-6 sm:p-7 text-start">
               <h3 className="text-xl font-bold text-[var(--foreground)] font-syne">{ctaText}</h3>
               <p className="mt-3 text-xs text-[var(--muted)] leading-relaxed">
@@ -127,9 +141,15 @@ export const ContactSection: React.FC = () => {
                 </a>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="lg:col-span-7 reveal reveal-delay-2">
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:col-span-7"
+          >
             <div className="glass-card border border-[var(--border)] p-6 sm:p-8">
               {submitted ? (
                 <div className="space-y-5 py-8 text-center">
@@ -241,7 +261,7 @@ export const ContactSection: React.FC = () => {
                 </form>
               )}
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
