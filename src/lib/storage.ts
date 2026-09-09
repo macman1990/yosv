@@ -15,6 +15,75 @@ export const supabase: SupabaseClient | null =
     ? createClient(supabaseUrl, supabaseAnonKey)
     : null;
 
+const logSupabaseError = (operation: string, error: any) => {
+  if (!import.meta.env.DEV) return;
+
+  console.debug('[StorageService] Supabase error', {
+    operation,
+    message: error?.message ?? 'Unknown error',
+    code: error?.code ?? null,
+    details: error?.details ?? null,
+    hint: error?.hint ?? null,
+  });
+};
+
+const normalizeClientLogos = (list: any[] | undefined): any[] => {
+  if (!Array.isArray(list) || list.length === 0) {
+    return initialPortfolioData.clientLogos;
+  }
+
+  return list.map((logo, index) => ({
+    id: logo?.id || `logo-${index}-${Date.now()}`,
+    name: logo?.name || `Client ${index + 1}`,
+    logoUrl: logo?.logoUrl ?? logo?.url ?? '',
+    websiteUrl: logo?.websiteUrl ?? logo?.url ?? '',
+    visible: typeof logo?.visible === 'boolean' ? logo.visible : Boolean(logo?.isVisible),
+    order: typeof logo?.order === 'number' ? logo.order : index + 1,
+  }));
+};
+
+export const normalizePortfolioData = (input: Partial<PortfolioData> | null | undefined): PortfolioData => {
+  const base = initialPortfolioData;
+  const payload = input && typeof input === 'object' ? input : {};
+
+  const siteFeatures = {
+    ...base.siteFeatures,
+    ...(payload.siteFeatures || {}),
+  } as PortfolioData['siteFeatures'];
+
+  const contact = {
+    ...base.contact,
+    ...(payload.contact || {}),
+    formFields: {
+      ...base.contact.formFields,
+      ...(payload.contact?.formFields || {}),
+    },
+  } as PortfolioData['contact'];
+
+  const availability = {
+    ...base.availability,
+    ...(payload.availability || {}),
+    label: { ...base.availability.label, ...(payload.availability?.label || {}) },
+    description: { ...base.availability.description, ...(payload.availability?.description || {}) },
+  } as PortfolioData['availability'];
+
+  const normalized: PortfolioData = {
+    ...base,
+    ...payload,
+    siteFeatures,
+    contact,
+    availability,
+    clientLogos: normalizeClientLogos((payload as any).clientLogos ?? base.clientLogos),
+    socialLinks: Array.isArray(payload.socialLinks) ? payload.socialLinks : base.socialLinks,
+    servicePackages: Array.isArray(payload.servicePackages) ? payload.servicePackages : base.servicePackages,
+    testimonials: Array.isArray(payload.testimonials) ? payload.testimonials : base.testimonials,
+    blogPosts: Array.isArray(payload.blogPosts) ? payload.blogPosts : base.blogPosts,
+    blogCategories: Array.isArray(payload.blogCategories) ? payload.blogCategories : base.blogCategories,
+  };
+
+  return normalized;
+};
+
 export class StorageService {
   private static cachedData: PortfolioData | null = null;
 
@@ -23,102 +92,130 @@ export class StorageService {
       return this.cachedData;
     }
 
-    // 1. If Supabase is connected, try to fetch from Supabase
     if (supabase) {
       try {
-        const { data: sessionData } = await supabase.auth.getSession();
-        const userId = sessionData?.session?.user?.id;
+        const { data, error } = await supabase
+          .from('public_portfolio_data')
+          .select('payload, updated_at')
+          .eq('id', 'primary')
+          .maybeSingle();
 
-        let isAdmin = false;
-        if (userId) {
-          const { data: adminData, error: adminError } = await supabase
-            .from('admin_users')
-            .select('role')
-            .eq('user_id', userId)
-            .maybeSingle();
-          isAdmin = !adminError && adminData?.role === 'admin';
+        if (!error && data?.payload) {
+          const normalized = normalizePortfolioData(data.payload as PortfolioData);
+          this.cachedData = normalized;
+          if (import.meta.env.DEV) {
+            console.debug('[StorageService] Loaded public portfolio payload from Supabase', {
+              operation: 'get_public_portfolio_data',
+              keys: Object.keys(normalized.siteFeatures || {}),
+            });
+          }
+          return normalized;
         }
 
-        // Admins query the raw table (contains drafts), public queries the secure filtered view
-        const tableName = isAdmin ? 'portfolio_data' : 'public_portfolio_data';
-
-        const { data, error } = await supabase
-          .from(tableName)
-          .select('payload')
-          .eq('id', 'primary')
-          .single();
-
-        if (data?.payload && !error) {
-          this.cachedData = data.payload as PortfolioData;
-          return this.cachedData;
+        if (error) {
+          logSupabaseError('get_public_portfolio_data', error);
         }
       } catch (err) {
-        console.warn('Supabase fetch failed, falling back to local store:', err);
+        logSupabaseError('get_public_portfolio_data_exception', err);
       }
     }
 
-    // 2. Fallback to LocalStorage
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        this.cachedData = {
-          ...initialPortfolioData,
-          ...parsed,
-          siteFeatures: { ...initialPortfolioData.siteFeatures, ...(parsed.siteFeatures || {}) },
-          availability: { ...initialPortfolioData.availability, ...(parsed.availability || {}) },
-          blogPosts: parsed.blogPosts && parsed.blogPosts.length > 0 ? parsed.blogPosts : initialPortfolioData.blogPosts,
-          blogCategories: parsed.blogCategories && parsed.blogCategories.length > 0 ? parsed.blogCategories : initialPortfolioData.blogCategories,
-          clientLogos: Array.isArray(parsed.clientLogos) && parsed.clientLogos.length > 0 ? parsed.clientLogos : initialPortfolioData.clientLogos,
-        };
-        return this.cachedData;
+        const normalized = normalizePortfolioData(parsed as Partial<PortfolioData>);
+        this.cachedData = normalized;
+        return normalized;
       }
     } catch (e) {
-      console.error('Error reading localStorage portfolio data:', e);
+      if (import.meta.env.DEV) {
+        console.debug('[StorageService] localStorage read failed', e);
+      }
     }
 
-    // 3. First time initialize with initial sample data
-    this.cachedData = initialPortfolioData;
-    this.savePortfolioData(initialPortfolioData).catch((err) =>
-      console.warn('Initial save error:', err)
-    );
-    return this.cachedData;
+    const initial = normalizePortfolioData(initialPortfolioData);
+    this.cachedData = initial;
+    if (supabase) {
+      this.savePortfolioData(initial).catch((err) => {
+        if (import.meta.env.DEV) {
+          console.debug('[StorageService] Initial cloud seed failed', err);
+        }
+      });
+    }
+    return initial;
   }
 
   public static async savePortfolioData(data: PortfolioData): Promise<boolean> {
-    this.cachedData = data;
+    const normalized = normalizePortfolioData(data);
 
-    // Save to LocalStorage immediately
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
     } catch (e) {
-      console.error('Failed to write to localStorage:', e);
-    }
-
-    // If Supabase is active, sync with database table
-    if (supabase) {
-      try {
-        const { data: sessionData } = await supabase.auth.getSession();
-        if (!sessionData?.session?.user) {
-           console.warn('Supabase sync skipped: No authenticated admin session');
-           throw new Error('You must be logged in to save to the cloud.');
-        }
-
-        const { error } = await supabase.from('portfolio_data').upsert({
-          id: 'primary',
-          payload: data,
-          updated_at: new Date().toISOString(),
-        });
-        if (error) {
-          console.error('Supabase sync error:', error.message);
-          throw new Error(`Cloud save failed: ${error.message}`);
-        }
-      } catch (err) {
-        console.error('Supabase sync exception:', err);
-        throw err;
+      if (import.meta.env.DEV) {
+        console.debug('[StorageService] localStorage write failed', e);
       }
     }
 
+    if (supabase) {
+      try {
+        const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) {
+          logSupabaseError('save_portfolio_data_session', sessionError);
+          throw new Error(`Cloud session check failed: ${sessionError.message}`);
+        }
+
+        if (!sessionData?.session?.user) {
+          throw new Error('You must be logged in to save to the cloud.');
+        }
+
+        const { data: saved, error } = await supabase
+          .from('portfolio_data')
+          .upsert(
+            {
+              id: 'primary',
+              payload: normalized,
+              updated_at: new Date().toISOString(),
+            },
+            { onConflict: 'id' }
+          )
+          .select('payload, updated_at')
+          .single();
+
+        if (error) {
+          logSupabaseError('save_portfolio_data_upsert', error);
+          throw new Error(`Cloud save failed: ${error.message}`);
+        }
+
+        if (!saved?.payload) {
+          const payloadError = {
+            message: 'Supabase save returned no payload.',
+            code: 'NO_PAYLOAD',
+            details: null,
+            hint: 'Check the portfolio_data row and the payload column payload field.',
+          };
+          logSupabaseError('save_portfolio_data_no_payload', payloadError);
+          throw new Error('Cloud save failed: Supabase save returned no payload.');
+        }
+
+        this.cachedData = normalizePortfolioData(saved.payload as PortfolioData);
+        if (import.meta.env.DEV) {
+          console.debug('[StorageService] Saved portfolio payload to Supabase', {
+            operation: 'save_portfolio_data',
+            startProject: this.cachedData.siteFeatures.startProject,
+            pricing: this.cachedData.siteFeatures.pricing,
+          });
+        }
+
+        return true;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : 'Unknown cloud save error';
+        logSupabaseError('save_portfolio_data_exception', err);
+        throw new Error(message);
+      }
+    }
+
+    this.cachedData = normalized;
     return true;
   }
 
@@ -137,13 +234,7 @@ export class StorageService {
     if (!parsed.profile || !parsed.projects) {
       throw new Error('Invalid portfolio backup JSON format.');
     }
-    const merged: PortfolioData = {
-      ...initialPortfolioData,
-      ...parsed,
-      siteFeatures: { ...initialPortfolioData.siteFeatures, ...(parsed.siteFeatures || {}) },
-      availability: { ...initialPortfolioData.availability, ...(parsed.availability || {}) },
-      clientLogos: Array.isArray(parsed.clientLogos) && parsed.clientLogos.length > 0 ? parsed.clientLogos : initialPortfolioData.clientLogos,
-    } as PortfolioData;
+    const merged = normalizePortfolioData(parsed as Partial<PortfolioData>);
     await this.savePortfolioData(merged);
     return merged;
   }

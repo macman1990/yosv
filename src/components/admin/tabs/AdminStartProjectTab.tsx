@@ -5,7 +5,7 @@ import { Save, CheckCircle2, X } from 'lucide-react';
 export const AdminStartProjectTab: React.FC = () => {
   const { data, updateData, language, addToast } = usePortfolio();
   const [config, setConfig] = useState({
-    enabled: data.siteFeatures?.startProject ?? true,
+    enabled: typeof data.siteFeatures?.startProject === 'boolean' ? data.siteFeatures.startProject : true,
     ctaEn: data.contact?.ctaText?.en || 'Start a Project',
     ctaAr: data.contact?.ctaText?.ar || 'ابدأ مشروعًا',
     descriptionEn: 'Tell me what you’re building, the content goal, and the timeline.',

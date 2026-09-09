@@ -32,13 +32,18 @@ const PortfolioApp: React.FC = () => {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const [showSplash, setShowSplash] = useState(true);
 
-  const showStartProject = data.siteFeatures?.startProject ?? true;
-  const showProjectInquiry = data.siteFeatures?.projectInquiry ?? true;
-  const showPricing = data.siteFeatures?.pricing ?? data.siteFeatures?.packages ?? true;
-  const showTestimonials = data.siteFeatures?.testimonials ?? true;
-  const showBlog = data.siteFeatures?.blog ?? true;
-  const showContent = data.siteFeatures?.content ?? data.siteFeatures?.contentHub ?? true;
-  const showSocialLinks = data.siteFeatures?.socialLinks ?? true;
+  const getFeatureFlag = <K extends keyof typeof data.siteFeatures>(key: K) => {
+    const value = data?.siteFeatures?.[key];
+    return typeof value === 'boolean' ? value : true;
+  };
+
+  const showStartProject = getFeatureFlag('startProject');
+  const showProjectInquiry = getFeatureFlag('projectInquiry');
+  const showPricing = getFeatureFlag('pricing') || getFeatureFlag('packages');
+  const showTestimonials = getFeatureFlag('testimonials');
+  const showBlog = getFeatureFlag('blog');
+  const showContent = getFeatureFlag('content') || getFeatureFlag('contentHub');
+  const showSocialLinks = getFeatureFlag('socialLinks');
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setShowSplash(false), 1800);

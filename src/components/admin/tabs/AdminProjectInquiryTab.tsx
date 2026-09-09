@@ -4,8 +4,8 @@ import { Save, CheckCircle2, X } from 'lucide-react';
 
 export const AdminProjectInquiryTab: React.FC = () => {
   const { data, updateData, language, addToast } = usePortfolio();
-  const [enabled, setEnabled] = useState(data.siteFeatures?.projectInquiry ?? true);
-  const [briefEnabled, setBriefEnabled] = useState(data.siteFeatures?.projectBrief ?? true);
+  const [enabled, setEnabled] = useState(typeof data.siteFeatures?.projectInquiry === 'boolean' ? data.siteFeatures.projectInquiry : true);
+  const [briefEnabled, setBriefEnabled] = useState(typeof data.siteFeatures?.projectBrief === 'boolean' ? data.siteFeatures.projectBrief : true);
   const [required, setRequired] = useState(data.contact?.formFields?.projectBriefRequired ?? false);
   const [labelEn, setLabelEn] = useState(data.contact?.formFields?.briefLabelEn || 'Project brief URL');
   const [labelAr, setLabelAr] = useState(data.contact?.formFields?.briefLabelAr || 'رابط تفاصيل المشروع');

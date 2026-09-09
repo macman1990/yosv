@@ -4,7 +4,7 @@ import { Save } from 'lucide-react';
 
 export const AdminAvailabilityTab: React.FC = () => {
   const { data, updateData, language, addToast } = usePortfolio();
-  const [visible, setVisible] = useState(data.availability?.visible ?? true);
+  const [visible, setVisible] = useState(typeof data.availability?.visible === 'boolean' ? data.availability.visible : true);
   const [status, setStatus] = useState(data.availability?.status ?? 'available');
   const [labelEn, setLabelEn] = useState(data.availability?.label?.en || 'Available for new projects');
   const [labelAr, setLabelAr] = useState(data.availability?.label?.ar || 'متاح لمشاريع جديدة');

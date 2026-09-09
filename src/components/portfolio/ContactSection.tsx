@@ -21,11 +21,17 @@ export const ContactSection: React.FC = () => {
 
   const ctaText = contact.ctaText[language] || contact.ctaText.en;
   const successMsg = contact.successMessage[language] || contact.successMessage.en;
-  const showProjectBrief = data.siteFeatures?.projectBrief ?? true;
-  const showAvailability = (data.siteFeatures?.availability ?? true) && data.availability?.visible;
-  const showClientLogos = (data.siteFeatures?.clientLogos ?? true) && (data.clientLogos || []).some((logo) => logo.visible);
-  const showSocialButtons = (data.siteFeatures?.socialLinks ?? true) && (data.socialLinks || []).some((social) => social.visible);
-  const isInquiryEnabled = data.siteFeatures?.projectInquiry ?? true;
+
+  const getFeatureFlag = (key: keyof typeof data.siteFeatures) => {
+    const value = data?.siteFeatures?.[key];
+    return typeof value === 'boolean' ? value : true;
+  };
+
+  const showProjectBrief = getFeatureFlag('projectBrief');
+  const showAvailability = getFeatureFlag('availability') && data.availability?.visible;
+  const showClientLogos = getFeatureFlag('clientLogos') && (data.clientLogos || []).some((logo) => logo.visible);
+  const showSocialButtons = getFeatureFlag('socialLinks') && (data.socialLinks || []).some((social) => social.visible);
+  const isInquiryEnabled = getFeatureFlag('projectInquiry');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
