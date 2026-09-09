@@ -24,6 +24,8 @@ export const ContactSection: React.FC = () => {
   const showProjectBrief = data.siteFeatures?.projectBrief ?? true;
   const showAvailability = (data.siteFeatures?.availability ?? true) && data.availability?.visible;
   const showClientLogos = (data.siteFeatures?.clientLogos ?? true) && (data.clientLogos || []).some((logo) => logo.visible);
+  const showSocialButtons = (data.siteFeatures?.socialLinks ?? true) && (data.socialLinks || []).some((social) => social.visible);
+  const isInquiryEnabled = data.siteFeatures?.projectInquiry ?? true;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -174,19 +176,21 @@ export const ContactSection: React.FC = () => {
               </div>
             )}
 
-            <div className="glass-card border border-[var(--border)] p-5 flex flex-wrap gap-2">
-              {(data.socialLinks || []).filter((s) => s.visible).map((social) => (
-                <a
-                  key={social.id}
-                  href={sanitizeExternalUrl(social.url)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
-                >
-                  {social.label}
-                </a>
-              ))}
-            </div>
+            {showSocialButtons && (
+              <div className="glass-card border border-[var(--border)] p-5 flex flex-wrap gap-2">
+                {(data.socialLinks || []).filter((s) => s.visible).map((social) => (
+                  <a
+                    key={social.id}
+                    href={sanitizeExternalUrl(social.url)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
+                  >
+                    {social.label}
+                  </a>
+                ))}
+              </div>
+            )}
           </motion.div>
 
           <motion.div
@@ -197,7 +201,11 @@ export const ContactSection: React.FC = () => {
             className="lg:col-span-7"
           >
             <div className="glass-card border border-[var(--border)] p-6 sm:p-8">
-              {submitted ? (
+              {!isInquiryEnabled ? (
+                <div className="py-8 text-center">
+                  <p className="text-sm text-[var(--muted)]">Project inquiry is currently disabled.</p>
+                </div>
+              ) : submitted ? (
                 <div className="space-y-5 py-8 text-center">
                   <div
                     className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border"

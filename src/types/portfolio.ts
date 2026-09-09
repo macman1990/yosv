@@ -261,13 +261,17 @@ export interface SocialLink {
 
 export type FeatureFlagKey =
   | 'startProject'
+  | 'projectInquiry'
   | 'projectBrief'
   | 'availability'
   | 'clientLogos'
   | 'testimonials'
+  | 'pricing'
   | 'packages'
   | 'blog'
-  | 'contentHub';
+  | 'content'
+  | 'contentHub'
+  | 'socialLinks';
 
 export interface FeatureFlag {
   key: FeatureFlagKey;
@@ -278,13 +282,17 @@ export interface FeatureFlag {
 
 export interface SiteFeatureFlags {
   startProject: boolean;
+  projectInquiry: boolean;
   projectBrief: boolean;
   availability: boolean;
   clientLogos: boolean;
   testimonials: boolean;
+  pricing: boolean;
   packages: boolean;
   blog: boolean;
+  content: boolean;
   contentHub: boolean;
+  socialLinks: boolean;
 }
 
 export interface ClientLogo {
@@ -421,6 +429,12 @@ export interface ContactSettings {
     showProjectType: boolean;
     showBudget: boolean;
     showTimeline: boolean;
+    showProjectBrief: boolean;
+    projectBriefRequired: boolean;
+    briefLabelEn: string;
+    briefLabelAr: string;
+    briefPlaceholderEn: string;
+    briefPlaceholderAr: string;
   };
 }
 

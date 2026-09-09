@@ -33,10 +33,12 @@ const PortfolioApp: React.FC = () => {
   const [showSplash, setShowSplash] = useState(true);
 
   const showStartProject = data.siteFeatures?.startProject ?? true;
-  const showPackages = data.siteFeatures?.packages ?? true;
+  const showProjectInquiry = data.siteFeatures?.projectInquiry ?? true;
+  const showPricing = data.siteFeatures?.pricing ?? data.siteFeatures?.packages ?? true;
   const showTestimonials = data.siteFeatures?.testimonials ?? true;
   const showBlog = data.siteFeatures?.blog ?? true;
-  const showContentHub = data.siteFeatures?.contentHub ?? true;
+  const showContent = data.siteFeatures?.content ?? data.siteFeatures?.contentHub ?? true;
+  const showSocialLinks = data.siteFeatures?.socialLinks ?? true;
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setShowSplash(false), 1800);
@@ -112,12 +114,12 @@ const PortfolioApp: React.FC = () => {
             <ExperienceSection />
             <EducationCertificationsSection />
             <ToolsSection />
-            {showContentHub && <ContentCreationSection />}
+            {showContent && <ContentCreationSection />}
             {showBlog && <BlogSection />}
             {showTestimonials && <TestimonialsSection />}
             <CustomSectionsRenderer />
-            {showPackages && <PricingSection />}
-            {showStartProject && <ContactSection />}
+            {showPricing && <PricingSection />}
+            {showStartProject && showProjectInquiry && <ContactSection />}
           </main>
           
           <Footer />

@@ -19,6 +19,11 @@ import { AdminBackupSyncTab } from './tabs/AdminBackupSyncTab';
 import { AdminSecurityTab } from './tabs/AdminSecurityTab';
 import { AdminPricingTab } from './tabs/AdminPricingTab';
 import { AdminSocialLinksTab } from './tabs/AdminSocialLinksTab';
+import { AdminFeatureFlagsTab } from './tabs/AdminFeatureFlagsTab';
+import { AdminStartProjectTab } from './tabs/AdminStartProjectTab';
+import { AdminProjectInquiryTab } from './tabs/AdminProjectInquiryTab';
+import { AdminAvailabilityTab } from './tabs/AdminAvailabilityTab';
+import { AdminClientLogosTab } from './tabs/AdminClientLogosTab';
 
 export const AdminDashboard: React.FC = () => {
   const { data, saveData, addToast, language } = usePortfolio();
@@ -49,6 +54,11 @@ export const AdminDashboard: React.FC = () => {
             {activeTab === 'overview' && <AdminOverviewTab onNavigate={setActiveTab} />}
             {activeTab === 'projects' && <AdminProjectsTab />}
             {activeTab === 'services' && <AdminServicesTab />}
+            {activeTab === 'features' && <AdminFeatureFlagsTab />}
+            {activeTab === 'startProject' && <AdminStartProjectTab />}
+            {activeTab === 'projectInquiry' && <AdminProjectInquiryTab />}
+            {activeTab === 'availability' && <AdminAvailabilityTab />}
+            {activeTab === 'clientLogos' && <AdminClientLogosTab />}
             {activeTab === 'pricing' && <AdminPricingTab />}
             {activeTab === 'tools' && <AdminToolsSkillsTab />}
             {activeTab === 'experience' && <AdminExperienceTab />}

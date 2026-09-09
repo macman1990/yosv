@@ -869,13 +869,17 @@ A strong CTA should feel like the natural conclusion to the story, not an awkwar
 
   siteFeatures: {
     startProject: true,
+    projectInquiry: true,
     projectBrief: true,
     availability: true,
     clientLogos: true,
     testimonials: true,
+    pricing: true,
     packages: true,
     blog: true,
+    content: true,
     contentHub: true,
+    socialLinks: true,
   },
 
   clientLogos: [
@@ -993,6 +997,12 @@ A strong CTA should feel like the natural conclusion to the story, not an awkwar
       showProjectType: true,
       showBudget: true,
       showTimeline: true,
+      showProjectBrief: true,
+      projectBriefRequired: false,
+      briefLabelEn: 'Project brief URL',
+      briefLabelAr: 'رابط تفاصيل المشروع',
+      briefPlaceholderEn: 'https://drive.google.com/…',
+      briefPlaceholderAr: 'https://drive.google.com/…',
     },
   },
 

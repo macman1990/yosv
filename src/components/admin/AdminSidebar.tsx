@@ -16,12 +16,18 @@ import {
   Database,
   ShieldAlert,
   FileText,
+  Sparkles,
 } from 'lucide-react';
 
 export type AdminTabId =
   | 'overview'
   | 'projects'
   | 'services'
+  | 'features'
+  | 'startProject'
+  | 'projectInquiry'
+  | 'availability'
+  | 'clientLogos'
   | 'pricing'
   | 'tools'
   | 'experience'
@@ -50,6 +56,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     overview: { en: 'Overview', ar: 'نظرة عامة' },
     projects: { en: 'Projects & Reels', ar: 'المشاريع والريلز' },
     services: { en: 'Services', ar: 'الخدمات' },
+    features: { en: 'Features', ar: 'المميزات' },
+    startProject: { en: 'Start a Project', ar: 'ابدأ مشروعًا' },
+    projectInquiry: { en: 'Project Inquiry', ar: 'استفسارات المشاريع' },
+    availability: { en: 'Availability', ar: 'حالة التوفر' },
+    clientLogos: { en: 'Client Logos', ar: 'شعارات العملاء' },
     pricing: { en: 'Pricing Packages', ar: 'باقات التسعير' },
     tools: { en: 'Tools & Skills', ar: 'الأدوات والمهارات' },
     experience: { en: 'Experience', ar: 'الخبرة' },
@@ -58,7 +69,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     blog: { en: 'Blog & Editorial', ar: 'المدونة والتحرير' },
     testimonials: { en: 'Testimonials', ar: 'آراء العملاء' },
     profile: { en: 'Profile & Bio', ar: 'الملف الشخصي والسيرة' },
-    social: { en: 'Social Links', ar: 'روابط التواصل' },
+    social: { en: 'Social Media', ar: 'السوشيال ميديا' },
     sections: { en: 'Section Builder', ar: 'بناء الأقسام' },
     appearance: { en: 'Appearance & UI', ar: 'المظهر والواجهة' },
     media: { en: 'Media Library', ar: 'مكتبة الوسائط' },
@@ -70,6 +81,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     { id: 'overview', icon: <LayoutDashboard className="h-4 w-4" /> },
     { id: 'projects', icon: <Film className="h-4 w-4" /> },
     { id: 'services', icon: <Layers className="h-4 w-4" /> },
+    { id: 'features', icon: <Sparkles className="h-4 w-4" /> },
+    { id: 'startProject', icon: <MessageSquare className="h-4 w-4" /> },
+    { id: 'projectInquiry', icon: <Briefcase className="h-4 w-4" /> },
+    { id: 'availability', icon: <ShieldAlert className="h-4 w-4" /> },
+    { id: 'clientLogos', icon: <ImageIcon className="h-4 w-4" /> },
     { id: 'pricing', icon: <Layers className="h-4 w-4" /> },
     { id: 'tools', icon: <Cpu className="h-4 w-4" /> },
     { id: 'experience', icon: <Briefcase className="h-4 w-4" /> },

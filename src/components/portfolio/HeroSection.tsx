@@ -66,7 +66,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
     }
   };
 
-  const visibleSocialLinks = (data.socialLinks || []).filter((s) => s.visible && s.url);
+  const visibleSocialLinks = (data.siteFeatures?.socialLinks ?? true)
+    ? (data.socialLinks || []).filter((s) => s.visible && s.url)
+    : [];
   const statsList = (data.stats || []).filter((s) => s.visible).slice(0, 3);
 
   return (
