@@ -70,120 +70,141 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
   return (
     <section
       id="hero"
-      className="relative min-h-[90vh] flex items-center justify-center pt-24 pb-16 overflow-hidden"
+      className="relative min-h-[92vh] flex items-center justify-center pt-28 pb-16 overflow-hidden"
     >
-      {/* Cinematic Ambient Atmosphere */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
-          className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[640px] h-[460px] rounded-full blur-[120px] opacity-30 transition-colors duration-500"
-          style={{ backgroundColor: 'var(--accent-glow)' }}
+          className="absolute left-1/2 top-1/3 h-[420px] w-[420px] -translate-x-1/2 rounded-full blur-[130px] opacity-40"
+          style={{ background: 'var(--accent-glow)' }}
         />
-        <div className="absolute bottom-8 start-10 w-[360px] h-[360px] bg-[var(--surface-elevated)] rounded-full blur-[120px] opacity-20" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--border-subtle)_1px,transparent_1px),linear-gradient(to_bottom,var(--border-subtle)_1px,transparent_1px)] bg-[size:5rem_5rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_45%,#000_70%,transparent_100%)]" />
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 z-10">
-        {/* Availability Badge */}
-        <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-[var(--surface-muted)] border border-[var(--border)] shadow-xs">
-          <span
-            className="w-2 h-2 rounded-full animate-pulse shadow-xs"
-            style={{ backgroundColor: 'var(--color-accent)' }}
-          />
-          <span className="text-xs font-mono uppercase tracking-widest text-[var(--muted)] font-medium">
-            {profile.availableForWork ? t('hero.badge') : 'In Post-Production'}
-          </span>
-        </div>
-
-        {/* Hero Headline & Identity */}
-        <div className="space-y-4 max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight font-syne text-[var(--foreground)] leading-[1.08]">
-            {name}
-          </h1>
-
-          <div className="inline-block px-4 py-1 rounded-lg bg-[var(--surface-elevated)] border border-[var(--border)] text-xs sm:text-sm font-mono uppercase tracking-wider text-[var(--color-accent)] font-semibold">
-            {title}
-          </div>
-
-          <p className="text-lg sm:text-2xl font-medium text-[var(--foreground)]/90 max-w-3xl mx-auto leading-snug">
-            {tagline}
-          </p>
-
-          <p className="text-sm sm:text-base text-[var(--muted)] max-w-2xl mx-auto leading-relaxed">
-            {bio}
-          </p>
-        </div>
-
-        {/* Primary Action Buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-          <button
-            type="button"
-            onClick={handleOpenReel}
-            className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-bold uppercase tracking-wider bg-[var(--color-accent)] hover:opacity-90 text-black shadow-sm hover:scale-102 transition-all duration-200 cursor-pointer"
-          >
-            <Play className="w-4 h-4 fill-black group-hover:scale-110 transition-transform" />
-            {t('hero.viewWork')}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => {
-              if (onContactClick) {
-                onContactClick();
-              } else {
-                const contactEl = document.getElementById('contact');
-                contactEl?.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
-            className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full text-sm font-semibold tracking-wider text-[var(--foreground)] bg-[var(--surface-muted)] hover:bg-[var(--surface-elevated)] border border-[var(--border)] hover:border-[var(--border-hover)] transition-all duration-200 cursor-pointer"
-          >
-            <Sparkles className="w-4 h-4" style={{ color: 'var(--color-accent)' }} />
-            {t('hero.contactMe')}
-          </button>
-        </div>
-
-        {/* Social Quick Links */}
-        {visibleSocialLinks.length > 0 && (
-          <div className="flex items-center justify-center gap-4 pt-1 text-[var(--muted)]">
-            {visibleSocialLinks.map((social) => (
-              <a
-                key={social.id}
-                href={sanitizeExternalUrl(social.url)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 rounded-full hover:text-[var(--foreground)] hover:bg-[var(--surface-muted)] transition-colors"
-                title={social.label}
-                aria-label={social.label}
-              >
-                {getSocialIcon(social.platform)}
-              </a>
-            ))}
-          </div>
-        )}
-
-        {/* Authentic Dynamic Stats Row */}
-        {statsList.length > 0 && (
-          <div className="pt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 max-w-3xl mx-auto">
-            {statsList.map((stat, idx) => (
-              <div
-                key={stat.id || idx}
-                className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-[var(--card-shadow)] flex flex-col items-center transition-colors duration-300"
-              >
-                <div className="flex items-center gap-1 mb-1 text-[var(--color-accent)]">
-                  {idx === 0 ? <Award className="w-4 h-4" /> : idx === 1 ? <Cpu className="w-4 h-4" /> : <TrendingUp className="w-4 h-4" />}
-                  <span className="text-xl sm:text-2xl font-black font-mono tracking-tight text-[var(--foreground)]">
-                    {stat.number}{stat.suffix}
-                  </span>
-                </div>
-                <span className="text-[11px] uppercase tracking-wider text-[var(--muted)] font-medium text-center">
-                  {stat.label[language] || stat.label.en}
-                </span>
+      <div className="section-shell relative z-10">
+        <div className="glass-card reveal p-4 sm:p-6 md:p-8 lg:p-10 border border-[var(--border)] bg-[var(--surface)]/70">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 items-center">
+            <div className="space-y-6 text-start">
+              <div className="inline-flex items-center gap-2.5 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--muted)]">
+                <span className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-accent)' }} />
+                {profile.availableForWork ? t('hero.badge') : 'In Post-Production'}
               </div>
-            ))}
-          </div>
-        )}
 
-        {/* Scroll / Explore Indicator */}
-        <div className="pt-4">
+              <div className="space-y-4">
+                <p className="text-[11px] uppercase tracking-[0.28em] text-[var(--muted)] font-mono">
+                  {title}
+                </p>
+                <h1 className="max-w-[700px] text-4xl sm:text-6xl lg:text-[5rem] leading-[0.94] tracking-[-0.06em] font-black font-syne text-[var(--foreground)]">
+                  {name}
+                </h1>
+                <p className="max-w-xl text-lg sm:text-2xl text-[var(--foreground)]/90 leading-tight">
+                  {tagline}
+                </p>
+                <p className="max-w-xl text-sm sm:text-base text-[var(--muted)] leading-relaxed">
+                  {bio}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={handleOpenReel}
+                  className="group inline-flex items-center gap-2.5 rounded-full bg-[var(--color-accent)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-black shadow-sm hover:scale-[1.01]"
+                >
+                  <Play className="h-4 w-4 fill-black group-hover:scale-110 transition-transform" />
+                  {t('hero.viewWork')}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onContactClick) {
+                      onContactClick();
+                    } else {
+                      const contactEl = document.getElementById('contact');
+                      contactEl?.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-6 py-3 text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--foreground)] hover:border-[var(--border-hover)]"
+                >
+                  <Sparkles className="h-4 w-4" style={{ color: 'var(--color-accent)' }} />
+                  {t('hero.contactMe')}
+                </button>
+              </div>
+
+              {visibleSocialLinks.length > 0 && (
+                <div className="flex items-center gap-3 pt-1 text-[var(--muted)]">
+                  {visibleSocialLinks.map((social) => (
+                    <a
+                      key={social.id}
+                      href={sanitizeExternalUrl(social.url)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--surface-muted)] hover:text-[var(--foreground)] hover:border-[var(--border-hover)] transition-colors"
+                      title={social.label}
+                      aria-label={social.label}
+                    >
+                      {getSocialIcon(social.platform)}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="relative">
+              <div className="glass-panel overflow-hidden rounded-[32px] p-2.5 border border-[var(--border)]">
+                {featuredProject ? (
+                  <div className="relative overflow-hidden rounded-[26px]">
+                    <img
+                      src={featuredProject.thumbnail}
+                      alt={featuredProject.title[language] || featuredProject.title.en}
+                      className="h-[360px] w-full object-cover sm:h-[430px]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-5">
+                      <div className="mb-3 flex items-center justify-between gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-white/80">
+                        <span>{featuredProject.client}</span>
+                        <span>{featuredProject.date}</span>
+                      </div>
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <h2 className="text-lg font-semibold text-white">{featuredProject.title[language] || featuredProject.title.en}</h2>
+                          <p className="text-xs text-white/70">{featuredProject.platform}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={handleOpenReel}
+                          className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-md border border-white/10"
+                          aria-label="Play featured reel"
+                        >
+                          <Play className="h-4 w-4 fill-white" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
+
+              {statsList.length > 0 && (
+                <div className="mt-4 grid grid-cols-3 gap-3">
+                  {statsList.map((stat, idx) => (
+                    <div key={stat.id || idx} className="glass-panel rounded-2xl p-3 text-center">
+                      <div className="mb-1 flex items-center justify-center gap-1 text-[var(--color-accent)]">
+                        {idx === 0 ? <Award className="w-3.5 h-3.5" /> : idx === 1 ? <Cpu className="w-3.5 h-3.5" /> : <TrendingUp className="w-3.5 h-3.5" />}
+                        <span className="font-mono text-lg font-bold text-[var(--foreground)]">
+                          {stat.number}{stat.suffix}
+                        </span>
+                      </div>
+                      <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--muted)]">
+                        {stat.label[language] || stat.label.en}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-8 text-center">
           <button
             type="button"
             onClick={() => {
@@ -193,12 +214,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
                 workEl?.scrollIntoView({ behavior: 'smooth' });
               }
             }}
-            className="inline-flex flex-col items-center gap-1.5 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors group cursor-pointer"
+            className="inline-flex flex-col items-center gap-2 text-[var(--muted)] hover:text-[var(--foreground)] transition-colors group"
           >
-            <span className="text-[10px] font-mono uppercase tracking-widest">
-              {t('hero.scroll')}
-            </span>
-            <ArrowDown className="w-3.5 h-3.5 animate-bounce group-hover:translate-y-0.5 transition-transform" />
+            <span className="text-[10px] font-mono uppercase tracking-[0.3em]">{t('hero.scroll')}</span>
+            <ArrowDown className="h-4 w-4 animate-bounce group-hover:translate-y-0.5 transition-transform" />
           </button>
         </div>
       </div>

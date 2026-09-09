@@ -24,33 +24,25 @@ export const FeaturedWorkSection: React.FC = () => {
 
   return (
     <section id="work" className="py-24 relative overflow-hidden">
-      {/* Background ambient lighting */}
-      <div className="absolute top-1/2 left-0 w-96 h-96 bg-[var(--color-accent)]/5 rounded-full blur-[130px] pointer-events-none" />
+      <div className="absolute top-1/2 left-0 h-80 w-80 -translate-y-1/2 rounded-full bg-[var(--color-accent)]/5 blur-[120px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
+      <div className="section-shell space-y-10">
+        <div className="text-center max-w-3xl mx-auto space-y-4 reveal">
           <div
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest border"
-            style={{
-              backgroundColor: 'var(--accent-muted)',
-              borderColor: 'var(--color-accent)',
-              color: 'var(--color-accent)',
-            }}
+            className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--color-accent)]"
           >
             <Film className="w-3.5 h-3.5" />
             {t('work.badge')}
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--foreground)] font-syne tracking-tight transition-colors duration-300">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--foreground)] font-syne tracking-[-0.05em]">
             {t('work.title')}
           </h2>
-          <p className="text-[var(--muted)] text-sm sm:text-base leading-relaxed transition-colors duration-300">
+          <p className="text-[var(--muted)] text-sm sm:text-base leading-relaxed">
             {t('work.subtitle')}
           </p>
         </div>
 
-        {/* Dynamic Category Filters */}
-        <div className="flex flex-wrap items-center justify-center gap-2 pb-2">
+        <div className="flex flex-wrap items-center justify-center gap-2 pb-2 reveal reveal-delay-1">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             const name = cat.name[language] || cat.name.en;
@@ -59,10 +51,10 @@ export const FeaturedWorkSection: React.FC = () => {
                 key={cat.id}
                 type="button"
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wider transition-all duration-200 cursor-pointer ${
+                className={`px-4 py-2 rounded-full text-[10px] font-semibold uppercase tracking-[0.18em] transition-all duration-300 cursor-pointer ${
                   isSelected
-                    ? 'bg-[var(--color-accent)] text-black shadow-sm font-bold scale-102'
-                    : 'bg-[var(--surface-muted)] hover:bg-[var(--surface-elevated)] text-[var(--muted)] hover:text-[var(--foreground)] border border-[var(--border)]'
+                    ? 'bg-[var(--color-accent)] text-black shadow-sm'
+                    : 'bg-[var(--surface-muted)] border border-[var(--border)] text-[var(--muted)] hover:text-[var(--foreground)] hover:border-[var(--border-hover)]'
                 }`}
               >
                 {name}
@@ -71,50 +63,37 @@ export const FeaturedWorkSection: React.FC = () => {
           })}
         </div>
 
-        {/* Projects Grid */}
         {filteredProjects.length === 0 ? (
-          <div className="py-16 text-center rounded-3xl bg-[var(--surface)] border border-[var(--border)]">
+          <div className="glass-card py-16 text-center border border-[var(--border)] reveal">
             <Film className="w-12 h-12 text-[var(--muted-foreground)] mx-auto mb-3" />
             <p className="text-[var(--muted)] text-sm">{t('work.empty')}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
             {filteredProjects.map((project) => {
               const title = project.title[language] || project.title.en;
               const subtitle = project.subtitle[language] || project.subtitle.en;
-              const results = project.results
-                ? project.results[language] || project.results.en
-                : null;
+              const results = project.results ? project.results[language] || project.results.en : null;
               const isHovered = hoveredProjectId === project.id;
-              const isVertical = project.aspectRatio === '9:16' || project.aspectRatio === '4:5';
 
               return (
-                <div
+                <article
                   key={project.id}
                   data-cursor="video"
                   onMouseEnter={() => setHoveredProjectId(project.id)}
                   onMouseLeave={() => setHoveredProjectId(null)}
-                  className={`project-card group relative flex flex-col rounded-2xl md:rounded-3xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--border-hover)] transition-all duration-300 overflow-hidden shadow-[var(--card-shadow)] ${
-                    isVertical ? 'lg:col-span-1' : ''
-                  }`}
+                  className="group relative flex flex-col overflow-hidden rounded-[30px] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--card-shadow)] transition-all duration-500 hover:-translate-y-1 hover:border-[var(--border-hover)] reveal"
                 >
-                  {/* Thumbnail / Video Preview Stage */}
-                  <div
-                    className={`relative w-full overflow-hidden bg-black ${getAspectRatioClass(
-                      project.aspectRatio
-                    )}`}
-                  >
-                    {/* Poster Image */}
+                  <div className={`relative w-full overflow-hidden bg-black ${getAspectRatioClass(project.aspectRatio)}`}>
                     <img
                       src={project.thumbnail}
                       alt={title}
                       loading="lazy"
-                      className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${
+                      className={`h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${
                         isHovered && project.previewVideoUrl ? 'opacity-0' : 'opacity-100'
                       }`}
                     />
 
-                    {/* Muted Preview Video on Hover */}
                     {project.previewVideoUrl && isHovered && (
                       <video
                         src={project.previewVideoUrl}
@@ -122,89 +101,74 @@ export const FeaturedWorkSection: React.FC = () => {
                         loop
                         muted
                         playsInline
-                        className="absolute inset-0 w-full h-full object-cover animate-in fade-in duration-300"
+                        className="absolute inset-0 h-full w-full object-cover"
                       />
                     )}
 
-                    {/* Dark gradient overlay for readability over video/image */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
 
-                    {/* Top Badges */}
-                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none z-10">
-                      <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider bg-black/75 backdrop-blur-md text-[var(--foreground)] border border-white/20">
+                    <div className="absolute inset-x-3 top-3 flex items-center justify-between z-10">
+                      <span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-[9px] font-mono uppercase tracking-[0.18em] text-white/80 backdrop-blur-sm">
                         {project.platform}
                       </span>
                       {project.featured && (
-                        <span className="px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider bg-[var(--color-accent)] text-black shadow-xs font-bold">
+                        <span className="rounded-full bg-[var(--color-accent)] px-2.5 py-1 text-[9px] font-mono uppercase tracking-[0.18em] text-black font-bold">
                           Featured
                         </span>
                       )}
                     </div>
 
-                    {/* Center Play Trigger Button */}
                     <button
                       type="button"
                       onClick={() => setActiveVideoProject(project)}
-                      className="absolute inset-0 m-auto w-14 h-14 rounded-full bg-[var(--color-accent)] hover:opacity-95 text-black flex items-center justify-center shadow-lg transform scale-90 group-hover:scale-100 transition-all duration-300 cursor-pointer z-10"
+                      className="absolute inset-0 m-auto flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-accent)] text-black shadow-lg transition-all duration-300 z-10 opacity-90 group-hover:scale-100 scale-90"
                       aria-label={`Play ${title}`}
                     >
-                      <Play className="w-6 h-6 fill-black" />
+                      <Play className="h-5 w-5 fill-black" />
                     </button>
                   </div>
 
-                  {/* Card Content Information */}
-                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                    <div className="space-y-2 text-start">
-                      <div className="flex items-center justify-between text-[11px] font-mono uppercase tracking-wider text-[var(--muted-foreground)]">
-                        <span className="font-semibold" style={{ color: 'var(--color-accent)' }}>{project.client}</span>
+                  <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
+                    <div className="space-y-3 text-start">
+                      <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                        <span style={{ color: 'var(--color-accent)' }}>{project.client}</span>
                         <span>{project.date}</span>
                       </div>
 
-                      <h3 className="text-lg sm:text-xl font-bold text-[var(--foreground)] group-hover:opacity-90 transition-opacity leading-snug">
+                      <h3 className="text-lg sm:text-xl font-bold text-[var(--foreground)] leading-tight">
                         {title}
                       </h3>
 
-                      <p className="text-xs sm:text-sm text-[var(--muted)] line-clamp-2 leading-relaxed">
+                      <p className="text-sm text-[var(--muted)] leading-relaxed line-clamp-2">
                         {subtitle}
                       </p>
                     </div>
 
-                    {/* Metrics pill if present */}
                     {results && (
-                      <div
-                        className="flex items-start gap-2 p-2.5 rounded-xl text-[11px] border text-start"
-                        style={{
-                          backgroundColor: 'var(--accent-muted)',
-                          borderColor: 'var(--border)',
-                          color: 'var(--foreground)',
-                        }}
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" style={{ color: 'var(--color-accent)' }} />
-                        <span className="line-clamp-1">{results}</span>
+                      <div className="mt-4 flex items-start gap-2 rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)] p-3 text-[11px] text-[var(--foreground)]">
+                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" style={{ color: 'var(--color-accent)' }} />
+                        <span>{results}</span>
                       </div>
                     )}
 
-                    {/* Tools badges */}
-                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <div className="mt-4 flex flex-wrap gap-2">
                       {project.toolsUsed?.slice(0, 3).map((tool, idx) => (
                         <span
                           key={idx}
-                          className="px-2 py-0.5 rounded text-[10px] font-mono bg-[var(--surface-muted)] border border-[var(--border-subtle)] text-[var(--muted)]"
+                          className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-2.5 py-1 text-[9px] font-mono uppercase tracking-[0.14em] text-[var(--muted)]"
                         >
                           {tool}
                         </span>
                       ))}
                     </div>
 
-                    {/* Card Actions */}
-                    <div className="pt-3 border-t border-[var(--border)] flex items-center justify-between gap-2">
+                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-[var(--border)] pt-4">
                       <button
                         type="button"
                         onClick={() => setActiveVideoProject(project)}
-                        className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider transition-opacity hover:opacity-80 cursor-pointer"
-                        style={{ color: 'var(--color-accent)' }}
+                        className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--color-accent)]"
                       >
-                        <Play className="w-3 h-3" style={{ fill: 'var(--color-accent)' }} />
+                        <Play className="h-3.5 w-3.5 fill-current" />
                         {t('work.watchVideo')}
                       </button>
 
@@ -212,15 +176,15 @@ export const FeaturedWorkSection: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => setActiveCaseStudyProject(project)}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[var(--surface-muted)] hover:bg-[var(--surface-elevated)] text-[var(--foreground)] border border-[var(--border)] transition-all cursor-pointer"
+                          className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[var(--foreground)]"
                         >
-                          <Sparkles className="w-3 h-3" style={{ color: 'var(--color-accent)' }} />
+                          <Sparkles className="h-3 w-3" style={{ color: 'var(--color-accent)' }} />
                           {t('work.viewCaseStudy')}
                         </button>
                       )}
                     </div>
                   </div>
-                </div>
+                </article>
               );
             })}
           </div>

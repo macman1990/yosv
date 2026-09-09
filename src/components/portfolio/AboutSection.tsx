@@ -16,57 +16,40 @@ export const AboutSection: React.FC = () => {
     .sort((a, b) => a.order - b.order);
 
   return (
-    <section id="about" className="py-24 relative overflow-hidden bg-white/[0.01]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
+    <section id="about" className="py-24 relative overflow-hidden">
+      <div className="section-shell space-y-14">
+        <div className="text-center max-w-3xl mx-auto space-y-4 reveal">
           <div
-            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono uppercase tracking-widest border"
-            style={{
-              backgroundColor: 'var(--accent-muted)',
-              borderColor: 'var(--color-accent)',
-              color: 'var(--color-accent)',
-            }}
+            className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--color-accent)]"
           >
             <User className="w-3.5 h-3.5" />
             {t('about.badge')}
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--foreground)] font-syne tracking-tight transition-colors duration-300">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--foreground)] font-syne tracking-[-0.05em]">
             {t('about.title')}
           </h2>
         </div>
 
-        {/* 2-Column Grid: Photo & Bio + Philosophy & Skills */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          {/* Left Column: Photo Card & Quick Facts */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="relative rounded-3xl overflow-hidden border border-[var(--border)] bg-[var(--surface)] shadow-[var(--card-shadow)] group">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          <div className="lg:col-span-5 space-y-6 reveal reveal-delay-1">
+            <div className="glass-card overflow-hidden border border-[var(--border)] group">
               <img
                 src={profile.photoUrl}
                 alt={profile.name[language] || profile.name.en}
-                className="w-full aspect-[4/5] object-cover filter saturate-105 group-hover:scale-103 transition-transform duration-700"
+                className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none" />
-
-              {/* Bottom Tag overlay */}
-              <div className="absolute bottom-6 left-6 right-6 space-y-2 z-10 text-start">
-                <div
-                  className="flex items-center gap-2 text-xs font-mono px-3 py-1.5 rounded-full border w-fit"
-                  style={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                    borderColor: 'var(--color-accent)',
-                    color: 'var(--color-accent)',
-                  }}
-                >
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6">
+                <div className="mb-3 flex w-fit items-center gap-2 rounded-full border border-[var(--border)] bg-black/30 px-3 py-1.5 text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--color-accent)] backdrop-blur-sm">
                   <MapPin className="w-3.5 h-3.5" />
-                  <span>{location}</span>
+                  {location}
                 </div>
-                <div className="flex items-center justify-between text-[var(--foreground)]">
+                <div className="flex items-end justify-between gap-3 text-white">
                   <div>
-                    <h4 className="text-xl font-bold font-syne text-[var(--foreground)]">
+                    <h4 className="text-xl font-bold font-syne tracking-[-0.04em]">
                       {profile.name[language] || profile.name.en}
                     </h4>
-                    <p className="text-xs text-[var(--muted)] font-mono">
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-white/70 font-mono">
                       {profile.yearsExperience}+ {t('about.yearsExp')}
                     </p>
                   </div>
@@ -75,7 +58,7 @@ export const AboutSection: React.FC = () => {
                       href={profile.cvUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-white text-black hover:bg-zinc-200 transition-colors shadow-md"
+                      className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-2 text-[9px] font-bold uppercase tracking-[0.18em] text-black"
                     >
                       <FileText className="w-3.5 h-3.5" />
                       CV
@@ -85,25 +68,18 @@ export const AboutSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Editorial Philosophy Callout */}
-            <div className="p-6 rounded-3xl bg-[var(--surface)] border border-[var(--border)] shadow-[var(--card-shadow)] space-y-3 text-start">
-              <div
-                className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest font-bold"
-                style={{ color: 'var(--color-accent)' }}
-              >
+            <div className="glass-card border border-[var(--border)] p-5 sm:p-6 text-start">
+              <div className="mb-3 flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--color-accent)]">
                 <Quote className="w-4 h-4" />
                 {t('about.philosophy')}
               </div>
-              <p className="text-sm text-[var(--foreground)] italic leading-relaxed">
-                "{philosophy}"
-              </p>
+              <p className="text-sm text-[var(--foreground)] italic leading-relaxed">"{philosophy}"</p>
             </div>
           </div>
 
-          {/* Right Column: In-depth Biography and Dynamic Skills */}
-          <div className="lg:col-span-7 space-y-8 text-start">
+          <div className="lg:col-span-7 space-y-8 text-start reveal reveal-delay-2">
             <div className="space-y-4">
-              <h3 className="text-2xl font-bold text-[var(--foreground)] font-syne">
+              <h3 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] font-syne tracking-[-0.05em]">
                 {shortBio}
               </h3>
               <p className="text-[var(--muted)] text-sm sm:text-base leading-relaxed">
@@ -111,18 +87,14 @@ export const AboutSection: React.FC = () => {
               </p>
             </div>
 
-            {/* Dynamic Skills with Retention & Level Meters */}
-            <div className="space-y-4 pt-4 border-t border-[var(--border)]">
-              <div className="flex items-center justify-between">
-                <h4
-                  className="text-sm font-bold uppercase tracking-widest font-mono flex items-center gap-2"
-                  style={{ color: 'var(--color-accent)' }}
-                >
+            <div className="space-y-4 border-t border-[var(--border)] pt-5">
+              <div className="flex items-center justify-between gap-3">
+                <h4 className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--color-accent)]">
                   <Flame className="w-4 h-4" />
                   {language === 'ar' ? 'مهارات السرد وما بعد الإنتاج' : 'Core Storytelling & Post-Production Skills'}
                 </h4>
-                <span className="text-xs font-mono text-[var(--muted)]">
-                  {skills.length} {language === 'ar' ? 'مهارات' : 'Disciplines'}
+                <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted)]">
+                  {skills.length} {language === 'ar' ? 'مهارات' : 'disciplines'}
                 </span>
               </div>
 
@@ -132,23 +104,18 @@ export const AboutSection: React.FC = () => {
                   return (
                     <div
                       key={skill.id}
-                      className="p-4 rounded-2xl bg-[var(--surface)] border border-[var(--border)] hover:border-[var(--border-hover)] transition-colors space-y-2.5 shadow-xs"
+                      className="rounded-[22px] border border-[var(--border)] bg-[var(--surface)] p-4 shadow-[var(--card-shadow)]"
                     >
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-semibold text-[var(--foreground)] truncate max-w-[180px]">
+                      <div className="mb-2 flex items-center justify-between text-xs">
+                        <span className="max-w-[180px] truncate font-semibold text-[var(--foreground)]">
                           {skillName}
                         </span>
-                        <span className="font-mono font-bold" style={{ color: 'var(--color-accent)' }}>
-                          {skill.level}%
-                        </span>
+                        <span className="font-mono font-bold text-[var(--color-accent)]">{skill.level}%</span>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-[var(--surface-muted)] overflow-hidden">
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--surface-muted)]">
                         <div
                           className="h-full rounded-full transition-all duration-1000"
-                          style={{
-                            width: `${skill.level}%`,
-                            backgroundColor: 'var(--color-accent)',
-                          }}
+                          style={{ width: `${skill.level}%`, backgroundColor: 'var(--color-accent)' }}
                         />
                       </div>
                     </div>
