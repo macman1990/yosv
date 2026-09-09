@@ -21,6 +21,7 @@ import { EducationCertificationsSection } from './components/portfolio/Education
 import { ToolsSection } from './components/portfolio/ToolsSection';
 import { ContentCreationSection } from './components/portfolio/ContentCreationSection';
 import { BlogSection } from './components/portfolio/BlogSection';
+import { TestimonialsSection } from './components/portfolio/TestimonialsSection';
 import { ContactSection } from './components/portfolio/ContactSection';
 import { CustomSectionsRenderer } from './components/portfolio/CustomSectionsRenderer';
 
@@ -98,6 +99,7 @@ const PortfolioApp: React.FC = () => {
             <ToolsSection />
             <ContentCreationSection />
             <BlogSection />
+            <TestimonialsSection />
             <CustomSectionsRenderer />
             <ContactSection />
           </main>

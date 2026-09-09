@@ -162,6 +162,7 @@ export interface Testimonial {
   rating: number; // 1 - 5
   projectRef?: string;
   date: string;
+  order?: number;
   visible: boolean;
 }
 
@@ -279,9 +280,13 @@ export interface MediaAsset {
   name: string;
   url: string;
   type: 'image' | 'video' | 'pdf' | 'document';
+  mimeType?: string;
   size: string;
   uploadedAt: string;
   dimensions?: string;
+  altText?: string;
+  category?: string;
+  bucketPath?: string;
 }
 
 export interface AppearanceSettings {

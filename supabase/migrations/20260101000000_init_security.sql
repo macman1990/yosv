@@ -55,36 +55,50 @@ WITH CHECK (
   )
 );
 
--- Create a secure view for public consumption that strips out drafts and hidden projects
+-- Create a secure view for public consumption that strips out drafts and hidden items while exposing only intentionally public data.
 CREATE OR REPLACE VIEW public_portfolio_data AS
 SELECT 
-  id, 
+  id,
   jsonb_set(
     jsonb_set(
-      payload, 
-      '{blogPosts}', 
+      jsonb_set(
+        payload,
+        '{blogPosts}',
+        COALESCE(
+          (SELECT jsonb_agg(post)
+           FROM jsonb_array_elements(
+             CASE
+               WHEN payload->'blogPosts' IS NULL OR jsonb_typeof(payload->'blogPosts') != 'array' THEN '[]'::jsonb
+               ELSE payload->'blogPosts'
+             END
+           ) post
+           WHERE (post->>'published')::boolean = true),
+          '[]'::jsonb
+        )
+      ),
+      '{projects}',
       COALESCE(
-        (SELECT jsonb_agg(post) 
+        (SELECT jsonb_agg(proj)
          FROM jsonb_array_elements(
-           CASE 
-             WHEN payload->'blogPosts' IS NULL OR jsonb_typeof(payload->'blogPosts') != 'array' THEN '[]'::jsonb 
-             ELSE payload->'blogPosts' 
+           CASE
+             WHEN payload->'projects' IS NULL OR jsonb_typeof(payload->'projects') != 'array' THEN '[]'::jsonb
+             ELSE payload->'projects'
            END
-         ) post 
-         WHERE (post->>'published')::boolean = true), 
+         ) proj
+         WHERE (proj->>'status') = 'published' OR (proj->>'visible')::boolean = true),
         '[]'::jsonb
       )
     ),
-    '{projects}',
+    '{testimonials}',
     COALESCE(
-      (SELECT jsonb_agg(proj) 
+      (SELECT jsonb_agg(testimonial)
        FROM jsonb_array_elements(
-         CASE 
-           WHEN payload->'projects' IS NULL OR jsonb_typeof(payload->'projects') != 'array' THEN '[]'::jsonb 
-           ELSE payload->'projects' 
+         CASE
+           WHEN payload->'testimonials' IS NULL OR jsonb_typeof(payload->'testimonials') != 'array' THEN '[]'::jsonb
+           ELSE payload->'testimonials'
          END
-       ) proj 
-       WHERE (proj->>'visible')::boolean = true), 
+       ) testimonial
+       WHERE (testimonial->>'visible')::boolean = true),
       '[]'::jsonb
     )
   ) AS payload,

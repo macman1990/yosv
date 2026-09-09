@@ -7,12 +7,21 @@ export const AdminMediaLibraryTab: React.FC = () => {
   const { data, saveData, addToast } = usePortfolio();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState<'all' | 'image' | 'video' | 'other'>('all');
 
   const [newTitle, setNewTitle] = useState('');
   const [newUrl, setNewUrl] = useState('');
   const [newType, setNewType] = useState<'image' | 'video'>('image');
 
-  const mediaList = [...(data.media || [])];
+  const mediaList = [...(data.media || [])]
+    .filter((asset) => {
+      const matchesFilter = filter === 'all' ? true : asset.type === filter || (filter === 'other' && !['image', 'video'].includes(asset.type));
+      const query = search.trim().toLowerCase();
+      const matchesSearch = !query || asset.name.toLowerCase().includes(query) || asset.url.toLowerCase().includes(query);
+      return matchesFilter && matchesSearch;
+    })
+    .sort((a, b) => (b.uploadedAt || '').localeCompare(a.uploadedAt || ''));
 
   const handleAddMedia = async () => {
     if (!newUrl.trim()) {
@@ -68,6 +77,26 @@ export const AdminMediaLibraryTab: React.FC = () => {
           <Plus className="w-4 h-4" />
           <span>Add Media Asset</span>
         </button>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search assets..."
+          className="w-full sm:max-w-xs px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white text-xs"
+        />
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value as 'all' | 'image' | 'video' | 'other')}
+          className="px-3 py-2 rounded-xl bg-[#14161f] border border-white/10 text-white text-xs"
+        >
+          <option value="all">All</option>
+          <option value="image">Images</option>
+          <option value="video">Videos</option>
+          <option value="other">Other</option>
+        </select>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

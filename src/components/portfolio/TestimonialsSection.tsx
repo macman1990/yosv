@@ -6,7 +6,9 @@ import { MessageSquare, Star, Quote } from 'lucide-react';
 export const TestimonialsSection: React.FC = () => {
   const { data, language, t } = usePortfolio();
 
-  const testimonials: Testimonial[] = (data.testimonials || []).filter((t) => t.visible);
+  const testimonials: Testimonial[] = [...(data.testimonials || [])]
+    .filter((t) => t.visible)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 
   if (testimonials.length === 0) return null;
 
@@ -34,8 +36,8 @@ export const TestimonialsSection: React.FC = () => {
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {testimonials.map((test) => {
-            const pos = test.position[language] || test.position.en;
-            const quote = test.testimonial[language] || test.testimonial.en;
+            const pos = test.position?.[language] || test.position?.en || 'Client';
+            const quote = test.testimonial?.[language] || test.testimonial?.en || '';
 
             return (
               <div

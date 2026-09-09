@@ -27,8 +27,18 @@ export class StorageService {
     if (supabase) {
       try {
         const { data: sessionData } = await supabase.auth.getSession();
-        const isAdmin = sessionData?.session?.user != null;
-        
+        const userId = sessionData?.session?.user?.id;
+
+        let isAdmin = false;
+        if (userId) {
+          const { data: adminData, error: adminError } = await supabase
+            .from('admin_users')
+            .select('role')
+            .eq('user_id', userId)
+            .maybeSingle();
+          isAdmin = !adminError && adminData?.role === 'admin';
+        }
+
         // Admins query the raw table (contains drafts), public queries the secure filtered view
         const tableName = isAdmin ? 'portfolio_data' : 'public_portfolio_data';
 

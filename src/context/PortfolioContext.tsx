@@ -20,6 +20,7 @@ interface PortfolioContextType {
   toggleTheme: () => void;
   t: (key: string) => string;
   saveData: (updated: PortfolioData) => Promise<boolean>;
+  updateData: (updated: Partial<PortfolioData> | PortfolioData) => Promise<boolean>;
   resetData: () => Promise<void>;
   activeVideoProject: Project | null;
   setActiveVideoProject: (proj: Project | null) => void;
@@ -173,6 +174,22 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     [addToast, t]
   );
 
+  const updateData = useCallback(
+    async (updated: Partial<PortfolioData> | PortfolioData): Promise<boolean> => {
+      const nextData = (updated as PortfolioData).profile ? (updated as PortfolioData) : { ...data, ...updated };
+      try {
+        const res = await StorageService.savePortfolioData(nextData as PortfolioData);
+        setData(nextData as PortfolioData);
+        addToast(t('admin.saved'), 'success');
+        return res;
+      } catch (error: any) {
+        addToast(error.message || 'Failed to update data', 'error');
+        return false;
+      }
+    },
+    [addToast, data, t]
+  );
+
   const resetData = useCallback(async () => {
     const fresh = await StorageService.resetToDefault();
     setData(fresh);
@@ -191,6 +208,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         toggleTheme,
         t,
         saveData,
+        updateData,
         resetData,
         activeVideoProject,
         setActiveVideoProject,
