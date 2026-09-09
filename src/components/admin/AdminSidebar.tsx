@@ -1,4 +1,5 @@
 import React from 'react';
+import { usePortfolio } from '../../context/PortfolioContext';
 import {
   LayoutDashboard,
   Film,
@@ -41,57 +42,78 @@ interface AdminSidebarProps {
 }
 
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActiveTab }) => {
-  const menuItems: { id: AdminTabId; label: string; icon: React.ReactNode; badge?: string }[] = [
-    { id: 'overview', label: 'Overview', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { id: 'projects', label: 'Projects & Reels', icon: <Film className="w-4 h-4" /> },
-    { id: 'services', label: 'Services', icon: <Layers className="w-4 h-4" /> },
-    { id: 'tools', label: 'Tools & Skills', icon: <Cpu className="w-4 h-4" /> },
-    { id: 'experience', label: 'Experience', icon: <Briefcase className="w-4 h-4" /> },
-    { id: 'education', label: 'Education & Certs', icon: <GraduationCap className="w-4 h-4" /> },
-    { id: 'content', label: 'Content Creator', icon: <Video className="w-4 h-4" /> },
-    { id: 'blog', label: 'Blog & Editorial', icon: <FileText className="w-4 h-4" /> },
-    { id: 'testimonials', label: 'Testimonials', icon: <MessageSquare className="w-4 h-4" /> },
-    { id: 'profile', label: 'Profile & Bio', icon: <User className="w-4 h-4" /> },
-    { id: 'sections', label: 'Section Builder', icon: <Component className="w-4 h-4" /> },
-    { id: 'appearance', label: 'Appearance & UI', icon: <Palette className="w-4 h-4" /> },
-    { id: 'media', label: 'Media Library', icon: <ImageIcon className="w-4 h-4" /> },
-    { id: 'backup', label: 'Backup & JSON', icon: <Database className="w-4 h-4" /> },
-    { id: 'security', label: 'Security & Auth', icon: <ShieldAlert className="w-4 h-4" /> },
+  const { language } = usePortfolio();
+
+  const labelMap: Record<AdminTabId, { en: string; ar: string }> = {
+    overview: { en: 'Overview', ar: 'نظرة عامة' },
+    projects: { en: 'Projects & Reels', ar: 'المشاريع والريلز' },
+    services: { en: 'Services', ar: 'الخدمات' },
+    tools: { en: 'Tools & Skills', ar: 'الأدوات والمهارات' },
+    experience: { en: 'Experience', ar: 'الخبرة' },
+    education: { en: 'Education & Certs', ar: 'التعليم والشهادات' },
+    content: { en: 'Content Creator', ar: 'محتوى المنصة' },
+    blog: { en: 'Blog & Editorial', ar: 'المدونة والتحرير' },
+    testimonials: { en: 'Testimonials', ar: 'آراء العملاء' },
+    profile: { en: 'Profile & Bio', ar: 'الملف الشخصي والسيرة' },
+    sections: { en: 'Section Builder', ar: 'بناء الأقسام' },
+    appearance: { en: 'Appearance & UI', ar: 'المظهر والواجهة' },
+    media: { en: 'Media Library', ar: 'مكتبة الوسائط' },
+    backup: { en: 'Backup & JSON', ar: 'النسخ الاحتياطي والـ JSON' },
+    security: { en: 'Security & Auth', ar: 'الأمان والمصادقة' },
+  };
+
+  const menuItems: { id: AdminTabId; icon: React.ReactNode }[] = [
+    { id: 'overview', icon: <LayoutDashboard className="h-4 w-4" /> },
+    { id: 'projects', icon: <Film className="h-4 w-4" /> },
+    { id: 'services', icon: <Layers className="h-4 w-4" /> },
+    { id: 'tools', icon: <Cpu className="h-4 w-4" /> },
+    { id: 'experience', icon: <Briefcase className="h-4 w-4" /> },
+    { id: 'education', icon: <GraduationCap className="h-4 w-4" /> },
+    { id: 'content', icon: <Video className="h-4 w-4" /> },
+    { id: 'blog', icon: <FileText className="h-4 w-4" /> },
+    { id: 'testimonials', icon: <MessageSquare className="h-4 w-4" /> },
+    { id: 'profile', icon: <User className="h-4 w-4" /> },
+    { id: 'sections', icon: <Component className="h-4 w-4" /> },
+    { id: 'appearance', icon: <Palette className="h-4 w-4" /> },
+    { id: 'media', icon: <ImageIcon className="h-4 w-4" /> },
+    { id: 'backup', icon: <Database className="h-4 w-4" /> },
+    { id: 'security', icon: <ShieldAlert className="h-4 w-4" /> },
   ];
 
   return (
-    <aside className="w-64 bg-[#0d0e14] border-r border-white/10 flex flex-col justify-between shrink-0 h-full overflow-y-auto">
-      <div className="p-4 space-y-1">
-        <div className="px-3 py-3 mb-2 flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 font-bold">
+    <aside className="h-full w-64 shrink-0 overflow-y-auto border-r border-[var(--border)] bg-[var(--surface)]">
+      <div className="space-y-1 p-4">
+        <div className="mb-2 flex items-center gap-2 px-3 py-3">
+          <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--color-accent)]" />
+          <span className="text-xs font-mono font-bold uppercase tracking-[0.24em] text-[var(--muted)]">
             Studio CMS v3.4
           </span>
         </div>
 
         {menuItems.map((item) => {
           const isActive = activeTab === item.id;
+          const label = labelMap[item.id][language];
           return (
             <button
               key={item.id}
               type="button"
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+              className={`flex w-full cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-medium transition-all ${
                 isActive
-                  ? 'bg-emerald-500 text-black font-bold shadow-[0_0_15px_rgba(16,185,129,0.3)]'
-                  : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                  ? 'bg-[var(--color-accent)] text-black shadow-[0_0_15px_rgba(16,185,129,0.3)]'
+                  : 'text-[var(--muted)] hover:bg-[var(--surface-muted)] hover:text-[var(--foreground)]'
               }`}
             >
               <div className="flex items-center gap-2.5">
                 {item.icon}
-                <span>{item.label}</span>
+                <span>{label}</span>
               </div>
             </button>
           );
         })}
       </div>
 
-      <div className="p-4 border-t border-white/10 text-[11px] font-mono text-zinc-500 text-center">
+      <div className="border-t border-[var(--border)] p-4 text-center text-[11px] font-mono text-[var(--muted-foreground)]">
         Aetheria OS • Vercel Ready
       </div>
     </aside>

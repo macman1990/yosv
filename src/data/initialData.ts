@@ -11,21 +11,21 @@ export const initialPortfolioData: PortfolioData = {
       ar: 'محرر فيديو ومسوق رقمي مستقل',
     },
     shortTagline: {
-      en: 'Turning raw footage and ideas into high-impact content through video editing, social media content, and digital marketing.',
-      ar: 'تحويل اللقطات الخام والأفكار إلى محتوى مرئي مؤثر عبر تحرير الفيديو، ومحتوى منصات التواصل، والتسويق الرقمي.',
+      en: 'I turn rough footage into videos that feel clear, confident, and worth watching.',
+      ar: 'أحول اللقطات الخام إلى فيديوهات تبدو واضحة وواثقة وقيمة للمشاهدة.',
     },
     shortBio: {
-      en: 'Freelance Video Editor and Digital Marketing specialist based in Cairo, Egypt. Experienced in short-form, long-form, and retention-driven video editing since May 2019.',
-      ar: 'محرر فيديو ومسوق رقمي مستقل مقيم في القاهرة، مصر. متخصص في تحرير الفيديوهات القصيرة والمطولة والمحتوى الهادف لزيادة نسب المشاهدة منذ مايو 2019.',
+      en: 'Freelance video editor based in Cairo, helping brands, creators, and businesses shape content that feels natural, intentional, and easy to watch.',
+      ar: 'محرر فيديو مستقل في القاهرة، أساعد العلامات التجارية وصناع المحتوى والشركات على بناء محتوى يبدو طبيعيًا وذكيًا وممتعًا للمشاهدة.',
     },
     longBio: {
-      en: 'I help businesses, creators, and personal brands turn raw footage and ideas into content through video editing, social media content, and digital marketing. From short-form viral TikToks, Instagram Reels, and YouTube Shorts to YouTube long-form, talking-head content, and educational videos, I combine technical mastery across DaVinci Resolve, Adobe Premiere Pro, After Effects, and CapCut with visual storytelling, captions, color correction, audio cleanup, synchronization, and motion graphics.',
-      ar: 'أساعد الشركات، صناع المحتوى، والعلامات التجارية الشخصية على تحويل اللقطات الخام والأفكار إلى محتوى احترافي عبر تحرير الفيديو، وصناعة محتوى منصات التواصل، والتسويق الرقمي. من المقاطع القصيرة على تيك توك وإنستغرام ريلز ويوتيوب شورتس إلى فيديوهات يوتيوب المطولة، والمحتوى الحواري والتعليمي، أدمج بين الإتقان البرمجي لأدوات دافينشي ريزولف وأدوبي بريمير برو وأفتر إفكتس وكاب كت، وبين السرد البصري، النصوص التفاعلية، معالجة الألوان، نقاء وتزامن الصوت، والمؤثرات الحركية.',
+      en: 'I’ve spent years chopping, pacing, cleaning, and polishing footage until it feels like it was meant to be seen this way. I work on short-form content, YouTube edits, talking-head pieces, and branded videos where the goal is simple: make the message hit harder, feel smoother, and land faster. I like videos that don’t waste people’s time. I care about the rhythm, the timing, the little sound details, and the decisions that make a cut feel clean instead of forced.',
+      ar: 'قضيت سنين في تقطيع اللقطات، ضبط الإيقاع، تنظيف الصوت، وتلميع المونتاج حتى يشعر كل قطع وكأنّه كان مصممًا ليُشاهد بهذه الطريقة. أعمل على المحتوى القصير، وتحرير يوتيوب، وفيديوهات الحوار، ومقاطع العلامات التجارية، مع هدف بسيط: أن تصل الرسالة بشكل أقوى، وأن تبدو أكثر سلاسة، وأن تنزل بسرعة أكبر. أحب الفيديوهات التي لا تضيع وقت الناس. أنا أركز على الإيقاع، التوقيت، تفاصيل الصوت الصغيرة، والقرارات التي تجعل القطع يبدو ناعمًا بدلًا من مبالغًا فيه.',
     },
     yearsExperience: 7,
     philosophy: {
-      en: 'Every cut, caption, and sound element must serve the viewer’s attention and the brand’s message. Through rhythm, pacing, and clarity, raw footage becomes compelling storytelling.',
-      ar: 'كل انتقال، نص توضيحي، أو عنصر صوتي يجب أن يخدم انتباه المشاهد ورسالة العلامة التجارية. عبر الإيقاع المتناسق والوضوح، تتحول اللقطات الخام إلى قصة مؤثرة تأسر المتابعين.',
+      en: 'I care about the details that make a video feel human: the cut that lands at the right second, the pause that gives the idea room, the sound that feels natural, and the rhythm that makes people stay with it.',
+      ar: 'أنا أركز على التفاصيل التي تجعل الفيديو يبدو بشريًا: القطع الذي يضبط في اللحظة المناسبة، التوقف الذي يمنح الفكرة مساحة، الصوت الطبيعي، والإيقاع الذي يحافظ على انتباه المشاهد.',
     },
     photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&auto=format&fit=crop&q=80',
     cvUrl: '#',
@@ -51,16 +51,16 @@ export const initialPortfolioData: PortfolioData = {
     {
       id: 'proj-1',
       title: {
-        en: 'High-Retention Vertical Video Campaign',
-        ar: 'حملة فيديوهات رأسية عالية الاستبقاء',
+        en: 'Short-form content built to hold attention',
+        ar: 'محتوى قصير مصمم ليبقى الناس في المتصفح',
       },
       subtitle: {
-        en: 'Short-form content series engineered for TikTok, Instagram Reels, and YouTube Shorts.',
-        ar: 'سلسلة محتوى رأسي مصممة لمنصات تيك توك، إنستغرام ريلز، ويوتيوب شورتس.',
+        en: 'A vertical content series cut for TikTok, Reels, and Shorts without wasting the first two seconds.',
+        ar: 'سلسلة محتوى رأسية تم مونتاجها لتيك توك، ريلز، وشورتس دون إهدار أول ثانيتين من الانتباه.',
       },
       description: {
-        en: 'Crafted dynamic short-form videos with instant visual hooks, animated captions, sound effects, and fast-paced cutaways to maximize viewer completion rate.',
-        ar: 'صناعة فيديوهات قصيرة حيوية بخطافات بصرية أولية، نصوص متحركة، مؤثرات صوتية وقطع سريع لرفع معدل إكمال المشاهدة.',
+        en: 'Fast-paced edits, clean captions, punchy sound choices, and tighter rhythm so the message lands before people scroll away.',
+        ar: 'مونتاج سريع، ترجمات نظيفة، مؤثرات صوتية قوية، وإيقاع أكثر ضيقًا حتى تصل الرسالة قبل أن يمرر الناس الفيديو.',
       },
       category: 'short-form',
       client: 'Content Creators & Personal Brands',
@@ -110,16 +110,16 @@ export const initialPortfolioData: PortfolioData = {
     {
       id: 'proj-2',
       title: {
-        en: 'YouTube Long-Form & Educational Video',
-        ar: 'فيديو يوتيوب مطول ومحتوى تعليمي',
+        en: 'Long-form edits that feel easy to follow',
+        ar: 'مونتاج طويل يسير بسهولة ويشعر بالوضوح',
       },
       subtitle: {
-        en: 'In-depth long-form storytelling with multi-cam synchronization, color correction, and motion graphics.',
-        ar: 'سرد قصصي مطول متكامل مع تزامن متعدد الكاميرات، تصحيح الألوان، وعناصر موشن جرافيكس.',
+        en: 'Longer-form storytelling, tighter pacing, cleaner audio, and a visual flow that keeps the viewer with you.',
+        ar: 'سرد أطول مع إيقاع أقوى، صوت أنظف، وتدفق بصري يحافظ على متابعة المشاهد.',
       },
       description: {
-        en: 'Structured comprehensive raw footage into a cohesive narrative. Balanced dialogue audio, removed unwanted pauses, added informational overlays, and calibrated natural color grading.',
-        ar: 'إعادة هيكلة لقطات مطولة خام إلى قصة متماسكة. معالجة نقاء الصوت، حذف التردد، إضافة عناصر توضيحية وتدريج لوني طبيعي متوازن.',
+        en: 'I shaped raw footage into a natural narrative, cleaned the dialogue, removed dead space, and built a polished rhythm that makes educational content feel smoother and more credible.',
+        ar: 'قمت بتجميع اللقطات الخام في قصة طبيعية، وتنظيف الحوار، وإزالة الفراغات الميتة، وبناء إيقاع مصقول يجعل المحتوى التعليمي يبدو أنظف وأكثر مصداقية.',
       },
       category: 'youtube',
       client: 'Educational Creators & Digital Businesses',
@@ -150,16 +150,16 @@ export const initialPortfolioData: PortfolioData = {
     {
       id: 'proj-3',
       title: {
-        en: 'Talking-Head & Thought Leadership Content',
-        ar: 'محتوى حواري وبناء العلامة الشخصية',
+        en: 'Talking-head edits that feel warm and trustworthy',
+        ar: 'مونتاج حواري يبدو دافئًا ومطمئنًا',
       },
       subtitle: {
-        en: 'Clean, professional talking-head edit with audio cleanup, multi-angle cuts, and kinetic titles.',
-        ar: 'مونتاج حواري احترافي ونقي مع معالجة التشويش الصوتي، القطع متعدد الزوايا، والعناوين الحركية.',
+        en: 'Clean audio, sharper cuts, calmer pacing, and a more polished look that helps a message land with confidence.',
+        ar: 'صوت أنظف، قطع أكثر حدة، إيقاع هادئ، ومظهر أكثر احترافية يساعد الرسالة على الاستقرار والثقة.',
       },
       description: {
-        en: 'Enhanced executive and creator presentations with speech cleanup, noise reduction, natural color grading, and branded graphics for LinkedIn and YouTube.',
-        ar: 'تطوير المحتوى الحواري للخبراء وصناع المحتوى عبر إزالة الضوضاء الصوتية، معالجة ألوان البشرة الطبيعية، وإضافة هوية بصرية رقمية مناسبة لمنصات التواصل.',
+        en: 'I refined founder and creator talking-head content so it felt more natural, more confident, and easier to trust. The goal was to keep the personality front and center without the edit feeling overworked.',
+        ar: 'قمت بتلميع محتوى المؤثرين ورجال الأعمال الحواري حتى يبدو أكثر طبيعية وثقة وأسهل في التقدير. الهدف كان إبقاء الشخصية في المقدمة دون أن يبدو المونتاج مصطنعًا أو مفرطًا.',
       },
       category: 'talking-head',
       client: 'Personal Brands & Professional Founders',
@@ -189,16 +189,16 @@ export const initialPortfolioData: PortfolioData = {
     {
       id: 'proj-4',
       title: {
-        en: 'Motion Graphics, Transitions & Visual Effects Suite',
-        ar: 'حزمة موشن جرافيكس وانتقالات ومؤثرات بصرية',
+        en: 'Motion layers that make the edit feel alive',
+        ar: 'طبقات حركة تجعل المونتاج يبدو حيًا',
       },
       subtitle: {
-        en: 'Custom kinetic overlays, title sequences, smooth wipes, and digital marketing graphics.',
-        ar: 'عناصر نصوص حركية مخصصة، مقدمات عناوين، انتقالات سلسة، ورسوم تسويقية تفاعلية.',
+        en: 'Transitions, overlays, and motion graphics that support the story instead of drowning it.',
+        ar: 'انتقالات، طبقات بصرية، ومؤثرات حركة تدعم القصة بدلًا من أن تشتت انتباه المشاهد.',
       },
       description: {
-        en: 'Designed engaging visual transitions, animated pointers, subscribe cards, lower-thirds, and visual effects in After Effects to keep audiences visually stimulated.',
-        ar: 'تصميم انتقالات بصرية احترافية، مؤشرات توضيحية متحركة، بطاقات متابعة، وتأثيرات بصرية في أفتر إفكتس لإبقاء المشاهد متفاعلاً طوال الفيديو.',
+        en: 'I build motion pieces that feel smooth and intentional, using overlays, transitions, and brand-led graphics that add energy without turning the edit into a fireworks show.',
+        ar: 'أقوم ببناء عناصر حركة تبدو ناعمة ومقصودة باستخدام طبقات، انتقالات، ورسومات هويّة تضيف طاقة دون تحويل الفيديو إلى عرض أضواء مبالغ فيه.',
       },
       category: 'motion-vfx',
       client: 'Digital Marketing & Content Creators',

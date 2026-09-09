@@ -3,10 +3,10 @@ import { Language } from '../types/portfolio';
 export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
   en: {
     // Navigation
-    'nav.work': 'Featured Work',
+    'nav.work': 'Work',
     'nav.services': 'Services',
-    'nav.skills': 'Skills & Tools',
-    'nav.content': 'Content & Shorts',
+    'nav.skills': 'Skills',
+    'nav.content': 'Content',
     'nav.experience': 'Experience',
     'nav.testimonials': 'Testimonials',
     'nav.contact': 'Contact',
@@ -14,35 +14,35 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     'nav.openAdmin': 'Admin Terminal',
 
     // Hero
-    'hero.badge': 'Available for Global Commissions & High-Yield Series',
-    'hero.viewWork': 'Explore Selected Works',
-    'hero.contactMe': 'Let’s Collaborate',
-    'hero.scroll': 'Scroll to Discover',
-    'hero.statsViews': 'Views Generated',
-    'hero.statsProjects': 'Projects Cut',
-    'hero.statsRetention': 'Avg. Retention',
+    'hero.badge': 'Available for projects and partnerships',
+    'hero.viewWork': 'See the work',
+    'hero.contactMe': 'Let’s talk',
+    'hero.scroll': 'Scroll down',
+    'hero.statsViews': 'Views generated',
+    'hero.statsProjects': 'Projects cut',
+    'hero.statsRetention': 'Avg. retention',
 
     // About
-    'about.badge': 'Creative Identity & Vision',
-    'about.title': 'Not Just Editing. Psychological Story Architecture.',
-    'about.downloadCv': 'Download Production CV',
-    'about.philosophy': 'Core Editorial Philosophy',
-    'about.statsTitle': 'Production Footprint',
-    'about.yearsExp': 'Years in Cinema & Digital Media',
-    'about.location': 'Base Location',
+    'about.badge': 'About me',
+    'about.title': 'I cut videos that keep people watching.',
+    'about.downloadCv': 'Download CV',
+    'about.philosophy': 'How I work',
+    'about.statsTitle': 'My footprint',
+    'about.yearsExp': 'Years editing and producing',
+    'about.location': 'Based in',
 
     // Work / Projects
-    'work.badge': 'Selected Filmography & Directing',
-    'work.title': 'Engineered to Captivate & Retain',
-    'work.subtitle': 'A cross-section of investigative YouTube essays, viral 9:16 short-form campaigns, commercial motion, and 12-bit color science.',
-    'work.all': 'All Works',
-    'work.watchVideo': 'Watch Full Reel',
-    'work.viewCaseStudy': 'In-Depth Case Study',
-    'work.toolsUsed': 'Production Stack',
-    'work.results': 'Impact & Metrics',
-    'work.client': 'Client / Creator',
-    'work.empty': 'No projects available in this category.',
-    'work.previewHover': 'Hover to Preview Video',
+    'work.badge': 'Selected work',
+    'work.title': 'Videos built to hold attention and feel honest.',
+    'work.subtitle': 'A mix of short-form edits, creator storytelling, YouTube work, and motion-led pieces that actually hold attention.',
+    'work.all': 'All work',
+    'work.watchVideo': 'Watch reel',
+    'work.viewCaseStudy': 'Case study',
+    'work.toolsUsed': 'Tools used',
+    'work.results': 'Impact',
+    'work.client': 'Client',
+    'work.empty': 'No projects are available in this category right now.',
+    'work.previewHover': 'Hover to preview',
 
     // Case study modal
     'case.title': 'Case Study Analysis',
@@ -56,10 +56,10 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     'case.close': 'Close Case Study',
 
     // Services
-    'services.badge': 'Disciplines & Capabilities',
-    'services.title': 'Full-Spectrum Post-Production & Ideation',
-    'services.subtitle': 'From concept ideation and retention-proof scripting to final 4K broadcast masters and Dolby Vision grade.',
-    'services.inquire': 'Inquire for Service',
+    'services.badge': 'What I do',
+    'services.title': 'Editing support for real content and real people.',
+    'services.subtitle': 'From rough footage to final cut, I help shape content that feels clear, sharp, and worth watching.',
+    'services.inquire': 'Ask about this',
 
     // Tools & Skills
     'tools.badge': 'Technical Proficiency',
@@ -91,23 +91,23 @@ export const UI_TRANSLATIONS: Record<Language, Record<string, string>> = {
     'testimonials.title': 'What Directors & Creators Say',
 
     // Contact
-    'contact.badge': 'Start a Project',
-    'contact.title': 'Let’s Create Something Iconic',
-    'contact.subtitle': 'Looking for an editor who elevates your storytelling beyond stock transitions and generic cuts? Tell me about your next project.',
-    'contact.name': 'Your Name or Agency',
-    'contact.email': 'Email Address',
-    'contact.projectType': 'Project Discipline',
-    'contact.projectTypePlaceholder': 'e.g. YouTube Series, Viral Shorts, Color Grade',
-    'contact.budget': 'Estimated Budget Tier',
-    'contact.message': 'Project Vision & Links to Footage',
-    'contact.send': 'Send Inquiry',
-    'contact.sending': 'Transmitting Message...',
-    'contact.whatsappDirect': 'Direct WhatsApp Chat',
-    'contact.emailDirect': 'Direct Email',
+    'contact.badge': 'Start a project',
+    'contact.title': 'Let’s make something people actually watch.',
+    'contact.subtitle': 'Tell me what you’re making, what kind of feeling you want it to have, and what you need from the edit. We’ll make it sensible, sharp, and not painfully generic.',
+    'contact.name': 'Your name or studio',
+    'contact.email': 'Email address',
+    'contact.projectType': 'Type of project',
+    'contact.projectTypePlaceholder': 'e.g. YouTube series, short-form content, color grade',
+    'contact.budget': 'Budget range',
+    'contact.message': 'Project details and links',
+    'contact.send': 'Send inquiry',
+    'contact.sending': 'Sending...',
+    'contact.whatsappDirect': 'WhatsApp chat',
+    'contact.emailDirect': 'Email',
 
     // Footer
     'footer.rights': 'All rights reserved.',
-    'footer.builtWith': 'Crafted with cinematic precision for 2030+ creators.',
+    'footer.builtWith': 'Built for people who like good edits and good stories.',
     'footer.adminTrigger': 'CMS Access',
 
     // Admin Common

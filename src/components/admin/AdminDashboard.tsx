@@ -19,7 +19,7 @@ import { AdminBackupSyncTab } from './tabs/AdminBackupSyncTab';
 import { AdminSecurityTab } from './tabs/AdminSecurityTab';
 
 export const AdminDashboard: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
   const [activeTab, setActiveTab] = useState<AdminTabId>('overview');
   const [isSaving, setIsSaving] = useState(false);
 
@@ -33,16 +33,17 @@ export const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-[90000] flex flex-col bg-[#090a0f] text-zinc-200 overflow-hidden font-sans">
-      {/* Top Header */}
+    <div
+      dir={language === 'ar' ? 'rtl' : 'ltr'}
+      className="fixed inset-0 z-[90000] flex flex-col overflow-hidden font-sans bg-[var(--background)] text-[var(--foreground)]"
+    >
       <AdminHeader onSave={handleGlobalSave} isSaving={isSaving} />
 
-      {/* Main Admin Workspace with Sidebar and Content Stage */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex flex-1 overflow-hidden">
         <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <main className="flex-1 overflow-y-auto p-6 md:p-10 bg-[#090a0f]">
-          <div className="max-w-6xl mx-auto pb-16">
+        <main className="flex-1 overflow-y-auto bg-[var(--background)] p-6 md:p-10">
+          <div className="mx-auto max-w-6xl pb-16">
             {activeTab === 'overview' && <AdminOverviewTab onNavigate={setActiveTab} />}
             {activeTab === 'projects' && <AdminProjectsTab />}
             {activeTab === 'services' && <AdminServicesTab />}
