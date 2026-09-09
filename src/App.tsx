@@ -32,6 +32,12 @@ const PortfolioApp: React.FC = () => {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const [showSplash, setShowSplash] = useState(true);
 
+  const showStartProject = data.siteFeatures?.startProject ?? true;
+  const showPackages = data.siteFeatures?.packages ?? true;
+  const showTestimonials = data.siteFeatures?.testimonials ?? true;
+  const showBlog = data.siteFeatures?.blog ?? true;
+  const showContentHub = data.siteFeatures?.contentHub ?? true;
+
   useEffect(() => {
     const timeout = window.setTimeout(() => setShowSplash(false), 1800);
     return () => window.clearTimeout(timeout);
@@ -106,12 +112,12 @@ const PortfolioApp: React.FC = () => {
             <ExperienceSection />
             <EducationCertificationsSection />
             <ToolsSection />
-            <ContentCreationSection />
-            <BlogSection />
-            <TestimonialsSection />
+            {showContentHub && <ContentCreationSection />}
+            {showBlog && <BlogSection />}
+            {showTestimonials && <TestimonialsSection />}
             <CustomSectionsRenderer />
-            <PricingSection />
-            <ContactSection />
+            {showPackages && <PricingSection />}
+            {showStartProject && <ContactSection />}
           </main>
           
           <Footer />

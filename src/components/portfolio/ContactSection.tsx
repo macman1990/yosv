@@ -14,18 +14,30 @@ export const ContactSection: React.FC = () => {
   const [email, setEmail] = useState('');
   const [projectType, setProjectType] = useState('');
   const [budget, setBudget] = useState('');
+  const [briefUrl, setBriefUrl] = useState('');
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const ctaText = contact.ctaText[language] || contact.ctaText.en;
   const successMsg = contact.successMessage[language] || contact.successMessage.en;
+  const showProjectBrief = data.siteFeatures?.projectBrief ?? true;
+  const showAvailability = (data.siteFeatures?.availability ?? true) && data.availability?.visible;
+  const showClientLogos = (data.siteFeatures?.clientLogos ?? true) && (data.clientLogos || []).some((logo) => logo.visible);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !message.trim()) {
       addToast('Please fill out name, email, and message.', 'error');
       return;
+    }
+
+    if (showProjectBrief && briefUrl.trim()) {
+      const sanitized = sanitizeExternalUrl(briefUrl.trim());
+      if (!sanitized) {
+        addToast('Please enter a valid project brief URL.', 'error');
+        return;
+      }
     }
 
     setSubmitting(true);
@@ -86,6 +98,20 @@ export const ContactSection: React.FC = () => {
                 Direct booking for channel retainers, commercial post-production, high-yield viral series, and scriptwriting workshops.
               </p>
 
+              {showAvailability && (
+                <div className="mt-4 rounded-2xl border border-[var(--color-accent)]/35 bg-[var(--accent-muted)] p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--color-accent)]">
+                      {data.availability.label?.[language] || data.availability.label?.en || 'Available'}
+                    </span>
+                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_18px_rgba(52,211,153,0.9)]" />
+                  </div>
+                  <p className="mt-2 text-xs text-[var(--muted)] leading-relaxed">
+                    {data.availability.description?.[language] || data.availability.description?.en || ''}
+                  </p>
+                </div>
+              )}
+
               <div className="mt-6 space-y-3">
                 <a
                   href={`mailto:${contact.email}`}
@@ -128,6 +154,25 @@ export const ContactSection: React.FC = () => {
                 </a>
               </div>
             </div>
+
+            {showClientLogos && (
+              <div className="glass-card border border-[var(--border)] p-5">
+                <p className="mb-4 text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+                  Trusted by teams shipping fast
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  {(data.clientLogos || []).filter((logo) => logo.visible).map((logo) => (
+                    <img
+                      key={logo.id}
+                      src={logo.logoUrl}
+                      alt={logo.name}
+                      title={logo.name}
+                      className="h-10 w-20 rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] object-cover opacity-80"
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="glass-card border border-[var(--border)] p-5 flex flex-wrap gap-2">
               {(data.socialLinks || []).filter((s) => s.visible).map((social) => (
@@ -235,6 +280,21 @@ export const ContactSection: React.FC = () => {
                         <option value="$3k - $8k">$3,000 – $8,000</option>
                         <option value="$8k - $20k+">$8,000 – $20,000+</option>
                       </select>
+                    </div>
+                  )}
+
+                  {showProjectBrief && (
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                        Project brief URL
+                      </label>
+                      <input
+                        type="url"
+                        value={briefUrl}
+                        onChange={(e) => setBriefUrl(e.target.value)}
+                        placeholder="https://drive.google.com/..."
+                        className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--color-accent)] focus:outline-none"
+                      />
                     </div>
                   )}
 

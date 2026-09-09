@@ -867,6 +867,38 @@ A strong CTA should feel like the natural conclusion to the story, not an awkwar
     { id: 'soc-5', platform: 'instagram', label: 'Instagram', url: 'https://instagram.com', icon: 'Instagram', order: 5, visible: false },
   ],
 
+  siteFeatures: {
+    startProject: true,
+    projectBrief: true,
+    availability: true,
+    clientLogos: true,
+    testimonials: true,
+    packages: true,
+    blog: true,
+    contentHub: true,
+  },
+
+  clientLogos: [
+    { id: 'logo-1', name: 'Northstar Studio', logoUrl: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&auto=format&fit=crop&q=80', websiteUrl: 'https://example.com', visible: true, order: 1 },
+    { id: 'logo-2', name: 'Elevate Labs', logoUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&auto=format&fit=crop&q=80', websiteUrl: 'https://example.com', visible: true, order: 2 },
+    { id: 'logo-3', name: 'Aster Media', logoUrl: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&auto=format&fit=crop&q=80', websiteUrl: 'https://example.com', visible: true, order: 3 },
+    { id: 'logo-4', name: 'Signal House', logoUrl: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=400&auto=format&fit=crop&q=80', websiteUrl: 'https://example.com', visible: true, order: 4 },
+  ],
+
+  availability: {
+    status: 'available',
+    visible: true,
+    label: {
+      en: 'Available for select projects',
+      ar: 'متاح لمشاريع محددة',
+    },
+    description: {
+      en: 'Booking for Q2 campaigns, brand edits, and content systems.',
+      ar: 'توجد فتحات لبرامج الحملة، المونتاج التسويقي، ومشاريع المحتوى.',
+    },
+    nextAvailableDate: '2026-04-01',
+  },
+
   customSections: [],
 
   pages: [],

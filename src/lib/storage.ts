@@ -62,12 +62,14 @@ export class StorageService {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        // Merge with initial data to ensure all keys exist
         this.cachedData = {
           ...initialPortfolioData,
           ...parsed,
+          siteFeatures: { ...initialPortfolioData.siteFeatures, ...(parsed.siteFeatures || {}) },
+          availability: { ...initialPortfolioData.availability, ...(parsed.availability || {}) },
           blogPosts: parsed.blogPosts && parsed.blogPosts.length > 0 ? parsed.blogPosts : initialPortfolioData.blogPosts,
           blogCategories: parsed.blogCategories && parsed.blogCategories.length > 0 ? parsed.blogCategories : initialPortfolioData.blogCategories,
+          clientLogos: Array.isArray(parsed.clientLogos) && parsed.clientLogos.length > 0 ? parsed.clientLogos : initialPortfolioData.clientLogos,
         };
         return this.cachedData;
       }
@@ -135,7 +137,13 @@ export class StorageService {
     if (!parsed.profile || !parsed.projects) {
       throw new Error('Invalid portfolio backup JSON format.');
     }
-    const merged = { ...initialPortfolioData, ...parsed };
+    const merged: PortfolioData = {
+      ...initialPortfolioData,
+      ...parsed,
+      siteFeatures: { ...initialPortfolioData.siteFeatures, ...(parsed.siteFeatures || {}) },
+      availability: { ...initialPortfolioData.availability, ...(parsed.availability || {}) },
+      clientLogos: Array.isArray(parsed.clientLogos) && parsed.clientLogos.length > 0 ? parsed.clientLogos : initialPortfolioData.clientLogos,
+    } as PortfolioData;
     await this.savePortfolioData(merged);
     return merged;
   }

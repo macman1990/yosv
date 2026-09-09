@@ -259,6 +259,73 @@ export interface SocialLink {
   visible: boolean;
 }
 
+export type FeatureFlagKey =
+  | 'startProject'
+  | 'projectBrief'
+  | 'availability'
+  | 'clientLogos'
+  | 'testimonials'
+  | 'packages'
+  | 'blog'
+  | 'contentHub';
+
+export interface FeatureFlag {
+  key: FeatureFlagKey;
+  enabled: boolean;
+  label: LocalizedString;
+  description: LocalizedString;
+}
+
+export interface SiteFeatureFlags {
+  startProject: boolean;
+  projectBrief: boolean;
+  availability: boolean;
+  clientLogos: boolean;
+  testimonials: boolean;
+  packages: boolean;
+  blog: boolean;
+  contentHub: boolean;
+}
+
+export interface ClientLogo {
+  id: string;
+  name: string;
+  logoUrl: string;
+  websiteUrl?: string;
+  visible: boolean;
+  order: number;
+}
+
+export type AvailabilityStatusValue = 'available' | 'limited' | 'booked';
+
+export interface AvailabilityStatus {
+  status: AvailabilityStatusValue;
+  visible: boolean;
+  label: LocalizedString;
+  description: LocalizedString;
+  nextAvailableDate?: string;
+}
+
+export interface ProjectInquiry {
+  id: string;
+  created_at: string;
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  service?: string;
+  package?: string;
+  project_title?: string;
+  project_description?: string;
+  brief_url?: string;
+  deadline?: string;
+  budget?: string;
+  status: 'new' | 'reviewing' | 'contacted' | 'in_progress' | 'completed' | 'rejected';
+  admin_notes?: string;
+  locale: Language;
+  honeypot?: string;
+}
+
 export interface CustomSectionBlock {
   id: string;
   type: 'text' | 'image' | 'video' | 'button' | 'card' | 'stat' | 'embed';
@@ -393,6 +460,9 @@ export interface PortfolioData {
   blogPosts: BlogPost[];
   blogCategories: BlogCategory[];
   socialLinks: SocialLink[];
+  siteFeatures: SiteFeatureFlags;
+  clientLogos: ClientLogo[];
+  availability: AvailabilityStatus;
   customSections: CustomSection[];
   pages: CustomPage[];
   media: MediaAsset[];
@@ -401,4 +471,5 @@ export interface PortfolioData {
   seo: SEOSettings;
   contact: ContactSettings;
   analytics: AnalyticsEvent[];
+  projectInquiries?: ProjectInquiry[];
 }
