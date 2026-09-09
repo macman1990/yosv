@@ -25,6 +25,7 @@ import { BlogSection } from './components/portfolio/BlogSection';
 import { TestimonialsSection } from './components/portfolio/TestimonialsSection';
 import { ContactSection } from './components/portfolio/ContactSection';
 import { CustomSectionsRenderer } from './components/portfolio/CustomSectionsRenderer';
+import { PricingSection } from './components/portfolio/PricingSection';
 
 const PortfolioApp: React.FC = () => {
   const { data, isAdminMode, language, showAdminLogin, setShowAdminLogin } = usePortfolio();
@@ -109,6 +110,7 @@ const PortfolioApp: React.FC = () => {
             <BlogSection />
             <TestimonialsSection />
             <CustomSectionsRenderer />
+            <PricingSection />
             <ContactSection />
           </main>
           

@@ -17,6 +17,8 @@ import { AdminAppearanceTab } from './tabs/AdminAppearanceTab';
 import { AdminMediaLibraryTab } from './tabs/AdminMediaLibraryTab';
 import { AdminBackupSyncTab } from './tabs/AdminBackupSyncTab';
 import { AdminSecurityTab } from './tabs/AdminSecurityTab';
+import { AdminPricingTab } from './tabs/AdminPricingTab';
+import { AdminSocialLinksTab } from './tabs/AdminSocialLinksTab';
 
 export const AdminDashboard: React.FC = () => {
   const { data, saveData, addToast, language } = usePortfolio();
@@ -47,6 +49,7 @@ export const AdminDashboard: React.FC = () => {
             {activeTab === 'overview' && <AdminOverviewTab onNavigate={setActiveTab} />}
             {activeTab === 'projects' && <AdminProjectsTab />}
             {activeTab === 'services' && <AdminServicesTab />}
+            {activeTab === 'pricing' && <AdminPricingTab />}
             {activeTab === 'tools' && <AdminToolsSkillsTab />}
             {activeTab === 'experience' && <AdminExperienceTab />}
             {activeTab === 'education' && <AdminEducationTab />}
@@ -54,6 +57,7 @@ export const AdminDashboard: React.FC = () => {
             {activeTab === 'blog' && <AdminBlogTab />}
             {activeTab === 'testimonials' && <AdminTestimonialsTab />}
             {activeTab === 'profile' && <AdminProfileTab />}
+            {activeTab === 'social' && <AdminSocialLinksTab />}
             {activeTab === 'sections' && <AdminCustomSectionsTab />}
             {activeTab === 'appearance' && <AdminAppearanceTab />}
             {activeTab === 'media' && <AdminMediaLibraryTab />}

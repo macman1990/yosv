@@ -87,6 +87,23 @@ export interface Service {
   status: ContentStatus;
 }
 
+export interface ServicePackage {
+  id: string;
+  name: LocalizedString;
+  tagline: LocalizedString;
+  description: LocalizedString;
+  price: number;
+  currency: string;
+  billing: LocalizedString;
+  features: string[];
+  ctaText: LocalizedString;
+  ctaLink?: string;
+  featured: boolean;
+  order: number;
+  visible: boolean;
+  status: ContentStatus;
+}
+
 export interface Skill {
   id: string;
   name: LocalizedString;
@@ -364,6 +381,7 @@ export interface PortfolioData {
   projects: Project[];
   categories: Category[];
   services: Service[];
+  servicePackages: ServicePackage[];
   skills: Skill[];
   tools: ToolItem[];
   experience: Experience[];

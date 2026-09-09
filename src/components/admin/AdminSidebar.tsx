@@ -22,6 +22,7 @@ export type AdminTabId =
   | 'overview'
   | 'projects'
   | 'services'
+  | 'pricing'
   | 'tools'
   | 'experience'
   | 'education'
@@ -29,6 +30,7 @@ export type AdminTabId =
   | 'blog'
   | 'testimonials'
   | 'profile'
+  | 'social'
   | 'sections'
   | 'appearance'
   | 'media'
@@ -48,6 +50,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     overview: { en: 'Overview', ar: 'نظرة عامة' },
     projects: { en: 'Projects & Reels', ar: 'المشاريع والريلز' },
     services: { en: 'Services', ar: 'الخدمات' },
+    pricing: { en: 'Pricing Packages', ar: 'باقات التسعير' },
     tools: { en: 'Tools & Skills', ar: 'الأدوات والمهارات' },
     experience: { en: 'Experience', ar: 'الخبرة' },
     education: { en: 'Education & Certs', ar: 'التعليم والشهادات' },
@@ -55,6 +58,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     blog: { en: 'Blog & Editorial', ar: 'المدونة والتحرير' },
     testimonials: { en: 'Testimonials', ar: 'آراء العملاء' },
     profile: { en: 'Profile & Bio', ar: 'الملف الشخصي والسيرة' },
+    social: { en: 'Social Links', ar: 'روابط التواصل' },
     sections: { en: 'Section Builder', ar: 'بناء الأقسام' },
     appearance: { en: 'Appearance & UI', ar: 'المظهر والواجهة' },
     media: { en: 'Media Library', ar: 'مكتبة الوسائط' },
@@ -66,6 +70,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     { id: 'overview', icon: <LayoutDashboard className="h-4 w-4" /> },
     { id: 'projects', icon: <Film className="h-4 w-4" /> },
     { id: 'services', icon: <Layers className="h-4 w-4" /> },
+    { id: 'pricing', icon: <Layers className="h-4 w-4" /> },
     { id: 'tools', icon: <Cpu className="h-4 w-4" /> },
     { id: 'experience', icon: <Briefcase className="h-4 w-4" /> },
     { id: 'education', icon: <GraduationCap className="h-4 w-4" /> },
@@ -73,6 +78,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     { id: 'blog', icon: <FileText className="h-4 w-4" /> },
     { id: 'testimonials', icon: <MessageSquare className="h-4 w-4" /> },
     { id: 'profile', icon: <User className="h-4 w-4" /> },
+    { id: 'social', icon: <Component className="h-4 w-4" /> },
     { id: 'sections', icon: <Component className="h-4 w-4" /> },
     { id: 'appearance', icon: <Palette className="h-4 w-4" /> },
     { id: 'media', icon: <ImageIcon className="h-4 w-4" /> },

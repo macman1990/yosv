@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { Mail, MessageCircle, Send, Sparkles, CheckCircle2, ArrowUpRight } from 'lucide-react';
 import { StorageService } from '../../lib/storage';
+import { sanitizeExternalUrl } from '../../lib/security';
 
 export const ContactSection: React.FC = () => {
   const { data, language, t, addToast } = usePortfolio();
@@ -44,7 +45,7 @@ export const ContactSection: React.FC = () => {
   };
 
   const whatsappLink = `https://wa.me/${contact.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-    `Hello Kareem, I am interested in collaborating on a video editing / content project.`
+    `Hello Youssef, I am interested in collaborating on a video editing / content project.`
   )}`;
 
   return (
@@ -132,7 +133,7 @@ export const ContactSection: React.FC = () => {
               {(data.socialLinks || []).filter((s) => s.visible).map((social) => (
                 <a
                   key={social.id}
-                  href={social.url}
+                  href={sanitizeExternalUrl(social.url)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"
