@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { PortfolioData, AnalyticsEvent } from '../types/portfolio';
+import { PortfolioData, AnalyticsEvent, ProjectInquiry } from '../types/portfolio';
 import { initialPortfolioData } from '../data/initialData';
+import { normalizeSectionOrder } from './sectionRegistry';
 
 const STORAGE_KEY = 'aetheria_portfolio_data_v1';
 const AUTH_KEY = 'aetheria_admin_session_v1';
@@ -28,7 +29,7 @@ const logSupabaseError = (operation: string, error: any) => {
 };
 
 const normalizeClientLogos = (list: any[] | undefined): any[] => {
-  if (!Array.isArray(list) || list.length === 0) {
+  if (!Array.isArray(list)) {
     return initialPortfolioData.clientLogos;
   }
 
@@ -47,8 +48,18 @@ export const normalizePortfolioData = (input: Partial<PortfolioData> | null | un
   const payload = input && typeof input === 'object' ? input : {};
 
   const siteFeatures = {
-    ...base.siteFeatures,
-    ...(payload.siteFeatures || {}),
+    startProject: payload.siteFeatures?.startProject ?? base.siteFeatures.startProject,
+    projectInquiry: payload.siteFeatures?.projectInquiry ?? base.siteFeatures.projectInquiry,
+    projectBrief: payload.siteFeatures?.projectBrief ?? base.siteFeatures.projectBrief,
+    availability: payload.siteFeatures?.availability ?? base.siteFeatures.availability,
+    clientLogos: payload.siteFeatures?.clientLogos ?? base.siteFeatures.clientLogos,
+    testimonials: payload.siteFeatures?.testimonials ?? base.siteFeatures.testimonials,
+    pricing: payload.siteFeatures?.pricing ?? base.siteFeatures.pricing,
+    packages: payload.siteFeatures?.packages ?? base.siteFeatures.packages,
+    blog: payload.siteFeatures?.blog ?? base.siteFeatures.blog,
+    content: payload.siteFeatures?.content ?? base.siteFeatures.content,
+    contentHub: payload.siteFeatures?.contentHub ?? base.siteFeatures.contentHub,
+    socialLinks: payload.siteFeatures?.socialLinks ?? base.siteFeatures.socialLinks,
   } as PortfolioData['siteFeatures'];
 
   const contact = {
@@ -67,13 +78,45 @@ export const normalizePortfolioData = (input: Partial<PortfolioData> | null | un
     description: { ...base.availability.description, ...(payload.availability?.description || {}) },
   } as PortfolioData['availability'];
 
+  const appearance = {
+    ...base.appearance,
+    ...(payload.appearance || {}),
+    accentColor: payload.appearance?.accentColor || base.appearance.accentColor,
+    secondaryAccent: payload.appearance?.secondaryAccent || base.appearance.secondaryAccent,
+    themeName: payload.appearance?.themeName || base.appearance.themeName,
+    defaultTheme: payload.appearance?.defaultTheme || base.appearance.defaultTheme,
+    backgroundIntensity: payload.appearance?.backgroundIntensity || base.appearance.backgroundIntensity,
+    projectDisplayMode: payload.appearance?.projectDisplayMode || base.appearance.projectDisplayMode,
+    projectsInitialCount: Number(payload.appearance?.projectsInitialCount ?? base.appearance.projectsInitialCount),
+    projectsExpandedCount: Number(payload.appearance?.projectsExpandedCount ?? base.appearance.projectsExpandedCount),
+    desktopColumns: Number(payload.appearance?.desktopColumns ?? base.appearance.desktopColumns),
+    tabletColumns: Number(payload.appearance?.tabletColumns ?? base.appearance.tabletColumns),
+    mobileColumns: Number(payload.appearance?.mobileColumns ?? base.appearance.mobileColumns),
+    scrollAnimationEnabled: typeof payload.appearance?.scrollAnimationEnabled === 'boolean' ? payload.appearance.scrollAnimationEnabled : base.appearance.scrollAnimationEnabled,
+    customCursorEnabled: typeof payload.appearance?.customCursorEnabled === 'boolean' ? payload.appearance.customCursorEnabled : base.appearance.customCursorEnabled,
+    enable3D: typeof payload.appearance?.enable3D === 'boolean' ? payload.appearance.enable3D : (base.appearance.enable3D ?? false),
+    threeDIntensity: payload.appearance?.threeDIntensity || base.appearance.threeDIntensity || 'subtle',
+    threeDQuality: payload.appearance?.threeDQuality || base.appearance.threeDQuality || 'auto',
+    motionMode: payload.appearance?.motionMode || base.appearance.motionMode || 'full',
+    contentWidth: Number(payload.appearance?.contentWidth ?? base.appearance.contentWidth ?? 1200),
+    sectionSpacing: Number(payload.appearance?.sectionSpacing ?? base.appearance.sectionSpacing ?? 32),
+    projectGap: Number(payload.appearance?.projectGap ?? base.appearance.projectGap ?? 24),
+    glassIntensity: payload.appearance?.glassIntensity || base.appearance.glassIntensity || 'medium',
+    backgroundMode: payload.appearance?.backgroundMode || base.appearance.backgroundMode || 'subtle',
+    viewMoreEnabled: typeof payload.appearance?.viewMoreEnabled === 'boolean' ? payload.appearance.viewMoreEnabled : (base.appearance.viewMoreEnabled ?? true),
+    viewMoreLabelEn: payload.appearance?.viewMoreLabelEn || base.appearance.viewMoreLabelEn || 'View More',
+    viewMoreLabelAr: payload.appearance?.viewMoreLabelAr || base.appearance.viewMoreLabelAr || 'المزيد',
+  } as PortfolioData['appearance'];
+
   const normalized: PortfolioData = {
     ...base,
     ...payload,
     siteFeatures,
     contact,
     availability,
-    clientLogos: normalizeClientLogos((payload as any).clientLogos ?? base.clientLogos),
+    appearance,
+    sectionOrder: normalizeSectionOrder(payload.sectionOrder),
+    clientLogos: normalizeClientLogos((payload as any).clientLogos),
     socialLinks: Array.isArray(payload.socialLinks) ? payload.socialLinks : base.socialLinks,
     servicePackages: Array.isArray(payload.servicePackages) ? payload.servicePackages : base.servicePackages,
     testimonials: Array.isArray(payload.testimonials) ? payload.testimonials : base.testimonials,
@@ -237,6 +280,49 @@ export class StorageService {
     const merged = normalizePortfolioData(parsed as Partial<PortfolioData>);
     await this.savePortfolioData(merged);
     return merged;
+  }
+
+  public static async submitProjectInquiry(input: Omit<ProjectInquiry, 'id' | 'created_at' | 'status'>): Promise<{ success: boolean; error?: string }> {
+    if (!supabase) return { success: false, error: 'Inquiry service is not configured.' };
+
+    const { error } = await supabase.from('project_inquiries').insert({
+      ...input,
+      status: 'new',
+      source: 'portfolio',
+    });
+
+    if (error) {
+      logSupabaseError('submit_project_inquiry', error);
+      return { success: false, error: 'Inquiry could not be saved.' };
+    }
+
+    return { success: true };
+  }
+
+  public static async getProjectInquiries(): Promise<ProjectInquiry[]> {
+    if (!supabase) return [];
+
+    const { data, error } = await supabase
+      .from('project_inquiries')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      logSupabaseError('get_project_inquiries', error);
+      return [];
+    }
+
+    return (data || []) as ProjectInquiry[];
+  }
+
+  public static async updateProjectInquiryStatus(id: string, status: ProjectInquiry['status']): Promise<boolean> {
+    if (!supabase) return false;
+    const { error } = await supabase.from('project_inquiries').update({ status }).eq('id', id);
+    if (error) {
+      logSupabaseError('update_project_inquiry_status', error);
+      return false;
+    }
+    return true;
   }
 
   public static async recordAnalytics(event: Omit<AnalyticsEvent, 'id' | 'timestamp'>) {

@@ -14,17 +14,19 @@ export const ContactSection: React.FC = () => {
   const [email, setEmail] = useState('');
   const [projectType, setProjectType] = useState('');
   const [budget, setBudget] = useState('');
+  const [timeline, setTimeline] = useState('');
   const [briefUrl, setBriefUrl] = useState('');
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submissionError, setSubmissionError] = useState('');
 
   const ctaText = contact.ctaText[language] || contact.ctaText.en;
   const successMsg = contact.successMessage[language] || contact.successMessage.en;
 
   const getFeatureFlag = (key: keyof typeof data.siteFeatures) => {
     const value = data?.siteFeatures?.[key];
-    return typeof value === 'boolean' ? value : true;
+    return typeof value === 'boolean' ? value : false;
   };
 
   const showProjectBrief = getFeatureFlag('projectBrief');
@@ -41,33 +43,77 @@ export const ContactSection: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
+    setSubmissionError('');
+
     if (!name.trim() || !email.trim() || !message.trim()) {
       addToast('Please fill out name, email, and message.', 'error');
       return;
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) || email.trim().length > 320) {
+      setSubmissionError('Please enter a valid email address.');
+      addToast('Please enter a valid email address.', 'error');
+      return;
+    }
+
+    if (name.trim().length > 160 || message.trim().length > 5000 || projectType.trim().length > 160 || budget.length > 80 || timeline.trim().length > 160) {
+      setSubmissionError('Please shorten one or more fields and try again.');
+      addToast('One or more fields are too long.', 'error');
+      return;
+    }
+
+    if (showProjectBrief && contact.formFields.projectBriefRequired && !briefUrl.trim()) {
+      setSubmissionError('Please provide the required project brief URL.');
+      addToast('Please provide the required project brief URL.', 'error');
+      return;
+    }
+
     if (showProjectBrief && briefUrl.trim()) {
       const sanitized = sanitizeExternalUrl(briefUrl.trim());
-      if (!sanitized) {
+      let isHttpUrl = false;
+      try {
+        const parsed = new URL(sanitized);
+        isHttpUrl = parsed.protocol === 'http:' || parsed.protocol === 'https:';
+      } catch {
+        isHttpUrl = false;
+      }
+      if (sanitized === '#' || !isHttpUrl) {
         addToast('Please enter a valid project brief URL.', 'error');
         return;
       }
     }
 
     setSubmitting(true);
-    // Simulate high-speed serverless submission & analytics record
-    setTimeout(async () => {
-      await StorageService.recordAnalytics({
-        type: 'contact_submit',
-        language,
-        theme: 'dark',
-        device: window.innerWidth < 768 ? 'mobile' : 'desktop',
-      });
+    const result = await StorageService.submitProjectInquiry({
+      name: name.trim(),
+      email: email.trim(),
+      project_title: projectType.trim() || undefined,
+      project_description: message.trim(),
+      project_type: projectType.trim() || undefined,
+      budget: budget || undefined,
+      timeline: timeline.trim() || undefined,
+      brief_url: briefUrl.trim() ? sanitizeExternalUrl(briefUrl.trim()) : undefined,
+      locale: language,
+      honeypot: '',
+    });
 
+    if (!result.success) {
       setSubmitting(false);
-      setSubmitted(true);
-      addToast(successMsg, 'success');
-    }, 800);
+      setSubmissionError(result.error || 'Your inquiry could not be saved. Please try again.');
+      addToast(result.error || 'Your inquiry could not be saved. Please try again.', 'error');
+      return;
+    }
+
+    void StorageService.recordAnalytics({
+      type: 'contact_submit',
+      language,
+      theme: 'dark',
+      device: window.innerWidth < 768 ? 'mobile' : 'desktop',
+    });
+    setSubmitting(false);
+    setSubmitted(true);
+    addToast(successMsg, 'success');
   };
 
   const whatsappLink = `https://wa.me/${contact.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
@@ -232,6 +278,7 @@ export const ContactSection: React.FC = () => {
                     onClick={() => {
                       setSubmitted(false);
                       setMessage('');
+                      setSubmissionError('');
                     }}
                     className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-6 py-2.5 text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--foreground)]"
                   >
@@ -240,6 +287,7 @@ export const ContactSection: React.FC = () => {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-4">
+                  {submissionError && <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-400/10 px-3 py-2 text-xs text-rose-200">{submissionError}</p>}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
@@ -306,7 +354,7 @@ export const ContactSection: React.FC = () => {
                   {showProjectBrief && (
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-                        Project brief URL
+                        Project brief URL{contact.formFields.projectBriefRequired ? ' *' : ''}
                       </label>
                       <input
                         type="url"
@@ -315,6 +363,13 @@ export const ContactSection: React.FC = () => {
                         placeholder="https://drive.google.com/..."
                         className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--color-accent)] focus:outline-none"
                       />
+                    </div>
+                  )}
+
+                  {contact.formFields.showTimeline && (
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Timeline</label>
+                      <input type="text" value={timeline} onChange={(e) => setTimeline(e.target.value)} placeholder="Target delivery window" className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--color-accent)] focus:outline-none" />
                     </div>
                   )}
 

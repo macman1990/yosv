@@ -91,11 +91,13 @@
     scroll-behavior: smooth;
     background: var(--background);
     color: var(--foreground);
+    overflow-x: hidden;
     transition: background-color 0.35s ease, color 0.35s ease;
   }
 
   body {
     margin: 0;
+    overflow-x: hidden;
     background:
       radial-gradient(circle at top, rgba(142, 197, 255, 0.08), transparent 30%),
       radial-gradient(circle at bottom right, rgba(125, 211, 252, 0.07), transparent 28%),
@@ -119,6 +121,11 @@
     opacity: 0.55;
   }
 
+  body[data-theme-name="cinematic"]::before {
+    background-image: radial-gradient(circle at 15% 10%, rgba(142,197,255,0.16), transparent 24%), radial-gradient(circle at 80% 20%, rgba(224, 168, 79, 0.12), transparent 28%), linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    opacity: 0.8;
+  }
+
   body[data-theme-name="liquid-glass"]::before {
     background-image: radial-gradient(circle at 25% 20%, rgba(126, 211, 252, 0.18), transparent 25%), radial-gradient(circle at 80% 10%, rgba(168, 85, 247, 0.14), transparent 30%), linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
     opacity: 0.8;
@@ -135,7 +142,7 @@
     opacity: 0.7;
   }
 
-  body[data-theme-name="luxury"]::before {
+  body[data-theme-name="minimal"]::before {
     background-image: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.06), transparent 30%);
     opacity: 0.5;
   }
@@ -190,6 +197,206 @@
 
 .font-arabic-body {
   font-family: var(--font-arabic-body);
+}
+
+.background-system {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+  opacity: 0;
+  transition: opacity 0.8s var(--motion-ease, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+.background-system__atmosphere,
+.background-system__texture,
+.background-system__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.portfolio-3d-shell {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0.68;
+  mask-image: radial-gradient(ellipse at 58% 42%, black 18%, transparent 78%);
+}
+
+.portfolio-3d-layer,
+.portfolio-3d-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+body[data-theme-name="minimal"] .portfolio-3d-shell {
+  opacity: 0.36;
+}
+
+body[data-theme-name="editorial"] .portfolio-3d-shell {
+  opacity: 0.48;
+}
+
+:root[data-background-motion="off"] .portfolio-3d-shell,
+:root[data-motion-mode="off"] .portfolio-3d-shell {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .portfolio-3d-shell {
+    opacity: 0.42;
+    mask-image: radial-gradient(ellipse at 50% 34%, black 10%, transparent 70%);
+  }
+}
+
+.background-system__atmosphere {
+  background: var(--background-light);
+  background-size: 150% 150%;
+  opacity: 0.7;
+  filter: saturate(105%);
+}
+
+.background-system__texture {
+  background-image: var(--background-texture, url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E"));
+  mix-blend-mode: soft-light;
+  opacity: var(--background-grain-opacity);
+}
+
+.background-system__vignette {
+  background: radial-gradient(ellipse at center, transparent 46%, rgba(0, 0, 0, 0.2) 100%);
+  opacity: 0.65;
+}
+
+body[data-theme-name="cinematic"] .background-system__atmosphere {
+  animation: backgroundAmbientDrift 26s ease-in-out infinite alternate;
+}
+
+body[data-theme-name="liquid-glass"] .background-system__atmosphere {
+  filter: blur(26px) saturate(125%);
+  transform: scale(1.08);
+  animation: backgroundLiquidDrift 30s ease-in-out infinite alternate;
+}
+
+body[data-theme-name="editorial"] .background-system__texture {
+  mix-blend-mode: multiply;
+}
+
+body[data-theme-name="digital"] .background-system__atmosphere {
+  background-size: 44px 44px, 44px 44px, 100% 100%;
+  animation: backgroundSignalSweep 18s linear infinite;
+}
+
+body[data-theme-name="minimal"] .background-system__atmosphere {
+  opacity: 0.55;
+}
+
+:root[data-background-intensity="off"] .background-system,
+:root[data-background-intensity="off"] .background-system[data-background-intensity="off"],
+.background-system[data-background-intensity="off"],
+:root[data-background-intensity="off"] body::before {
+  opacity: 0 !important;
+}
+
+:root[data-background-intensity="subtle"] .background-system,
+.background-system[data-background-intensity="subtle"] {
+  opacity: 0.35;
+}
+
+:root[data-background-intensity="medium"] .background-system,
+.background-system[data-background-intensity="medium"] {
+  opacity: 0.68;
+}
+
+:root[data-background-intensity="strong"] .background-system,
+.background-system[data-background-intensity="strong"] {
+  opacity: 1;
+}
+
+:root[data-background-grain="off"] .background-system__texture,
+.background-system[data-background-grain="off"] .background-system__texture {
+  opacity: 0;
+}
+
+:root[data-background-motion="reduced"] .background-system__atmosphere,
+:root[data-background-motion="off"] .background-system__atmosphere,
+.background-system[data-background-motion="reduced"] .background-system__atmosphere,
+.background-system[data-background-motion="off"] .background-system__atmosphere {
+  animation: none;
+}
+
+:root[data-background-motion="reduced"] .background-system {
+  transition-duration: 1.4s;
+}
+
+:root[data-background-motion="off"] .background-system,
+:root[data-background-motion="off"] .background-system *,
+.background-system[data-background-motion="off"],
+.background-system[data-background-motion="off"] * {
+  animation: none !important;
+  transition: none !important;
+}
+
+:root[data-motion-mode="reduced"] .reveal,
+:root[data-motion-mode="off"] .reveal {
+  opacity: 1;
+  animation: none;
+  transform: none;
+  filter: none;
+}
+
+:root[data-motion-mode="off"] a,
+:root[data-motion-mode="off"] button,
+:root[data-motion-mode="off"] input,
+:root[data-motion-mode="off"] textarea,
+:root[data-motion-mode="off"] select {
+  transition: none !important;
+}
+
+@keyframes backgroundAmbientDrift {
+  from { transform: translate3d(-1%, -1%, 0) scale(1); }
+  to { transform: translate3d(2%, 1%, 0) scale(1.04); }
+}
+
+@keyframes backgroundLiquidDrift {
+  from { background-position: 0% 20%; }
+  to { background-position: 100% 75%; }
+}
+
+@keyframes backgroundSignalSweep {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to { background-position: 44px 44px, -44px -44px, 0 0; }
+}
+
+@media (max-width: 768px) {
+  .background-system__atmosphere {
+    background: var(--background-mobile-light, var(--background-light));
+    animation: none;
+    filter: blur(8px) saturate(105%);
+  }
+
+  .background-system__vignette {
+    opacity: 0.45;
+  }
+
+  :root[data-background-intensity="strong"] .background-system {
+    opacity: 0.72;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .background-system__atmosphere,
+  .background-system__texture,
+  .background-system__vignette {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 .glass,
@@ -290,6 +497,115 @@
   color: var(--foreground);
   background: rgba(255,255,255,0.06);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+body[data-theme-name="cinematic"] .nav-shell {
+  background: rgba(12, 15, 20, 0.66);
+  border-color: rgba(255,255,255,0.08);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 24px 55px -30px rgba(2,6,12,0.78);
+}
+
+body[data-theme-name="cinematic"] .nav-item-active {
+  background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+}
+
+body[data-theme-name="cinematic"] .glass-card,
+body[data-theme-name="cinematic"] .glass-panel {
+  border-radius: 28px;
+  box-shadow: 0 24px 60px -30px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+body[data-theme-name="cinematic"] #hero .glass-card {
+  border-radius: 34px;
+  background: linear-gradient(180deg, rgba(15, 19, 27, 0.82), rgba(11, 15, 21, 0.76));
+}
+
+body[data-theme-name="liquid-glass"] .nav-shell {
+  background: rgba(120, 140, 190, 0.12);
+  border-color: rgba(255,255,255,0.18);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 24px 60px -30px rgba(96,127,255,0.38);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+}
+
+body[data-theme-name="liquid-glass"] .nav-item {
+  border: 1px solid transparent;
+}
+
+body[data-theme-name="liquid-glass"] .nav-item-active {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.15);
+}
+
+body[data-theme-name="liquid-glass"] .glass-card,
+body[data-theme-name="liquid-glass"] .glass-panel {
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.09), 0 24px 55px -30px rgba(96,127,255,0.35);
+}
+
+body[data-theme-name="editorial"] .nav-shell {
+  border-radius: 18px;
+  background: rgba(23, 19, 16, 0.72);
+  border-color: rgba(216, 179, 144, 0.12);
+}
+
+body[data-theme-name="editorial"] .nav-item {
+  letter-spacing: 0.14em;
+  font-size: 0.62rem;
+}
+
+body[data-theme-name="editorial"] #hero .glass-card {
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(28, 23, 20, 0.9), rgba(19, 16, 14, 0.76));
+}
+
+body[data-theme-name="editorial"] .glass-card {
+  box-shadow: 0 20px 48px -32px rgba(17,12,9,0.7);
+}
+
+body[data-theme-name="digital"] .nav-shell {
+  border-radius: 18px;
+  background: rgba(7, 12, 18, 0.78);
+  border-color: rgba(96, 165, 250, 0.18);
+  box-shadow: inset 0 1px 0 rgba(96, 165, 250, 0.12), 0 18px 48px -32px rgba(15, 73, 104, 0.7);
+}
+
+body[data-theme-name="digital"] .nav-item {
+  letter-spacing: 0.15em;
+  font-size: 0.58rem;
+}
+
+body[data-theme-name="digital"] .nav-item-active {
+  background: rgba(28, 217, 217, 0.08);
+  border: 1px solid rgba(28, 217, 217, 0.2);
+}
+
+body[data-theme-name="digital"] .glass-card,
+body[data-theme-name="digital"] .glass-panel {
+  border-radius: 18px;
+  box-shadow: inset 0 1px 0 rgba(96,165,250,0.08), 0 18px 52px -30px rgba(7, 12, 18, 0.76);
+}
+
+body[data-theme-name="minimal"] .nav-shell {
+  background: rgba(255,255,255,0.68);
+  border-color: rgba(23,20,14,0.08);
+  box-shadow: 0 18px 44px -32px rgba(24,20,16,0.22);
+}
+
+body[data-theme-name="minimal"] .nav-item {
+  letter-spacing: 0.12em;
+  font-size: 0.6rem;
+}
+
+body[data-theme-name="minimal"] .nav-item-active {
+  background: rgba(24,20,16,0.04);
+}
+
+body[data-theme-name="minimal"] .glass-card,
+body[data-theme-name="minimal"] .glass-panel {
+  border-radius: 20px;
+  box-shadow: 0 18px 42px -28px rgba(24,20,16,0.22);
 }
 
 .mobile-panel {

@@ -17,8 +17,10 @@ export type VideoPlatform =
 
 export type AspectRatio = '16:9' | '9:16' | '1:1' | '21:9' | '4:5';
 
-export type PortfolioThemeName = 'cinematic' | 'liquid-glass' | 'editorial' | 'digital' | 'luxury';
+export type PortfolioThemeName = 'cinematic' | 'liquid' | 'liquid-glass' | 'editorial' | 'digital' | 'minimal' | 'luxury';
 export type BackgroundIntensity = 'off' | 'subtle' | 'medium' | 'strong';
+export type MotionMode = 'full' | 'reduced' | 'off';
+export type ThreeDQuality = 'auto' | 'high' | 'medium' | 'low';
 export type ProjectDisplayMode = 'grid' | 'view-more' | 'carousel' | 'horizontal' | 'featured-secondary' | 'compact';
 
 export type ContentStatus = 'published' | 'draft' | 'hidden';
@@ -65,6 +67,7 @@ export interface Project {
   credits?: string;
   featured: boolean;
   status: ContentStatus;
+  visible?: boolean;
   order: number;
   caseStudy?: CaseStudy;
   viewsCount?: number;
@@ -327,10 +330,12 @@ export interface ProjectInquiry {
   company?: string;
   service?: string;
   package?: string;
+  project_type?: string;
   project_title?: string;
   project_description?: string;
   brief_url?: string;
   deadline?: string;
+  timeline?: string;
   budget?: string;
   status: 'new' | 'reviewing' | 'contacted' | 'in_progress' | 'completed' | 'rejected';
   admin_notes?: string;
@@ -395,9 +400,28 @@ export interface AppearanceSettings {
   customCursorEnabled: boolean;
   scrollAnimationEnabled: boolean;
   grainOverlayEnabled: boolean;
-  defaultTheme: 'dark' | 'light';
+  enable3D?: boolean;
+  threeDIntensity?: BackgroundIntensity;
+  threeDQuality?: ThreeDQuality;
+  defaultTheme: ThemeMode;
   themeName: PortfolioThemeName;
   backgroundIntensity: BackgroundIntensity;
+  backgroundMode?: 'off' | 'subtle' | 'medium' | 'strong';
+  glassIntensity?: 'off' | 'subtle' | 'medium' | 'strong';
+  surfaceOpacity?: number;
+  blurIntensity?: number;
+  borderIntensity?: 'subtle' | 'medium' | 'strong';
+  shadowIntensity?: 'soft' | 'medium' | 'strong';
+  motionIntensity?: 'subtle' | 'standard' | 'cinematic';
+  motionMode?: MotionMode;
+  contentWidth?: number;
+  sectionSpacing?: number;
+  cardDensity?: 'compact' | 'balanced' | 'spacious';
+  projectGap?: number;
+  projectCardSize?: 'compact' | 'standard' | 'large';
+  viewMoreEnabled?: boolean;
+  viewMoreLabelEn?: string;
+  viewMoreLabelAr?: string;
   projectDisplayMode: ProjectDisplayMode;
   projectsInitialCount: number;
   projectsExpandedCount: number;
@@ -407,6 +431,8 @@ export interface AppearanceSettings {
   carouselAutoplay: boolean;
   carouselLoop: boolean;
   showCarouselControls: boolean;
+  featuredCount?: number;
+  secondaryCount?: number;
   navigationMode?: 'slider' | 'scroll';
   heroStyle?: 'cinematic' | 'editorial' | 'studio' | 'luxury';
 }
@@ -473,6 +499,22 @@ export interface AnalyticsEvent {
   device: 'desktop' | 'tablet' | 'mobile';
 }
 
+export interface SectionOrderItem {
+  id: string;
+  order: number;
+  visible: boolean;
+  label?: LocalizedString;
+}
+
+export interface MessageEntry {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  createdAt: string;
+  status: 'new' | 'reviewing' | 'replied';
+}
+
 export interface PortfolioData {
   profile: ProfileData;
   projects: Project[];
@@ -497,6 +539,8 @@ export interface PortfolioData {
   pages: CustomPage[];
   media: MediaAsset[];
   navItems: NavItem[];
+  sectionOrder?: SectionOrderItem[];
+  messages?: MessageEntry[];
   appearance: AppearanceSettings;
   seo: SEOSettings;
   contact: ContactSettings;

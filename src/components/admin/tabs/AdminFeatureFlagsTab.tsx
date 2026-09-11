@@ -4,24 +4,29 @@ import { SiteFeatureFlags } from '../../../types/portfolio';
 
 const FEATURE_META: { key: keyof SiteFeatureFlags; en: string; ar: string; descriptionEn: string; descriptionAr: string }[] = [
   { key: 'startProject', en: 'Start a Project', ar: 'ابدأ مشروع', descriptionEn: 'Public inquiry CTA and conversion flow.', descriptionAr: 'زر طلب المشروع وتدفق التحويل العام.' },
+  { key: 'projectInquiry', en: 'Project Inquiry Form', ar: 'نموذج طلب المشروع', descriptionEn: 'Public inquiry form for new projects.', descriptionAr: 'نموذج طلب المشروع العام.' },
   { key: 'projectBrief', en: 'Project Brief', ar: 'تفاصيل المشروع', descriptionEn: 'Project brief URL field in the inquiry flow.', descriptionAr: 'حقل رابط تفاصيل المشروع في نموذج الطلب.' },
   { key: 'availability', en: 'Availability Status', ar: 'حالة التوفر', descriptionEn: 'Show availability near the CTA area.', descriptionAr: 'عرض حالة التوفر بجانب منطقة الاتصال الرئيسية.' },
   { key: 'clientLogos', en: 'Trusted By', ar: 'عملاء وثقوا بي', descriptionEn: 'Show client logos and trust strip.', descriptionAr: 'عرض شريط عملاء موثوقين وشعاراتهم.' },
   { key: 'testimonials', en: 'Testimonials', ar: 'آراء العملاء', descriptionEn: 'Public testimonial cards and social proof.', descriptionAr: 'بطاقات آراء العملاء والدليل الاجتماعي العام.' },
+  { key: 'pricing', en: 'Pricing', ar: 'الأسعار', descriptionEn: 'Selllier pricing cards and service packages.', descriptionAr: 'بطاقات الأسعار والخدمات العامة.' },
   { key: 'packages', en: 'Packages', ar: 'الباقات', descriptionEn: 'Public pricing/package cards.', descriptionAr: 'بطاقات الأسعار والباقات العامة.' },
   { key: 'blog', en: 'Blog', ar: 'المدونة', descriptionEn: 'General blog and editorial posts.', descriptionAr: 'مقالات المدونة والتحرير العامة.' },
+  { key: 'content', en: 'Content Section', ar: 'قسم المحتوى', descriptionEn: 'Public content showcase section.', descriptionAr: 'قسم عرض المحتوى العام.' },
   { key: 'contentHub', en: 'Content Hub', ar: 'مركز المحتوى', descriptionEn: 'Content library and platform posts.', descriptionAr: 'مكتبة المحتوى والمنشورات عبر المنصات.' },
+  { key: 'socialLinks', en: 'Social Links', ar: 'روابط التواصل', descriptionEn: 'Public social icons and profile links.', descriptionAr: 'أيقونات وروابط التواصل الاجتماعي.' },
 ];
 
 export const AdminFeatureFlagsTab: React.FC = () => {
   const { data, updateData, language } = usePortfolio();
 
   const handleToggle = async (key: keyof SiteFeatureFlags) => {
+    const current = typeof data.siteFeatures?.[key] === 'boolean' ? data.siteFeatures[key] : false;
     await updateData({
       ...data,
       siteFeatures: {
         ...data.siteFeatures,
-        [key]: !data.siteFeatures[key],
+        [key]: !current,
       },
     });
   };

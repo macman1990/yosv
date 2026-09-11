@@ -24,6 +24,9 @@ import { AdminStartProjectTab } from './tabs/AdminStartProjectTab';
 import { AdminProjectInquiryTab } from './tabs/AdminProjectInquiryTab';
 import { AdminAvailabilityTab } from './tabs/AdminAvailabilityTab';
 import { AdminClientLogosTab } from './tabs/AdminClientLogosTab';
+import { AdminPageOrderTab } from './tabs/AdminPageOrderTab';
+import { AdminSiteContentTab } from './tabs/AdminSiteContentTab';
+import { AdminMessagesTab } from './tabs/AdminMessagesTab';
 
 export const AdminDashboard: React.FC = () => {
   const { data, saveData, addToast, language } = usePortfolio();
@@ -69,6 +72,9 @@ export const AdminDashboard: React.FC = () => {
             {activeTab === 'profile' && <AdminProfileTab />}
             {activeTab === 'social' && <AdminSocialLinksTab />}
             {activeTab === 'sections' && <AdminCustomSectionsTab />}
+            {activeTab === 'pageOrder' && <AdminPageOrderTab />}
+            {activeTab === 'siteContent' && <AdminSiteContentTab />}
+            {activeTab === 'messages' && <AdminMessagesTab />}
             {activeTab === 'appearance' && <AdminAppearanceTab />}
             {activeTab === 'media' && <AdminMediaLibraryTab />}
             {activeTab === 'backup' && <AdminBackupSyncTab />}

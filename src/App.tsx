@@ -11,39 +11,13 @@ import { Header } from './components/portfolio/Header';
 import { BlogHubPage } from './components/portfolio/BlogHubPage';
 import { Footer } from './components/portfolio/Footer';
 import { SplashScreen } from './components/common/SplashScreen';
-
-// Portfolio Sections
-import { HeroSection } from './components/portfolio/HeroSection';
-import { FeaturedWorkSection } from './components/portfolio/FeaturedWorkSection';
-import { ServicesSection } from './components/portfolio/ServicesSection';
-import { AboutSection } from './components/portfolio/AboutSection';
-import { ExperienceSection } from './components/portfolio/ExperienceSection';
-import { EducationCertificationsSection } from './components/portfolio/EducationCertificationsSection';
-import { ToolsSection } from './components/portfolio/ToolsSection';
-import { ContentCreationSection } from './components/portfolio/ContentCreationSection';
-import { BlogSection } from './components/portfolio/BlogSection';
-import { TestimonialsSection } from './components/portfolio/TestimonialsSection';
-import { ContactSection } from './components/portfolio/ContactSection';
-import { CustomSectionsRenderer } from './components/portfolio/CustomSectionsRenderer';
-import { PricingSection } from './components/portfolio/PricingSection';
+import { BackgroundSystem } from './components/common/BackgroundSystem';
+import { getSectionDefinition, isSectionEnabled, normalizeSectionOrder, SectionRenderBoundary } from './lib/sectionRegistry';
 
 const PortfolioApp: React.FC = () => {
   const { data, isAdminMode, language, showAdminLogin, setShowAdminLogin } = usePortfolio();
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const [showSplash, setShowSplash] = useState(true);
-
-  const getFeatureFlag = <K extends keyof typeof data.siteFeatures>(key: K) => {
-    const value = data?.siteFeatures?.[key];
-    return typeof value === 'boolean' ? value : true;
-  };
-
-  const showStartProject = getFeatureFlag('startProject');
-  const showProjectInquiry = getFeatureFlag('projectInquiry');
-  const showPricing = getFeatureFlag('pricing') || getFeatureFlag('packages');
-  const showTestimonials = getFeatureFlag('testimonials');
-  const showBlog = getFeatureFlag('blog');
-  const showContent = getFeatureFlag('content') || getFeatureFlag('contentHub');
-  const showSocialLinks = getFeatureFlag('socialLinks');
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setShowSplash(false), 1800);
@@ -79,6 +53,7 @@ const PortfolioApp: React.FC = () => {
         className="min-h-screen transition-colors duration-300 bg-[var(--background)] text-[var(--foreground)] selection:bg-[var(--color-accent)]/30 selection:text-[var(--foreground)]"
         dir={language === 'ar' ? 'rtl' : 'ltr'}
       >
+        <BackgroundSystem />
         <CustomCursor />
         <ToastContainer />
         <AdminLoginModal />
@@ -98,6 +73,7 @@ const PortfolioApp: React.FC = () => {
       className="min-h-screen transition-colors duration-300 bg-[var(--background)] text-[var(--foreground)] selection:bg-[var(--color-accent)]/30 selection:text-[var(--foreground)]"
       dir={language === 'ar' ? 'rtl' : 'ltr'}
     >
+      <BackgroundSystem />
       <SplashScreen visible={showSplash} />
       <CustomCursor />
       <ToastContainer />
@@ -112,19 +88,13 @@ const PortfolioApp: React.FC = () => {
           <Header />
           
           <main className="flex-grow pt-16 sm:pt-20">
-            <HeroSection />
-            <FeaturedWorkSection />
-            <ServicesSection />
-            <AboutSection />
-            <ExperienceSection />
-            <EducationCertificationsSection />
-            <ToolsSection />
-            {showContent && <ContentCreationSection />}
-            {showBlog && <BlogSection />}
-            {showTestimonials && <TestimonialsSection />}
-            <CustomSectionsRenderer />
-            {showPricing && <PricingSection />}
-            {showStartProject && showProjectInquiry && <ContactSection />}
+            {normalizeSectionOrder(data.sectionOrder).map((item) => {
+              const section = getSectionDefinition(item.id);
+              if (!section || item.visible === false || !isSectionEnabled(data, section)) return null;
+              return (
+                React.createElement(SectionRenderBoundary, { key: section.id, children: section.render() })
+              );
+            })}
           </main>
           
           <Footer />

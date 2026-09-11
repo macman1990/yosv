@@ -3,6 +3,7 @@ import { PortfolioData, Language, ThemeMode, Project } from '../types/portfolio'
 import { initialPortfolioData } from '../data/initialData';
 import { StorageService } from '../lib/storage';
 import { UI_TRANSLATIONS } from '../lib/translations';
+import { getThemePreset, normalizeThemeName, resolveColorMode } from '../lib/themeRegistry';
 
 export interface ToastMessage {
   id: string;
@@ -52,9 +53,10 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   useEffect(() => {
     StorageService.getPortfolioData().then((loaded) => {
       setData(loaded);
-      if (loaded.appearance?.defaultTheme) {
-        setThemeState(loaded.appearance.defaultTheme);
-      }
+      const defaultMode = resolveColorMode(loaded.appearance?.defaultTheme || 'dark');
+      const savedTheme = localStorage.getItem('aetheria_preferred_theme') as 'dark' | 'light' | null;
+      const nextTheme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : defaultMode;
+      setThemeState(nextTheme);
       setLoading(false);
     });
 
@@ -66,7 +68,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
     // Theme preference
     const savedTheme = localStorage.getItem('aetheria_preferred_theme') as 'dark' | 'light';
-    if (savedTheme) {
+    if (savedTheme === 'dark' || savedTheme === 'light') {
       setThemeState(savedTheme);
     }
   }, []);
@@ -84,11 +86,16 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // Update body theme classes and dynamic CSS root variables on theme or appearance change
   useEffect(() => {
-    const themeName = data.appearance?.themeName || 'cinematic';
-    document.documentElement.setAttribute('data-theme', theme);
-    document.body.setAttribute('data-theme-name', themeName);
+    const themeName = normalizeThemeName(data.appearance?.themeName || 'cinematic');
+    const preset = getThemePreset(themeName);
+    const currentThemeMode = theme === 'light' ? 'light' : 'dark';
 
-    if (theme === 'light') {
+    document.documentElement.setAttribute('data-theme', currentThemeMode);
+    document.documentElement.setAttribute('data-theme-name', themeName);
+    document.body.setAttribute('data-theme-name', themeName);
+    document.documentElement.setAttribute('data-motion-mode', data.appearance?.motionMode || 'full');
+
+    if (currentThemeMode === 'light') {
       document.documentElement.classList.remove('dark');
       document.documentElement.classList.add('light');
     } else {
@@ -105,19 +112,25 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       document.documentElement.style.setProperty('--color-accent-secondary', data.appearance.secondaryAccent);
     }
 
-    const themeMap: Record<string, { shell: string; panel: string; shadow: string; border: string }> = {
-      cinematic: { shell: 'rgba(10,13,18,0.92)', panel: 'rgba(17,23,34,0.82)', shadow: '0 24px 60px -28px rgba(0,0,0,0.8)', border: 'rgba(255,255,255,0.08)' },
-      'liquid-glass': { shell: 'rgba(130,146,180,0.18)', panel: 'rgba(255,255,255,0.12)', shadow: '0 20px 50px -30px rgba(96,127,255,0.45)', border: 'rgba(255,255,255,0.14)' },
-      editorial: { shell: 'rgba(18,17,15,0.92)', panel: 'rgba(32,28,25,0.76)', shadow: '0 20px 50px -32px rgba(17,12,9,0.7)', border: 'rgba(255,255,255,0.08)' },
-      digital: { shell: 'rgba(6,11,20,0.92)', panel: 'rgba(12,18,29,0.86)', shadow: '0 24px 60px -28px rgba(28,67,118,0.5)', border: 'rgba(111,219,219,0.17)' },
-      luxury: { shell: 'rgba(22,19,16,0.9)', panel: 'rgba(35,29,24,0.76)', shadow: '0 24px 60px -26px rgba(24,18,12,0.7)', border: 'rgba(212,184,135,0.18)' },
-    };
+    Object.entries(preset.cssVars).forEach(([key, value]) => {
+      document.documentElement.style.setProperty(key, value);
+    });
 
-    const current = themeMap[themeName] || themeMap.cinematic;
-    document.documentElement.style.setProperty('--theme-shell-bg', current.shell);
-    document.documentElement.style.setProperty('--theme-panel-bg', current.panel);
-    document.documentElement.style.setProperty('--theme-panel-border', current.border);
-    document.documentElement.style.setProperty('--theme-shadow', current.shadow);
+    document.documentElement.style.setProperty('--section-shell-max-width', `${Math.max(960, Number(data.appearance?.contentWidth ?? 1200))}px`);
+    document.documentElement.style.setProperty('--section-spacing', `${Number(data.appearance?.sectionSpacing ?? 32)}px`);
+    document.documentElement.style.setProperty('--projects-gap', `${Number(data.appearance?.projectGap ?? 24)}px`);
+    document.documentElement.style.setProperty('--glass-intensity', data.appearance?.glassIntensity || 'medium');
+    document.documentElement.style.setProperty('--background-mode', data.appearance?.backgroundMode || 'subtle');
+
+    const shell = currentThemeMode === 'light' ? 'rgba(255,255,255,0.68)' : 'rgba(9, 12, 17, 0.92)';
+    const panel = currentThemeMode === 'light' ? 'rgba(255,255,255,0.72)' : 'rgba(21, 26, 35, 0.82)';
+    const border = currentThemeMode === 'light' ? 'rgba(15, 22, 31, 0.09)' : 'rgba(255,255,255,0.08)';
+    const shadow = currentThemeMode === 'light' ? '0 24px 60px -32px rgba(16,22,32,0.18)' : '0 24px 60px -28px rgba(0,0,0,0.8)';
+
+    document.documentElement.style.setProperty('--theme-shell-bg', shell);
+    document.documentElement.style.setProperty('--theme-panel-bg', panel);
+    document.documentElement.style.setProperty('--theme-panel-border', border);
+    document.documentElement.style.setProperty('--theme-shadow', shadow);
   }, [theme, data.appearance]);
 
   useEffect(() => {
@@ -227,7 +240,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     async (updated: PortfolioData): Promise<boolean> => {
       try {
         const res = await StorageService.savePortfolioData(updated);
-        setData(updated);
+        setData(await StorageService.getPortfolioData());
         addToast(t('admin.saved'), 'success');
         return res;
       } catch (error: any) {
@@ -243,7 +256,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       const nextData = (updated as PortfolioData).profile ? (updated as PortfolioData) : { ...data, ...updated };
       try {
         const res = await StorageService.savePortfolioData(nextData as PortfolioData);
-        setData(nextData as PortfolioData);
+        setData(await StorageService.getPortfolioData());
         addToast(t('admin.saved'), 'success');
         return res;
       } catch (error: any) {

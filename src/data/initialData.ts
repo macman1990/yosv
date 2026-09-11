@@ -937,6 +937,22 @@ A strong CTA should feel like the natural conclusion to the story, not an awkwar
     { id: 'nav-8', label: { en: 'Contact', ar: 'تواصل معي' }, target: '#contact', isExternal: false, order: 8, visible: true },
   ],
 
+  sectionOrder: [
+    { id: 'hero', order: 1, visible: true },
+    { id: 'work', order: 2, visible: true },
+    { id: 'services', order: 3, visible: true },
+    { id: 'about', order: 4, visible: true },
+    { id: 'experience', order: 5, visible: true },
+    { id: 'education', order: 6, visible: true },
+    { id: 'tools', order: 7, visible: true },
+    { id: 'content', order: 8, visible: true },
+    { id: 'blog', order: 9, visible: true },
+    { id: 'testimonials', order: 10, visible: true },
+    { id: 'custom', order: 11, visible: true },
+    { id: 'pricing', order: 12, visible: true },
+    { id: 'contact', order: 13, visible: true },
+  ],
+
   appearance: {
     accentColor: '#10b981', // Emerald cinematic tone
     secondaryAccent: '#06b6d4',
@@ -947,6 +963,9 @@ A strong CTA should feel like the natural conclusion to the story, not an awkwar
     customCursorEnabled: true,
     scrollAnimationEnabled: true,
     grainOverlayEnabled: true,
+    enable3D: true,
+    threeDIntensity: 'subtle',
+    threeDQuality: 'auto',
     defaultTheme: 'dark',
     themeName: 'cinematic',
     backgroundIntensity: 'medium',

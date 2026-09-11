@@ -21,6 +21,7 @@ export const Header: React.FC = () => {
 
   const navItems = (data.navItems || []).filter((i) => i.visible).sort((a, b) => a.order - b.order);
   const name = data.profile.name[language] || data.profile.name.en;
+  const showStartProject = data.siteFeatures?.startProject === true && data.siteFeatures?.projectInquiry === true;
 
   useEffect(() => {
     const targets = navItems
@@ -103,13 +104,13 @@ export const Header: React.FC = () => {
           <div className="hidden items-center gap-2.5 sm:flex">
             <LanguageSwitcher />
             <ThemeToggle />
-            <a
+            {showStartProject && <a
               href="#contact"
               className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent)] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-black shadow-[0_16px_40px_rgba(63,124,255,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_44px_rgba(63,124,255,0.34)]"
             >
               <Sparkles className="h-3.5 w-3.5" />
               {t('hero.contactMe')}
-            </a>
+            </a>}
           </div>
 
           <div className="flex items-center gap-2 sm:hidden">
@@ -153,13 +154,13 @@ export const Header: React.FC = () => {
           </nav>
 
           <div className="mt-4 border-t border-[var(--border)] pt-4">
-            <a
+            {showStartProject && <a
               href="#contact"
               onClick={() => setMobileMenuOpen(false)}
               className="block w-full rounded-2xl bg-[var(--color-accent)] px-4 py-3 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-black"
             >
               {t('hero.contactMe')}
-            </a>
+            </a>}
           </div>
         </div>
       </div>

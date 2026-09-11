@@ -2,6 +2,8 @@ import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { sanitizeExternalUrl } from '../../lib/security';
+import { ParallaxMedia } from '../common/MotionPrimitives';
+import { Portfolio3D } from '../three/Portfolio3D';
 import {
   Play,
   Sparkles,
@@ -74,12 +76,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
     ? (data.socialLinks || []).filter((s) => s.visible && s.url)
     : [];
   const statsList = (data.stats || []).filter((s) => s.visible).slice(0, 3);
+  const showStartProject = data.siteFeatures?.startProject === true && data.siteFeatures?.projectInquiry === true;
 
   return (
     <section
       id="hero"
       className="relative min-h-[92vh] flex items-center justify-center pt-28 pb-16 overflow-hidden"
     >
+      <Portfolio3D />
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute left-1/2 top-1/3 h-[420px] w-[420px] -translate-x-1/2 rounded-full blur-[130px] opacity-40"
@@ -156,7 +160,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
                   {t('hero.viewWork')}
                 </button>
 
-                <button
+                {showStartProject && <button
                   type="button"
                   onClick={() => {
                     if (onContactClick) {
@@ -170,7 +174,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
                 >
                   <Sparkles className="h-4 w-4" style={{ color: 'var(--color-accent)' }} />
                   {t('hero.contactMe')}
-                </button>
+                </button>}
               </motion.div>
 
               {visibleSocialLinks.length > 0 && (
@@ -206,11 +210,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
               <div className="glass-panel overflow-hidden rounded-[32px] border border-[var(--border)] p-2.5">
                 {featuredProject ? (
                   <div className="relative overflow-hidden rounded-[26px]">
-                    <img
-                      src={featuredProject.thumbnail}
-                      alt={featuredProject.title[language] || featuredProject.title.en}
-                      className="h-[360px] w-full object-cover transition-transform duration-700 hover:scale-[1.03] sm:h-[430px]"
-                    />
+                    <ParallaxMedia distance={10} className="h-full w-full">
+                      <img
+                        src={featuredProject.thumbnail}
+                        alt={featuredProject.title[language] || featuredProject.title.en}
+                        className="h-[360px] w-full object-cover transition-transform duration-700 hover:scale-[1.03] sm:h-[430px]"
+                      />
+                    </ParallaxMedia>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
                     <div className="absolute inset-x-0 bottom-0 p-5">
                       <div className="mb-3 flex items-center justify-between gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-white/80">

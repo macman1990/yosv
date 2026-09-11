@@ -17,6 +17,7 @@ import {
   ShieldAlert,
   FileText,
   Sparkles,
+  ListOrdered,
 } from 'lucide-react';
 
 export type AdminTabId =
@@ -38,6 +39,9 @@ export type AdminTabId =
   | 'profile'
   | 'social'
   | 'sections'
+  | 'pageOrder'
+  | 'siteContent'
+  | 'messages'
   | 'appearance'
   | 'media'
   | 'backup'
@@ -71,6 +75,9 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     profile: { en: 'Profile & Bio', ar: 'الملف الشخصي والسيرة' },
     social: { en: 'Social Media', ar: 'السوشيال ميديا' },
     sections: { en: 'Section Builder', ar: 'بناء الأقسام' },
+    pageOrder: { en: 'Page Order', ar: 'ترتيب الصفحات' },
+    siteContent: { en: 'Site Content', ar: 'محتوى الموقع' },
+    messages: { en: 'Messages', ar: 'الرسائل' },
     appearance: { en: 'Appearance & UI', ar: 'المظهر والواجهة' },
     media: { en: 'Media Library', ar: 'مكتبة الوسائط' },
     backup: { en: 'Backup & JSON', ar: 'النسخ الاحتياطي والـ JSON' },
@@ -96,6 +103,9 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     { id: 'profile', icon: <User className="h-4 w-4" /> },
     { id: 'social', icon: <Component className="h-4 w-4" /> },
     { id: 'sections', icon: <Component className="h-4 w-4" /> },
+    { id: 'pageOrder', icon: <ListOrdered className="h-4 w-4" /> },
+    { id: 'siteContent', icon: <FileText className="h-4 w-4" /> },
+    { id: 'messages', icon: <MessageSquare className="h-4 w-4" /> },
     { id: 'appearance', icon: <Palette className="h-4 w-4" /> },
     { id: 'media', icon: <ImageIcon className="h-4 w-4" /> },
     { id: 'backup', icon: <Database className="h-4 w-4" /> },
