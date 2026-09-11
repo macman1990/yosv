@@ -148,7 +148,8 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const seo = data.seo;
     const siteTitle = seo?.siteTitle?.[language] || seo?.siteTitle?.en || data.profile?.name?.[language] || data.profile?.name?.en || 'Portfolio';
     const metaDescription = seo?.metaDescription?.[language] || seo?.metaDescription?.en || '';
-    const canonicalUrl = seo?.canonicalUrl || '';
+    const staticCanonicalUrl = document.head.querySelector('link[rel="canonical"]')?.getAttribute('href') || '';
+    const canonicalUrl = seo?.canonicalUrl || staticCanonicalUrl;
     const ogTitle = siteTitle;
     const ogDescription = metaDescription;
     const ogImage = seo?.ogImage || '';
