@@ -282,11 +282,18 @@ export class StorageService {
     return merged;
   }
 
-  public static async submitProjectInquiry(input: Omit<ProjectInquiry, 'id' | 'created_at' | 'status'>): Promise<{ success: boolean; error?: string }> {
+  public static async submitProjectInquiry(input: Pick<ProjectInquiry, 'name' | 'email' | 'project_type' | 'budget' | 'timeline' | 'brief_url' | 'message' | 'locale' | 'source'>): Promise<{ success: boolean; error?: string }> {
     if (!supabase) return { success: false, error: 'Inquiry service is not configured.' };
 
     const { error } = await supabase.from('project_inquiries').insert({
-      ...input,
+      name: input.name,
+      email: input.email,
+      project_type: input.project_type,
+      budget: input.budget,
+      timeline: input.timeline,
+      brief_url: input.brief_url,
+      message: input.message,
+      locale: input.locale,
       status: 'new',
       source: 'portfolio',
     });

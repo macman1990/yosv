@@ -333,13 +333,15 @@ export interface ProjectInquiry {
   project_type?: string;
   project_title?: string;
   project_description?: string;
+  message: string;
   brief_url?: string;
   deadline?: string;
   timeline?: string;
   budget?: string;
-  status: 'new' | 'reviewing' | 'contacted' | 'in_progress' | 'completed' | 'rejected';
+  status: 'new' | 'read' | 'replied' | 'archived';
   admin_notes?: string;
   locale: Language;
+  source: 'portfolio';
   honeypot?: string;
 }
 

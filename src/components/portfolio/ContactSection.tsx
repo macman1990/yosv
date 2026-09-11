@@ -88,14 +88,13 @@ export const ContactSection: React.FC = () => {
     const result = await StorageService.submitProjectInquiry({
       name: name.trim(),
       email: email.trim(),
-      project_title: projectType.trim() || undefined,
-      project_description: message.trim(),
       project_type: projectType.trim() || undefined,
       budget: budget || undefined,
       timeline: timeline.trim() || undefined,
       brief_url: briefUrl.trim() ? sanitizeExternalUrl(briefUrl.trim()) : undefined,
+      message: message.trim(),
       locale: language,
-      honeypot: '',
+      source: 'portfolio',
     });
 
     if (!result.success) {
