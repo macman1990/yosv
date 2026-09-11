@@ -70,6 +70,7 @@ export const VideoPlayerModal: React.FC = () => {
                 poster={activeVideoProject.thumbnail}
                 controls
                 autoPlay
+                preload="none"
                 playsInline
                 className="w-full h-full object-contain"
               />

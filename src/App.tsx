@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { PortfolioProvider, usePortfolio } from './context/PortfolioContext';
 import { AdminAuthProvider } from './context/AdminAuthContext';
 import { CustomCursor } from './components/common/CustomCursor';
@@ -6,13 +6,14 @@ import { ToastContainer } from './components/common/ToastContainer';
 import { VideoPlayerModal } from './components/common/VideoPlayerModal';
 import { CaseStudyModal } from './components/common/CaseStudyModal';
 import { AdminLoginModal } from './components/admin/AdminLoginModal';
-import { AdminDashboard } from './components/admin/AdminDashboard';
 import { Header } from './components/portfolio/Header';
-import { BlogHubPage } from './components/portfolio/BlogHubPage';
 import { Footer } from './components/portfolio/Footer';
 import { SplashScreen } from './components/common/SplashScreen';
 import { BackgroundSystem } from './components/common/BackgroundSystem';
 import { getSectionDefinition, isSectionEnabled, normalizeSectionOrder, SectionRenderBoundary } from './lib/sectionRegistry';
+
+const LazyAdminDashboard = React.lazy(() => import('./components/admin/AdminDashboard').then((module) => ({ default: module.AdminDashboard })));
+const LazyBlogHubPage = React.lazy(() => import('./components/portfolio/BlogHubPage').then((module) => ({ default: module.BlogHubPage })));
 
 const PortfolioApp: React.FC = () => {
   const { data, isAdminMode, language, showAdminLogin, setShowAdminLogin } = usePortfolio();
@@ -57,13 +58,15 @@ const PortfolioApp: React.FC = () => {
         <CustomCursor />
         <ToastContainer />
         <AdminLoginModal />
-        <BlogHubPage
-          initialSlug={slug}
-          onNavigateHome={() => {
-            window.history.pushState({}, '', '/');
-            setCurrentPath('/');
-          }}
-        />
+        <Suspense fallback={null}>
+          <LazyBlogHubPage
+            initialSlug={slug}
+            onNavigateHome={() => {
+              window.history.pushState({}, '', '/');
+              setCurrentPath('/');
+            }}
+          />
+        </Suspense>
       </div>
     );
   }
@@ -82,7 +85,9 @@ const PortfolioApp: React.FC = () => {
       <AdminLoginModal />
 
       {isAdminMode ? (
-        <AdminDashboard />
+        <Suspense fallback={null}>
+          <LazyAdminDashboard />
+        </Suspense>
       ) : (
         <div className="relative flex flex-col min-h-screen">
           <Header />
