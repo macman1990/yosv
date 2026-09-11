@@ -17,6 +17,10 @@ export type VideoPlatform =
 
 export type AspectRatio = '16:9' | '9:16' | '1:1' | '21:9' | '4:5';
 
+export type PortfolioThemeName = 'cinematic' | 'liquid-glass' | 'editorial' | 'digital' | 'luxury';
+export type BackgroundIntensity = 'off' | 'subtle' | 'medium' | 'strong';
+export type ProjectDisplayMode = 'grid' | 'view-more' | 'carousel' | 'horizontal' | 'featured-secondary' | 'compact';
+
 export type ContentStatus = 'published' | 'draft' | 'hidden';
 
 export interface CaseStudy {
@@ -392,7 +396,19 @@ export interface AppearanceSettings {
   scrollAnimationEnabled: boolean;
   grainOverlayEnabled: boolean;
   defaultTheme: 'dark' | 'light';
+  themeName: PortfolioThemeName;
+  backgroundIntensity: BackgroundIntensity;
+  projectDisplayMode: ProjectDisplayMode;
+  projectsInitialCount: number;
+  projectsExpandedCount: number;
+  desktopColumns: number;
+  tabletColumns: number;
+  mobileColumns: number;
+  carouselAutoplay: boolean;
+  carouselLoop: boolean;
+  showCarouselControls: boolean;
   navigationMode?: 'slider' | 'scroll';
+  heroStyle?: 'cinematic' | 'editorial' | 'studio' | 'luxury';
 }
 
 export interface SEOSettings {

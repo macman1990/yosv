@@ -7,6 +7,7 @@ export const AdminAppearanceTab: React.FC = () => {
   const { data, saveData, addToast } = usePortfolio();
 
   const [appearance, setAppearance] = useState<AppearanceSettings>({
+    ...data.appearance,
     accentColor: data.appearance?.accentColor || '#10b981',
     secondaryAccent: data.appearance?.secondaryAccent || '#06b6d4',
     defaultTheme: data.appearance?.defaultTheme || 'dark',
@@ -14,7 +15,18 @@ export const AdminAppearanceTab: React.FC = () => {
     filmGrainEnabled: data.appearance?.filmGrainEnabled !== false,
     heroStyle: data.appearance?.heroStyle || 'cinematic',
     navigationMode: data.appearance?.navigationMode || 'slider',
-  });
+    themeName: data.appearance?.themeName || 'cinematic',
+    backgroundIntensity: data.appearance?.backgroundIntensity || 'medium',
+    projectDisplayMode: data.appearance?.projectDisplayMode || 'view-more',
+    projectsInitialCount: data.appearance?.projectsInitialCount || 6,
+    projectsExpandedCount: data.appearance?.projectsExpandedCount || 12,
+    desktopColumns: data.appearance?.desktopColumns || 3,
+    tabletColumns: data.appearance?.tabletColumns || 2,
+    mobileColumns: data.appearance?.mobileColumns || 1,
+    carouselAutoplay: data.appearance?.carouselAutoplay ?? false,
+    carouselLoop: data.appearance?.carouselLoop ?? true,
+    showCarouselControls: data.appearance?.showCarouselControls ?? true,
+  } as AppearanceSettings);
 
   const handleSave = async () => {
     await saveData({ ...data, appearance });
@@ -49,6 +61,90 @@ export const AdminAppearanceTab: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="p-6 rounded-3xl bg-[#12141c] border border-white/10 space-y-4">
+          <div className="flex items-center gap-2 text-violet-400 font-mono text-xs uppercase font-bold tracking-wider">
+            <Sparkles className="w-4 h-4" />
+            <span>Visual Theme</span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3">
+            {[
+              { value: 'cinematic', label: 'Cinematic Film' },
+              { value: 'liquid-glass', label: 'Spatial Glass' },
+              { value: 'editorial', label: 'Editorial' },
+              { value: 'digital', label: 'Digital Studio' },
+              { value: 'luxury', label: 'Minimal Luxury' },
+            ].map((theme) => (
+              <button
+                key={theme.value}
+                type="button"
+                onClick={() => setAppearance({ ...appearance, themeName: theme.value as any })}
+                className={`rounded-2xl border p-3 text-left transition ${appearance.themeName === theme.value ? 'border-[var(--color-accent)] bg-[var(--accent-muted)]' : 'border-white/10 bg-white/5'}`}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-semibold text-white">{theme.label}</span>
+                  <span className={`h-2.5 w-2.5 rounded-full ${appearance.themeName === theme.value ? 'bg-[var(--color-accent)]' : 'bg-zinc-600'}`} />
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div className="space-y-2 pt-2">
+            <label className="text-xs font-mono text-zinc-400">Background Intensity</label>
+            <select
+              value={appearance.backgroundIntensity || 'medium'}
+              onChange={(e) => setAppearance({ ...appearance, backgroundIntensity: e.target.value as any })}
+              className="w-full rounded-xl bg-black/50 border border-white/10 px-3 py-2 text-sm text-white"
+            >
+              <option value="off">Off</option>
+              <option value="subtle">Subtle</option>
+              <option value="medium">Medium</option>
+              <option value="strong">Strong</option>
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs font-mono text-zinc-400">Project Display Mode</label>
+            <select
+              value={appearance.projectDisplayMode || 'view-more'}
+              onChange={(e) => setAppearance({ ...appearance, projectDisplayMode: e.target.value as any })}
+              className="w-full rounded-xl bg-black/50 border border-white/10 px-3 py-2 text-sm text-white"
+            >
+              <option value="grid">Grid</option>
+              <option value="view-more">View More</option>
+              <option value="carousel">Carousel</option>
+              <option value="horizontal">Horizontal Scroll</option>
+              <option value="featured-secondary">Featured + Secondary</option>
+              <option value="compact">Compact List</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-xs font-mono text-zinc-400">Initial Count</label>
+              <input
+                type="number"
+                min={1}
+                max={24}
+                value={appearance.projectsInitialCount || 6}
+                onChange={(e) => setAppearance({ ...appearance, projectsInitialCount: Number(e.target.value) || 6 })}
+                className="w-full rounded-xl bg-black/50 border border-white/10 px-3 py-2 text-sm text-white"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-mono text-zinc-400">Expanded Count</label>
+              <input
+                type="number"
+                min={1}
+                max={48}
+                value={appearance.projectsExpandedCount || 12}
+                onChange={(e) => setAppearance({ ...appearance, projectsExpandedCount: Number(e.target.value) || 12 })}
+                className="w-full rounded-xl bg-black/50 border border-white/10 px-3 py-2 text-sm text-white"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Accent Colors */}
         <div className="p-6 rounded-3xl bg-[#12141c] border border-white/10 space-y-4">
           <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs uppercase font-bold tracking-wider">

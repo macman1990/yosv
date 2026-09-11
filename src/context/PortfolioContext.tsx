@@ -84,7 +84,10 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // Update body theme classes and dynamic CSS root variables on theme or appearance change
   useEffect(() => {
+    const themeName = data.appearance?.themeName || 'cinematic';
     document.documentElement.setAttribute('data-theme', theme);
+    document.body.setAttribute('data-theme-name', themeName);
+
     if (theme === 'light') {
       document.documentElement.classList.remove('dark');
       document.documentElement.classList.add('light');
@@ -93,22 +96,83 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       document.documentElement.classList.add('dark');
     }
 
-    // Accent color dynamic variable
     if (data.appearance?.accentColor) {
       document.documentElement.style.setProperty('--color-accent', data.appearance.accentColor);
-      document.documentElement.style.setProperty(
-        '--accent-muted',
-        `${data.appearance.accentColor}1f`
-      );
-      document.documentElement.style.setProperty(
-        '--accent-glow',
-        `${data.appearance.accentColor}33`
-      );
+      document.documentElement.style.setProperty('--accent-muted', `${data.appearance.accentColor}1f`);
+      document.documentElement.style.setProperty('--accent-glow', `${data.appearance.accentColor}33`);
     }
     if (data.appearance?.secondaryAccent) {
       document.documentElement.style.setProperty('--color-accent-secondary', data.appearance.secondaryAccent);
     }
+
+    const themeMap: Record<string, { shell: string; panel: string; shadow: string; border: string }> = {
+      cinematic: { shell: 'rgba(10,13,18,0.92)', panel: 'rgba(17,23,34,0.82)', shadow: '0 24px 60px -28px rgba(0,0,0,0.8)', border: 'rgba(255,255,255,0.08)' },
+      'liquid-glass': { shell: 'rgba(130,146,180,0.18)', panel: 'rgba(255,255,255,0.12)', shadow: '0 20px 50px -30px rgba(96,127,255,0.45)', border: 'rgba(255,255,255,0.14)' },
+      editorial: { shell: 'rgba(18,17,15,0.92)', panel: 'rgba(32,28,25,0.76)', shadow: '0 20px 50px -32px rgba(17,12,9,0.7)', border: 'rgba(255,255,255,0.08)' },
+      digital: { shell: 'rgba(6,11,20,0.92)', panel: 'rgba(12,18,29,0.86)', shadow: '0 24px 60px -28px rgba(28,67,118,0.5)', border: 'rgba(111,219,219,0.17)' },
+      luxury: { shell: 'rgba(22,19,16,0.9)', panel: 'rgba(35,29,24,0.76)', shadow: '0 24px 60px -26px rgba(24,18,12,0.7)', border: 'rgba(212,184,135,0.18)' },
+    };
+
+    const current = themeMap[themeName] || themeMap.cinematic;
+    document.documentElement.style.setProperty('--theme-shell-bg', current.shell);
+    document.documentElement.style.setProperty('--theme-panel-bg', current.panel);
+    document.documentElement.style.setProperty('--theme-panel-border', current.border);
+    document.documentElement.style.setProperty('--theme-shadow', current.shadow);
   }, [theme, data.appearance]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+
+    const seo = data.seo;
+    const siteTitle = seo?.siteTitle?.[language] || seo?.siteTitle?.en || data.profile?.name?.[language] || data.profile?.name?.en || 'Portfolio';
+    const metaDescription = seo?.metaDescription?.[language] || seo?.metaDescription?.en || '';
+    const canonicalUrl = seo?.canonicalUrl || '';
+    const ogTitle = siteTitle;
+    const ogDescription = metaDescription;
+    const ogImage = seo?.ogImage || '';
+
+    const setMetaTag = (selector: string, attribute: string, value: string, attributeValue: string) => {
+      if (!value) {
+        const existing = document.head.querySelector(selector);
+        if (existing) existing.remove();
+        return;
+      }
+
+      let element = document.head.querySelector(selector) as HTMLElement | null;
+      if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute(attribute, attributeValue);
+        document.head.appendChild(element);
+      }
+      element.setAttribute('content', value);
+    };
+
+    const setLinkTag = (selector: string, relValue: string, hrefValue: string) => {
+      if (!hrefValue) {
+        const existing = document.head.querySelector(selector);
+        if (existing) existing.remove();
+        return;
+      }
+
+      let link = document.head.querySelector(selector) as HTMLLinkElement | null;
+      if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', relValue);
+        document.head.appendChild(link);
+      }
+      link.setAttribute('href', hrefValue);
+    };
+
+    document.title = siteTitle;
+    setMetaTag('meta[name="description"]', 'name', metaDescription, 'description');
+    setMetaTag('meta[property="og:title"]', 'property', ogTitle, 'og:title');
+    setMetaTag('meta[property="og:description"]', 'property', ogDescription, 'og:description');
+    setMetaTag('meta[property="og:image"]', 'property', ogImage, 'og:image');
+    setMetaTag('meta[name="twitter:title"]', 'name', ogTitle, 'twitter:title');
+    setMetaTag('meta[name="twitter:description"]', 'name', ogDescription, 'twitter:description');
+    setMetaTag('meta[name="twitter:image"]', 'name', ogImage, 'twitter:image');
+    setLinkTag('link[rel="canonical"]', 'canonical', canonicalUrl);
+  }, [data.seo, data.profile, language]);
 
   // Keyboard shortcut Ctrl + Shift + A to open Admin Login terminal
   useEffect(() => {

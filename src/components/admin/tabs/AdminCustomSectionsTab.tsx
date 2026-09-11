@@ -73,6 +73,27 @@ export const AdminCustomSectionsTab: React.FC = () => {
     });
   };
 
+  const handleMoveSection = async (id: string, direction: 'up' | 'down') => {
+    const sorted = [...sections].sort((a, b) => a.order - b.order);
+    const index = sorted.findIndex((section) => section.id === id);
+    if (index === -1) return;
+
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= sorted.length) return;
+
+    const reordered = [...sorted];
+    const [moved] = reordered.splice(index, 1);
+    reordered.splice(targetIndex, 0, moved);
+
+    const updated = reordered.map((section, idx) => ({
+      ...section,
+      order: idx + 1,
+    }));
+
+    await saveData({ ...data, customSections: updated });
+    addToast('Section order saved.', 'success');
+  };
+
   const handleDeleteBlock = (blockId: string) => {
     if (!editingSection) return;
     setEditingSection({
@@ -125,6 +146,24 @@ export const AdminCustomSectionsTab: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => handleMoveSection(sec.id, 'up')}
+                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300"
+                  title="Move Up"
+                  disabled={sections.findIndex((s) => s.id === sec.id) === 0}
+                >
+                  ↑
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleMoveSection(sec.id, 'down')}
+                  className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300"
+                  title="Move Down"
+                  disabled={sections.findIndex((s) => s.id === sec.id) === sections.length - 1}
+                >
+                  ↓
+                </button>
                 <button
                   type="button"
                   onClick={() => handleToggleVisible(sec)}

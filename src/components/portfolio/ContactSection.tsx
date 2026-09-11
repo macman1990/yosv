@@ -29,8 +29,14 @@ export const ContactSection: React.FC = () => {
 
   const showProjectBrief = getFeatureFlag('projectBrief');
   const showAvailability = getFeatureFlag('availability') && data.availability?.visible;
-  const showClientLogos = getFeatureFlag('clientLogos') && (data.clientLogos || []).some((logo) => logo.visible);
-  const showSocialButtons = getFeatureFlag('socialLinks') && (data.socialLinks || []).some((social) => social.visible);
+  const visibleClientLogos = [...(data.clientLogos || [])]
+    .filter((logo) => logo.visible)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const visibleSocialLinks = [...(data.socialLinks || [])]
+    .filter((social) => social.visible)
+    .sort((a, b) => a.order - b.order);
+  const showClientLogos = getFeatureFlag('clientLogos') && visibleClientLogos.length > 0;
+  const showSocialButtons = getFeatureFlag('socialLinks') && visibleSocialLinks.length > 0;
   const isInquiryEnabled = getFeatureFlag('projectInquiry');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -169,7 +175,7 @@ export const ContactSection: React.FC = () => {
                   Trusted by teams shipping fast
                 </p>
                 <div className="flex flex-wrap items-center gap-3">
-                  {(data.clientLogos || []).filter((logo) => logo.visible).map((logo) => (
+                  {visibleClientLogos.map((logo) => (
                     <img
                       key={logo.id}
                       src={logo.logoUrl}
@@ -184,7 +190,7 @@ export const ContactSection: React.FC = () => {
 
             {showSocialButtons && (
               <div className="glass-card border border-[var(--border)] p-5 flex flex-wrap gap-2">
-                {(data.socialLinks || []).filter((s) => s.visible).map((social) => (
+                {visibleSocialLinks.map((social) => (
                   <a
                     key={social.id}
                     href={sanitizeExternalUrl(social.url)}

@@ -948,7 +948,19 @@ A strong CTA should feel like the natural conclusion to the story, not an awkwar
     scrollAnimationEnabled: true,
     grainOverlayEnabled: true,
     defaultTheme: 'dark',
+    themeName: 'cinematic',
+    backgroundIntensity: 'medium',
+    projectDisplayMode: 'view-more',
+    projectsInitialCount: 6,
+    projectsExpandedCount: 12,
+    desktopColumns: 3,
+    tabletColumns: 2,
+    mobileColumns: 1,
+    carouselAutoplay: false,
+    carouselLoop: true,
+    showCarouselControls: true,
     navigationMode: 'slider', // Default to cinematic scene slider mode
+    heroStyle: 'cinematic',
   },
 
   seo: {
