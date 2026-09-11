@@ -5,7 +5,7 @@ import { getAspectRatioClass } from '../../lib/videoHelper';
 import { Play, Sparkles, Film, CheckCircle2, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 
 export const FeaturedWorkSection: React.FC = () => {
-  const { data, language, t, setActiveVideoProject, setActiveCaseStudyProject } = usePortfolio();
+  const { data, isClientMode, language, t, setActiveVideoProject, setActiveCaseStudyProject } = usePortfolio();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null);
   const [expanded, setExpanded] = useState(false);
@@ -15,10 +15,12 @@ export const FeaturedWorkSection: React.FC = () => {
   const carouselViewportRef = useRef<HTMLDivElement>(null);
 
   const categories: Category[] = (data.categories || []).filter((category) => category.visible).sort((a, b) => a.order - b.order);
-  const projects: Project[] = (data.projects || []).filter((project) => project.status === 'published' || project.visible === true).sort((a, b) => a.order - b.order);
+  const projects: Project[] = (data.projects || [])
+    .filter((project) => project.status === 'published' || project.visible === true)
+    .sort((a, b) => isClientMode ? Number(b.featured) - Number(a.featured) || a.order - b.order : a.order - b.order);
   const filteredProjects = selectedCategory === 'all' ? projects : projects.filter((project) => project.category === selectedCategory);
   const appearance = data.appearance;
-  const displayMode = appearance?.projectDisplayMode || 'view-more';
+  const displayMode = isClientMode ? 'featured-secondary' : (appearance?.projectDisplayMode || 'view-more');
   const initialCount = Math.max(1, Number(appearance?.projectsInitialCount || 6));
   const expandedCount = Math.max(initialCount, Number(appearance?.projectsExpandedCount || 12));
   const viewMoreEnabled = appearance?.viewMoreEnabled !== false;

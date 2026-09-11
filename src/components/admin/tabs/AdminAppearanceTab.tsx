@@ -31,6 +31,10 @@ export const AdminAppearanceTab: React.FC = () => {
     carouselAutoplay: data.appearance?.carouselAutoplay ?? false,
     carouselLoop: data.appearance?.carouselLoop ?? true,
     showCarouselControls: data.appearance?.showCarouselControls ?? true,
+    clientMode: {
+      enabled: data.appearance?.clientMode?.enabled === true,
+      presentation: data.appearance?.clientMode?.presentation === 'client' ? 'client' : 'standard',
+    },
   } as AppearanceSettings);
 
   const selectedTheme = THEME_REGISTRY[normalizeThemeName(appearance.themeName)];
@@ -237,6 +241,26 @@ export const AdminAppearanceTab: React.FC = () => {
                     <span>{color.name}</span>
                   </button>
                 ))}
+              </div>
+            </div>
+
+            <div className="space-y-3 border-t border-white/10 pt-4">
+              <div className="flex items-center gap-2 text-amber-400 font-mono text-xs uppercase font-bold tracking-wider"><Sparkles className="w-4 h-4" /><span>Client Presentation</span></div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-3.5 space-y-3">
+                <label className="flex items-center justify-between gap-3 text-xs text-zinc-300">
+                  <span>
+                    <span className="block font-semibold text-white">Enable Client Mode</span>
+                    <span className="mt-1 block text-[11px] text-zinc-500">Allows the focused client presentation at <span className="font-mono">?mode=client</span>.</span>
+                  </span>
+                  <input type="checkbox" checked={appearance.clientMode?.enabled === true} onChange={(e) => setAppearance({ ...appearance, clientMode: { enabled: e.target.checked, presentation: appearance.clientMode?.presentation || 'standard' } })} className="h-4 w-4 accent-emerald-500" />
+                </label>
+                <label className="space-y-1 text-xs font-mono text-zinc-400">
+                  <span>Default Presentation</span>
+                  <select value={appearance.clientMode?.presentation || 'standard'} onChange={(e) => setAppearance({ ...appearance, clientMode: { enabled: appearance.clientMode?.enabled === true, presentation: e.target.value === 'client' ? 'client' : 'standard' } })} className="w-full rounded-xl bg-black/50 border border-white/10 px-3 py-2 text-sm text-white">
+                    <option value="standard">Standard Portfolio</option>
+                    <option value="client">Client Mode</option>
+                  </select>
+                </label>
               </div>
             </div>
 

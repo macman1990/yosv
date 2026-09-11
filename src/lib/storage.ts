@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { PortfolioData, AnalyticsEvent, ProjectInquiry } from '../types/portfolio';
+import { AvailabilityStatusValue, PortfolioData, AnalyticsEvent, ProjectInquiry } from '../types/portfolio';
 import { initialPortfolioData } from '../data/initialData';
 import { normalizeSectionOrder } from './sectionRegistry';
 
@@ -74,6 +74,9 @@ export const normalizePortfolioData = (input: Partial<PortfolioData> | null | un
   const availability = {
     ...base.availability,
     ...(payload.availability || {}),
+    status: (['available', 'limited', 'booked'] as AvailabilityStatusValue[]).includes(payload.availability?.status as AvailabilityStatusValue)
+      ? payload.availability?.status
+      : base.availability.status,
     label: { ...base.availability.label, ...(payload.availability?.label || {}) },
     description: { ...base.availability.description, ...(payload.availability?.description || {}) },
   } as PortfolioData['availability'];
@@ -81,6 +84,10 @@ export const normalizePortfolioData = (input: Partial<PortfolioData> | null | un
   const appearance = {
     ...base.appearance,
     ...(payload.appearance || {}),
+    clientMode: {
+      enabled: payload.appearance?.clientMode?.enabled === true,
+      presentation: payload.appearance?.clientMode?.presentation === 'client' ? 'client' : 'standard',
+    },
     accentColor: payload.appearance?.accentColor || base.appearance.accentColor,
     secondaryAccent: payload.appearance?.secondaryAccent || base.appearance.secondaryAccent,
     themeName: payload.appearance?.themeName || base.appearance.themeName,

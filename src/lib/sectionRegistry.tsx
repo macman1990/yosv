@@ -13,6 +13,7 @@ import { TestimonialsSection } from '../components/portfolio/TestimonialsSection
 import { CustomSectionsRenderer } from '../components/portfolio/CustomSectionsRenderer';
 import { PricingSection } from '../components/portfolio/PricingSection';
 import { ContactSection } from '../components/portfolio/ContactSection';
+import { ClientLogosSection } from '../components/portfolio/ClientLogosSection';
 
 export type PortfolioSectionId =
   | 'hero'
@@ -25,6 +26,7 @@ export type PortfolioSectionId =
   | 'content'
   | 'blog'
   | 'testimonials'
+  | 'clientLogos'
   | 'custom'
   | 'pricing'
   | 'contact';
@@ -72,9 +74,10 @@ export const SECTION_REGISTRY: readonly PortfolioSectionDefinition[] = [
   { id: 'content', label: { en: 'Content & Reels', ar: 'المحتوى والريلز' }, defaultOrder: 8, featureKeys: ['content', 'contentHub'], featureMode: 'any', render: () => <ContentCreationSection /> },
   { id: 'blog', label: { en: 'Blog & Editorial', ar: 'المدونة والتحرير' }, defaultOrder: 9, featureKeys: ['blog'], render: () => <BlogSection /> },
   { id: 'testimonials', label: { en: 'Testimonials', ar: 'آراء العملاء' }, defaultOrder: 10, featureKeys: ['testimonials'], render: () => <TestimonialsSection /> },
-  { id: 'custom', label: { en: 'Custom Sections', ar: 'الأقسام المخصصة' }, defaultOrder: 11, render: () => <CustomSectionsRenderer /> },
-  { id: 'pricing', label: { en: 'Pricing & Packages', ar: 'الأسعار والباقات' }, defaultOrder: 12, featureKeys: ['pricing', 'packages'], featureMode: 'any', render: () => <PricingSection /> },
-  { id: 'contact', label: { en: 'Contact', ar: 'تواصل' }, defaultOrder: 13, featureKeys: ['startProject', 'projectInquiry'], render: () => <ContactSection /> },
+  { id: 'clientLogos', label: { en: 'Client Logos', ar: 'شعارات العملاء' }, defaultOrder: 11, featureKeys: ['clientLogos'], render: () => <ClientLogosSection /> },
+  { id: 'custom', label: { en: 'Custom Sections', ar: 'الأقسام المخصصة' }, defaultOrder: 12, render: () => <CustomSectionsRenderer /> },
+  { id: 'pricing', label: { en: 'Pricing & Packages', ar: 'الأسعار والباقات' }, defaultOrder: 13, featureKeys: ['pricing', 'packages'], featureMode: 'any', render: () => <PricingSection /> },
+  { id: 'contact', label: { en: 'Contact', ar: 'تواصل' }, defaultOrder: 14, featureKeys: ['startProject', 'projectInquiry'], render: () => <ContactSection /> },
 ];
 
 const registryIds = new Set<string>(SECTION_REGISTRY.map((section) => section.id));
@@ -106,6 +109,20 @@ export const normalizeSectionOrder = (items?: SectionOrderItem[]): SectionOrderI
   });
 
   return normalized;
+};
+
+const CLIENT_SECTION_ORDER: readonly PortfolioSectionId[] = ['hero', 'work', 'services', 'clientLogos', 'testimonials', 'contact'];
+
+export const getClientSectionOrder = (items?: SectionOrderItem[]): SectionOrderItem[] => {
+  const normalized = normalizeSectionOrder(items);
+  const byId = new Map(normalized.map((item) => [item.id, item]));
+
+  return CLIENT_SECTION_ORDER
+    .map((id, index) => {
+      const item = byId.get(id);
+      return item && item.visible ? { ...item, order: index + 1 } : null;
+    })
+    .filter((item): item is SectionOrderItem => item !== null);
 };
 
 export const isSectionEnabled = (data: PortfolioData, section: PortfolioSectionDefinition): boolean => {

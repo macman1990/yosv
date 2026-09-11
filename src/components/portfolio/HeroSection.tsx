@@ -25,7 +25,7 @@ interface HeroSectionProps {
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onContactClick }) => {
-  const { data, language, t, setActiveVideoProject } = usePortfolio();
+  const { data, isClientMode, language, t, setActiveVideoProject } = usePortfolio();
   const profile = data.profile;
   const shouldReduceMotion = useReducedMotion();
 
@@ -76,6 +76,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
     ? (data.socialLinks || []).filter((s) => s.visible && s.url)
     : [];
   const statsList = (data.stats || []).filter((s) => s.visible).slice(0, 3);
+  const specialtyList = (data.skills || [])
+    .filter((skill) => skill.enabled)
+    .sort((a, b) => a.order - b.order)
+    .slice(0, 3);
   const showStartProject = data.siteFeatures?.startProject === true && data.siteFeatures?.projectInquiry === true;
 
   return (
@@ -143,6 +147,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
                 >
                   {bio}
                 </motion.p>
+
+                <div className="flex flex-wrap items-center gap-2 pt-1" aria-label={language === 'ar' ? 'مجالات التخصص' : 'Specialties'}>
+                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+                    {isClientMode ? (language === 'ar' ? 'أركز على' : 'Focused on') : (language === 'ar' ? 'التخصص' : 'Specialties')}
+                  </span>
+                  {specialtyList.map((skill) => (
+                    <span key={skill.id} className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-2.5 py-1 text-[10px] text-[var(--foreground)]">
+                      {skill.name[language] || skill.name.en}
+                    </span>
+                  ))}
+                </div>
               </div>
 
               <motion.div

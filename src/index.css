@@ -41,40 +41,41 @@
   }
 
   .light {
-    --background: #f4f3ee;
-    --background-elevated: #f8f7f3;
-    --foreground: #121821;
-    --foreground-soft: #1b2431;
-    --muted: #586579;
-    --muted-foreground: #72809a;
-    --surface: rgba(255, 255, 255, 0.78);
-    --surface-elevated: rgba(255, 255, 255, 0.92);
-    --surface-muted: rgba(240, 239, 235, 0.9);
-    --card: rgba(255, 255, 255, 0.8);
-    --card-hover: rgba(248, 249, 251, 0.96);
-    --border: rgba(17, 24, 34, 0.08);
-    --border-subtle: rgba(17, 24, 34, 0.06);
-    --border-hover: rgba(17, 24, 34, 0.16);
-    --hero-background: #f3f2ee;
-    --hero-foreground: #171d29;
-    --card-shadow: 0 24px 60px -32px rgba(16, 22, 32, 0.15);
-    --cursor-border: rgba(16, 18, 26, 0.35);
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-surface: rgba(255, 255, 255, 0.58);
-    --glass-border: rgba(17, 24, 34, 0.08);
-    --glass-highlight: rgba(255, 255, 255, 0.54);
-    --input-bg: rgba(255, 255, 255, 0.7);
-    --input-border: rgba(17, 24, 34, 0.1);
-    --shadow-soft: 0 18px 40px -24px rgba(15, 23, 42, 0.18);
-    --color-accent: #3f7cff;
-    --color-accent-secondary: #5ec4d4;
-    --accent-muted: rgba(63, 124, 255, 0.08);
-    --accent-soft: rgba(63, 124, 255, 0.12);
-    --accent-glow: rgba(94, 196, 212, 0.18);
-    --theme-shell-bg: rgba(249,246,240,0.9);
-    --theme-panel-bg: rgba(255,255,255,0.7);
-    --theme-panel-border: rgba(17,24,34,0.08);
-    --theme-shadow: 0 24px 60px -32px rgba(16,22,32,0.16);
+    /* Warm editorial light materials: quiet canvas, clear hierarchy, low glare. */
+    --background: #e9e5dc;
+    --background-elevated: #f1eee7;
+    --foreground: #292722;
+    --foreground-soft: #403c35;
+    --muted: #655f56;
+    --muted-foreground: #7b7469;
+    --surface: rgba(244, 241, 234, 0.86);
+    --surface-elevated: rgba(249, 246, 239, 0.94);
+    --surface-muted: rgba(229, 224, 214, 0.84);
+    --card: rgba(244, 241, 234, 0.9);
+    --card-hover: rgba(250, 247, 240, 0.96);
+    --border: rgba(55, 49, 40, 0.13);
+    --border-subtle: rgba(55, 49, 40, 0.08);
+    --border-hover: rgba(55, 49, 40, 0.24);
+    --hero-background: #e4dfd5;
+    --hero-foreground: #2d2922;
+    --card-shadow: 0 24px 60px -32px rgba(67, 57, 45, 0.2);
+    --cursor-border: rgba(55, 49, 40, 0.38);
+    --glass-bg: rgba(235, 231, 222, 0.78);
+    --glass-surface: rgba(249, 246, 239, 0.68);
+    --glass-border: rgba(55, 49, 40, 0.14);
+    --glass-highlight: rgba(255, 252, 244, 0.42);
+    --input-bg: rgba(247, 244, 237, 0.88);
+    --input-border: rgba(55, 49, 40, 0.16);
+    --shadow-soft: 0 18px 40px -24px rgba(67, 57, 45, 0.2);
+    --color-accent: #356fae;
+    --color-accent-secondary: #4f8d91;
+    --accent-muted: rgba(53, 111, 174, 0.12);
+    --accent-soft: rgba(53, 111, 174, 0.17);
+    --accent-glow: rgba(79, 141, 145, 0.12);
+    --theme-shell-bg: rgba(235, 231, 222, 0.9);
+    --theme-panel-bg: rgba(249, 246, 239, 0.78);
+    --theme-panel-border: rgba(55, 49, 40, 0.13);
+    --theme-shadow: 0 24px 60px -32px rgba(67, 57, 45, 0.2);
     color-scheme: light;
   }
 
@@ -107,6 +108,18 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     transition: background 0.45s ease;
+  }
+
+  html.light body {
+    --color-accent: #285f8b;
+    --color-accent-secondary: #3f7775;
+    --accent-muted: rgba(40, 95, 139, 0.12);
+    --accent-soft: rgba(40, 95, 139, 0.17);
+    --accent-glow: rgba(63, 119, 117, 0.12);
+    background:
+      radial-gradient(circle at 12% 0%, rgba(187, 149, 105, 0.1), transparent 28%),
+      radial-gradient(circle at 92% 18%, rgba(93, 131, 157, 0.06), transparent 26%),
+      var(--background);
   }
 
   body::before {
@@ -145,6 +158,12 @@
   body[data-theme-name="minimal"]::before {
     background-image: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.06), transparent 30%);
     opacity: 0.5;
+  }
+
+  html.light body::before {
+    background-image: linear-gradient(rgba(71, 61, 49, 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(71, 61, 49, 0.025) 1px, transparent 1px);
+    opacity: 0.48;
   }
 
   [dir="rtl"] {
@@ -545,6 +564,128 @@ a[role="button"] {
   background: color-mix(in srgb, var(--surface-elevated) 88%, transparent);
 }
 
+.client-logos-section {
+  position: relative;
+  overflow: hidden;
+  padding: 5rem 0;
+}
+
+.client-logos-section__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.client-logos-section__viewport {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 0.25rem 0 0.75rem;
+  mask-image: linear-gradient(90deg, transparent, black 7%, black 93%, transparent);
+}
+
+.client-logos-section__track {
+  display: flex;
+  width: max-content;
+  animation: clientLogosDrift 34s linear infinite;
+  will-change: transform;
+}
+
+.client-logos-section__group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-inline-end: 1rem;
+}
+
+.client-logos-section__item {
+  position: relative;
+  display: flex;
+  width: clamp(8.5rem, 17vw, 13rem);
+  height: 5.25rem;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 18px);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  box-shadow: var(--shadow-soft);
+  transition: border-color 0.25s ease, transform 0.25s ease, background-color 0.25s ease;
+}
+
+.client-logos-section__item--link:hover,
+.client-logos-section__item--link:focus-visible {
+  border-color: var(--border-hover);
+  background: var(--surface-elevated);
+  transform: translateY(-2px);
+}
+
+.client-logos-section__image {
+  display: block;
+  width: 78%;
+  height: 72%;
+  object-fit: contain;
+  opacity: 0.82;
+  filter: saturate(0.82) contrast(1.04);
+}
+
+.client-logos-section__link-icon {
+  position: absolute;
+  inset-inline-end: 0.6rem;
+  top: 0.6rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  color: var(--muted-foreground);
+}
+
+.client-logos-section__item--link:hover .client-logos-section__image,
+.client-logos-section__item--link:focus-visible .client-logos-section__image {
+  opacity: 1;
+  filter: saturate(0.96) contrast(1.06);
+}
+
+.client-logos-section--client .client-logos-section__item {
+  width: clamp(9rem, 18vw, 14rem);
+  height: 5.75rem;
+  border-color: var(--border-hover);
+}
+
+@keyframes clientLogosDrift {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+:root[data-motion-mode="reduced"] .client-logos-section__track,
+:root[data-motion-mode="off"] .client-logos-section__track {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .client-logos-section__track {
+    animation: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .client-logos-section {
+    padding: 4.5rem 0;
+  }
+
+  .client-logos-section__header {
+    align-items: start;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .client-logos-section__viewport {
+    mask-image: linear-gradient(90deg, transparent, black 4%, black 96%, transparent);
+  }
+}
+
 [dir="rtl"] #services .section-shell > div:last-child > .group:hover {
   transform: none;
 }
@@ -716,6 +857,116 @@ body[data-theme-name="minimal"] .glass-card,
 body[data-theme-name="minimal"] .glass-panel {
   border-radius: 20px;
   box-shadow: 0 18px 42px -28px rgba(24,20,16,0.22);
+}
+
+/* Keep every registered theme inside the same light-mode material system. */
+html.light .glass,
+html.light .glass-panel,
+html.light .glass-card,
+html.light .glass-nav,
+html.light .glass-button,
+html.light .glass-modal {
+  border-color: var(--glass-border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--shadow-soft);
+}
+
+html.light .glass-panel,
+html.light .glass-card,
+html.light .glass-modal {
+  background: color-mix(in srgb, var(--surface-elevated) 76%, transparent);
+}
+
+html.light .glass-nav {
+  background: var(--glass-bg);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--shadow-soft);
+}
+
+html.light .glass-button {
+  background: var(--surface-muted);
+}
+
+html.light #hero .glass-card {
+  background: linear-gradient(145deg, rgba(249, 246, 239, 0.9), rgba(229, 224, 214, 0.78));
+  box-shadow: 0 28px 60px -34px rgba(67, 57, 45, 0.24), inset 0 1px 0 var(--glass-highlight);
+}
+
+html.light #work article {
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+html.light #work article:hover {
+  box-shadow: 0 24px 52px -30px rgba(67, 57, 45, 0.24);
+}
+
+html.light #work article > div:first-child {
+  background: var(--background-elevated);
+}
+
+html.light #services .section-shell > div:last-child > .group:hover {
+  background: color-mix(in srgb, var(--surface-muted) 66%, transparent);
+}
+
+html.light #about .section-shell > .grid > div:first-child > .glass-card:first-child,
+html.light #contact .glass-card {
+  box-shadow: var(--shadow-soft);
+}
+
+html.light #contact input,
+html.light #contact textarea,
+html.light #contact select {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  box-shadow: inset 0 1px 0 rgba(255, 252, 244, 0.46);
+}
+
+html.light #contact input:focus,
+html.light #contact textarea:focus,
+html.light #contact select:focus {
+  box-shadow: 0 0 0 3px var(--accent-muted), inset 0 1px 0 rgba(255, 252, 244, 0.56);
+}
+
+html.light .nav-shell {
+  background: var(--glass-bg);
+  border-color: var(--border);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--shadow-soft);
+}
+
+html.light .nav-shell-scrolled {
+  background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
+  border-color: var(--border-hover);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), 0 20px 42px -28px rgba(67, 57, 45, 0.24);
+}
+
+html.light .nav-item:hover,
+html.light .nav-item-active {
+  background: rgba(55, 49, 40, 0.06);
+}
+
+html.light .mobile-panel {
+  background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
+  box-shadow: 0 24px 52px -32px rgba(67, 57, 45, 0.24);
+}
+
+html.light .splash-screen {
+  background: radial-gradient(circle at top, rgba(187, 149, 105, 0.12), transparent 34%), var(--background);
+}
+
+html.light .splash-mark {
+  background: rgba(249, 246, 239, 0.62);
+  box-shadow: inset 0 1px 0 var(--glass-highlight), var(--shadow-soft);
+}
+
+html.light .background-system__vignette {
+  background: radial-gradient(ellipse at center, transparent 48%, rgba(67, 57, 45, 0.08) 100%);
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: rgba(67, 57, 45, 0.2);
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: rgba(53, 111, 174, 0.48);
 }
 
 .mobile-panel {

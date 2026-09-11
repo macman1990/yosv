@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Youssef Mohamed logo">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f6d365"/>
+      <stop offset="100%" stop-color="#fda085"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="#0b0b0f"/>
+  <path d="M20 46V18h8.5c6.3 0 10.2 3.5 10.2 9.1 0 5.6-3.9 9.1-10.2 9.1H20zm8.5-6.8c3.1 0 5.1-1.6 5.1-4.4 0-2.8-2-4.4-5.1-4.4H27v8.8h1.5zM36 46l9.3-28h6.7L42.7 46H36z" fill="url(#g)"/>
+</svg>

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { PortfolioData, Language, ThemeMode, Project } from '../types/portfolio';
+import { PortfolioData, Language, ThemeMode, Project, PresentationMode } from '../types/portfolio';
 import { initialPortfolioData } from '../data/initialData';
 import { StorageService } from '../lib/storage';
 import { UI_TRANSLATIONS } from '../lib/translations';
@@ -34,6 +34,8 @@ interface PortfolioContextType {
   toasts: ToastMessage[];
   addToast: (text: string, type?: 'success' | 'error' | 'info') => void;
   removeToast: (id: string) => void;
+  isClientMode: boolean;
+  presentationMode: PresentationMode;
 }
 
 const PortfolioContext = createContext<PortfolioContextType | undefined>(undefined);
@@ -48,6 +50,13 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const clientModeSettings = data.appearance?.clientMode;
+  const requestedMode = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('mode') : null;
+  const isClientMode = clientModeSettings?.enabled === true && (
+    requestedMode === 'client' ||
+    (requestedMode !== 'standard' && clientModeSettings.presentation === 'client')
+  );
+  const presentationMode: PresentationMode = isClientMode ? 'client' : 'standard';
 
   // Load persisted data on mount
   useEffect(() => {
@@ -298,6 +307,8 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         toasts,
         addToast,
         removeToast,
+        isClientMode,
+        presentationMode,
       }}
     >
       {children}

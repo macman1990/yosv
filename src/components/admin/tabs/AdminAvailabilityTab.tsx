@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../../../context/PortfolioContext';
+import { AvailabilityStatusValue } from '../../../types/portfolio';
 import { Save } from 'lucide-react';
 
 export const AdminAvailabilityTab: React.FC = () => {
@@ -10,6 +11,12 @@ export const AdminAvailabilityTab: React.FC = () => {
   const [labelAr, setLabelAr] = useState(data.availability?.label?.ar || 'متاح لمشاريع جديدة');
   const [messageEn, setMessageEn] = useState(data.availability?.description?.en || 'Booking for select brand and social campaigns.');
   const [messageAr, setMessageAr] = useState(data.availability?.description?.ar || 'توجد فتحات لمشاريع العلامات التجارية والمحتوى الاجتماعي.');
+
+  const statusLabels = {
+    available: language === 'ar' ? 'متاح' : 'Available',
+    limited: language === 'ar' ? 'التوفر محدود' : 'Limited Availability',
+    booked: language === 'ar' ? 'غير متاح حالياً' : 'Currently Unavailable',
+  } as const;
 
   const handleSave = async () => {
     const next = {
@@ -45,6 +52,8 @@ export const AdminAvailabilityTab: React.FC = () => {
         <button
           type="button"
           onClick={() => setVisible((prev) => !prev)}
+          aria-label={language === 'ar' ? (visible ? 'إخفاء حالة التوفر' : 'إظهار حالة التوفر') : (visible ? 'Hide availability' : 'Show availability')}
+          aria-pressed={visible}
           className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${visible ? 'bg-emerald-500' : 'bg-zinc-700'}`}
         >
           <span className={`inline-block h-5 w-5 rounded-full bg-white transition-transform ${visible ? 'translate-x-6' : 'translate-x-1'}`} />
@@ -54,11 +63,10 @@ export const AdminAvailabilityTab: React.FC = () => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-1">
           <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">{language === 'ar' ? 'الحالة' : 'Status'}</label>
-          <select value={status} onChange={(e) => setStatus(e.target.value as any)} className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white">
-            <option value="available">Available</option>
-            <option value="limited">Limited Availability</option>
-            <option value="booked">Fully Booked</option>
-            <option value="custom">Custom</option>
+          <select value={status} onChange={(e) => setStatus(e.target.value as AvailabilityStatusValue)} className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white">
+            <option value="available">{statusLabels.available}</option>
+            <option value="limited">{statusLabels.limited}</option>
+            <option value="booked">{statusLabels.booked}</option>
           </select>
         </div>
 
@@ -81,6 +89,16 @@ export const AdminAvailabilityTab: React.FC = () => {
           <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">{language === 'ar' ? 'الرسالة (AR)' : 'Message (AR)'}</label>
           <textarea dir="rtl" rows={3} value={messageAr} onChange={(e) => setMessageAr(e.target.value)} className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white" />
         </div>
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-4 space-y-2" aria-live="polite">
+        <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-zinc-500">{language === 'ar' ? 'المعاينة العامة' : 'Public preview'}</p>
+        <div className="flex items-center gap-2 text-sm font-semibold text-white">
+          <span className={`h-2.5 w-2.5 rounded-full ${status === 'available' ? 'bg-emerald-400' : status === 'limited' ? 'bg-amber-400' : 'bg-zinc-400'}`} />
+          {statusLabels[status as AvailabilityStatusValue]}
+        </div>
+        <p className="text-xs leading-relaxed text-zinc-400">{language === 'ar' ? messageAr : messageEn}</p>
+        <p className="text-[11px] text-zinc-500">{visible ? (language === 'ar' ? 'سيظهر بجانب مسار التواصل.' : 'Shown beside the contact path.') : (language === 'ar' ? 'مخفي عن الزوار.' : 'Hidden from visitors.')}</p>
       </div>
 
       <div className="flex items-center justify-end gap-2 border-t border-white/10 pt-4">

@@ -22,8 +22,14 @@ export type BackgroundIntensity = 'off' | 'subtle' | 'medium' | 'strong';
 export type MotionMode = 'full' | 'reduced' | 'off';
 export type ThreeDQuality = 'auto' | 'high' | 'medium' | 'low';
 export type ProjectDisplayMode = 'grid' | 'view-more' | 'carousel' | 'horizontal' | 'featured-secondary' | 'compact';
+export type PresentationMode = 'standard' | 'client';
 
 export type ContentStatus = 'published' | 'draft' | 'hidden';
+
+export interface ClientModeSettings {
+  enabled: boolean;
+  presentation: PresentationMode;
+}
 
 export interface CaseStudy {
   enabled: boolean;
@@ -437,6 +443,7 @@ export interface AppearanceSettings {
   secondaryCount?: number;
   navigationMode?: 'slider' | 'scroll';
   heroStyle?: 'cinematic' | 'editorial' | 'studio' | 'luxury';
+  clientMode?: ClientModeSettings;
 }
 
 export interface SEOSettings {

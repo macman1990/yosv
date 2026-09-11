@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../../../context/PortfolioContext';
-import { Save, Plus, Trash2, GripVertical } from 'lucide-react';
+import { Save, Plus, Trash2, GripVertical, ArrowDown, ArrowUp } from 'lucide-react';
+import { ClientLogo } from '../../../types/portfolio';
 
 export const AdminClientLogosTab: React.FC = () => {
   const { data, updateData, language, addToast } = usePortfolio();
@@ -20,8 +21,16 @@ export const AdminClientLogosTab: React.FC = () => {
     ]);
   };
 
-  const updateLogo = (id: string, field: string, value: string | boolean | number) => {
+  const updateLogo = <K extends keyof ClientLogo>(id: string, field: K, value: ClientLogo[K]) => {
     setLogos((prev) => prev.map((logo) => (logo.id === id ? { ...logo, [field]: value } : logo)));
+  };
+
+  const moveLogo = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= logos.length) return;
+    const next = [...logos];
+    [next[index], next[target]] = [next[target], next[index]];
+    setLogos(next.map((logo, logoIndex) => ({ ...logo, order: logoIndex + 1 })));
   };
 
   const removeLogo = (id: string) => {
@@ -72,26 +81,38 @@ export const AdminClientLogosTab: React.FC = () => {
                   <GripVertical className="h-4 w-4" />
                   <span className="text-xs uppercase tracking-[0.18em]">{language === 'ar' ? 'شعار' : 'Logo'}</span>
                 </div>
-                <button type="button" onClick={() => removeLogo(logo.id)} className="text-zinc-400 hover:text-red-400">
-                  <Trash2 className="h-4 w-4" />
-                </button>
+                <div className="flex items-center gap-1">
+                  <button type="button" onClick={() => moveLogo(logos.indexOf(logo), -1)} disabled={logos.indexOf(logo) === 0} className="rounded-lg p-1.5 text-zinc-400 hover:text-white disabled:opacity-30" aria-label={language === 'ar' ? 'تحريك الشعار لأعلى' : 'Move logo up'}><ArrowUp className="h-4 w-4" /></button>
+                  <button type="button" onClick={() => moveLogo(logos.indexOf(logo), 1)} disabled={logos.indexOf(logo) === logos.length - 1} className="rounded-lg p-1.5 text-zinc-400 hover:text-white disabled:opacity-30" aria-label={language === 'ar' ? 'تحريك الشعار لأسفل' : 'Move logo down'}><ArrowDown className="h-4 w-4" /></button>
+                  <button type="button" onClick={() => removeLogo(logo.id)} className="rounded-lg p-1.5 text-zinc-400 hover:text-red-400" aria-label={language === 'ar' ? 'حذف الشعار' : 'Remove logo'}>
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 <div className="space-y-1">
-                  <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">Name</label>
+                  <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">{language === 'ar' ? 'الاسم' : 'Name'}</label>
                   <input value={logo.name} onChange={(e) => updateLogo(logo.id, 'name', e.target.value)} className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">Image URL</label>
+                  <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">{language === 'ar' ? 'رابط الصورة' : 'Image URL'}</label>
                   <input value={logo.logoUrl} onChange={(e) => updateLogo(logo.id, 'logoUrl', e.target.value)} className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white" />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">Visible</label>
-                  <button type="button" onClick={() => updateLogo(logo.id, 'visible', !logo.visible)} className={`w-full rounded-xl border px-3 py-2.5 text-sm transition ${logo.visible ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-300' : 'border-white/10 bg-black/40 text-zinc-400'}`}>
+                  <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">{language === 'ar' ? 'رابط الموقع (اختياري)' : 'Website URL (optional)'}</label>
+                  <input value={logo.websiteUrl || ''} onChange={(e) => updateLogo(logo.id, 'websiteUrl', e.target.value)} className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white" />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">{language === 'ar' ? 'الحالة' : 'Visibility'}</label>
+                  <button type="button" aria-pressed={logo.visible} onClick={() => updateLogo(logo.id, 'visible', !logo.visible)} className={`w-full rounded-xl border px-3 py-2.5 text-sm transition ${logo.visible ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-300' : 'border-white/10 bg-black/40 text-zinc-400'}`}>
                     {logo.visible ? (language === 'ar' ? 'مرئي' : 'Visible') : (language === 'ar' ? 'مخفي' : 'Hidden')}
                   </button>
                 </div>
+              </div>
+              <div className="mt-3 flex items-center gap-3 rounded-xl border border-white/10 bg-black/20 p-2.5">
+                <img src={logo.logoUrl} alt="" className="h-12 w-20 rounded-lg border border-white/10 bg-white/5 object-contain" />
+                <span className="text-xs text-zinc-400">{language === 'ar' ? 'معاينة الشعار' : 'Logo preview'}</span>
               </div>
             </div>
           ))

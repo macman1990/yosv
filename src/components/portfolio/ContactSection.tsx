@@ -6,7 +6,7 @@ import { StorageService } from '../../lib/storage';
 import { sanitizeExternalUrl } from '../../lib/security';
 
 export const ContactSection: React.FC = () => {
-  const { data, language, t, addToast } = usePortfolio();
+  const { data, isClientMode, language, t, addToast } = usePortfolio();
   const contact = data.contact;
   const shouldReduceMotion = useReducedMotion();
 
@@ -31,15 +31,21 @@ export const ContactSection: React.FC = () => {
 
   const showProjectBrief = getFeatureFlag('projectBrief');
   const showAvailability = getFeatureFlag('availability') && data.availability?.visible;
-  const visibleClientLogos = [...(data.clientLogos || [])]
-    .filter((logo) => logo.visible)
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   const visibleSocialLinks = [...(data.socialLinks || [])]
     .filter((social) => social.visible)
     .sort((a, b) => a.order - b.order);
-  const showClientLogos = getFeatureFlag('clientLogos') && visibleClientLogos.length > 0;
   const showSocialButtons = getFeatureFlag('socialLinks') && visibleSocialLinks.length > 0;
   const isInquiryEnabled = getFeatureFlag('projectInquiry');
+  const availabilityStatusLabel = data.availability?.status === 'limited'
+    ? (language === 'ar' ? 'التوفر محدود' : 'Limited Availability')
+    : data.availability?.status === 'booked'
+      ? (language === 'ar' ? 'غير متاح حالياً' : 'Currently Unavailable')
+      : (language === 'ar' ? 'متاح' : 'Available');
+  const availabilityTone = data.availability?.status === 'limited'
+    ? 'amber'
+    : data.availability?.status === 'booked'
+      ? 'neutral'
+      : 'emerald';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -158,16 +164,17 @@ export const ContactSection: React.FC = () => {
               </p>
 
               {showAvailability && (
-                <div className="mt-4 rounded-2xl border border-[var(--color-accent)]/35 bg-[var(--accent-muted)] p-3">
+                <div className={`mt-4 rounded-2xl border p-3 ${isClientMode ? 'p-4 shadow-[var(--shadow-soft)]' : ''} ${availabilityTone === 'amber' ? 'border-amber-400/40 bg-amber-400/10' : availabilityTone === 'neutral' ? 'border-[var(--border)] bg-[var(--surface-muted)]' : 'border-[var(--color-accent)]/35 bg-[var(--accent-muted)]'}`} role="status" aria-live="polite">
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--color-accent)]">
-                      {data.availability.label?.[language] || data.availability.label?.en || 'Available'}
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--foreground)]">
+                      {availabilityStatusLabel}
                     </span>
-                    <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_18px_rgba(52,211,153,0.9)]" />
+                    <span className={`h-2.5 w-2.5 rounded-full ${availabilityTone === 'amber' ? 'bg-amber-400' : availabilityTone === 'neutral' ? 'bg-[var(--muted-foreground)]' : 'bg-emerald-400'}`} />
                   </div>
                   <p className="mt-2 text-xs text-[var(--muted)] leading-relaxed">
-                    {data.availability.description?.[language] || data.availability.description?.en || ''}
+                    {data.availability.description?.[language] || data.availability.description?.en || data.availability.label?.[language] || data.availability.label?.en || ''}
                   </p>
+                  {isClientMode && <p className="mt-2 text-[10px] font-mono uppercase tracking-[0.16em] text-[var(--color-accent)]">{language === 'ar' ? 'ابدأ من مسار التواصل أدناه' : 'Use the contact path below to start a conversation'}</p>}
                 </div>
               )}
 
@@ -213,25 +220,6 @@ export const ContactSection: React.FC = () => {
                 </a>
               </div>
             </div>
-
-            {showClientLogos && (
-              <div className="glass-card border border-[var(--border)] p-5">
-                <p className="mb-4 text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
-                  Trusted by teams shipping fast
-                </p>
-                <div className="flex flex-wrap items-center gap-3">
-                  {visibleClientLogos.map((logo) => (
-                    <img
-                      key={logo.id}
-                      src={logo.logoUrl}
-                      alt={logo.name}
-                      title={logo.name}
-                      className="h-10 w-20 rounded-xl border border-[var(--border)] bg-[var(--surface-muted)] object-cover opacity-80"
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
 
             {showSocialButtons && (
               <div className="glass-card border border-[var(--border)] p-5 flex flex-wrap gap-2">
@@ -289,10 +277,11 @@ export const ContactSection: React.FC = () => {
                   {submissionError && <p role="alert" className="rounded-xl border border-rose-400/30 bg-rose-400/10 px-3 py-2 text-xs text-rose-200">{submissionError}</p>}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                      <label htmlFor="contact-name" className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
                         {t('contact.name')} *
                       </label>
                       <input
+                        id="contact-name"
                         type="text"
                         required
                         value={name}
@@ -303,10 +292,11 @@ export const ContactSection: React.FC = () => {
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                      <label htmlFor="contact-email" className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
                         {t('contact.email')} *
                       </label>
                       <input
+                        id="contact-email"
                         type="email"
                         required
                         value={email}
@@ -319,10 +309,11 @@ export const ContactSection: React.FC = () => {
 
                   {contact.formFields.showProjectType && (
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                      <label htmlFor="contact-project-type" className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
                         {t('contact.projectType')}
                       </label>
                       <input
+                        id="contact-project-type"
                         type="text"
                         value={projectType}
                         onChange={(e) => setProjectType(e.target.value)}
@@ -334,15 +325,16 @@ export const ContactSection: React.FC = () => {
 
                   {contact.formFields.showBudget && (
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                      <label htmlFor="contact-budget" className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
                         {t('contact.budget')}
                       </label>
                       <select
+                        id="contact-budget"
                         value={budget}
                         onChange={(e) => setBudget(e.target.value)}
                         className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--foreground)] focus:border-[var(--color-accent)] focus:outline-none"
                       >
-                        <option value="">Select an investment tier...</option>
+                        <option value="">{language === 'ar' ? 'اختر نطاق الاستثمار...' : 'Select an investment tier...'}</option>
                         <option value="$1k - $3k">$1,000 – $3,000</option>
                         <option value="$3k - $8k">$3,000 – $8,000</option>
                         <option value="$8k - $20k+">$8,000 – $20,000+</option>
@@ -352,10 +344,11 @@ export const ContactSection: React.FC = () => {
 
                   {showProjectBrief && (
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-                        Project brief URL{contact.formFields.projectBriefRequired ? ' *' : ''}
+                      <label htmlFor="contact-brief-url" className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                        {language === 'ar' ? 'رابط موجز المشروع' : 'Project brief URL'}{contact.formFields.projectBriefRequired ? ' *' : ''}
                       </label>
                       <input
+                        id="contact-brief-url"
                         type="url"
                         value={briefUrl}
                         onChange={(e) => setBriefUrl(e.target.value)}
@@ -367,16 +360,17 @@ export const ContactSection: React.FC = () => {
 
                   {contact.formFields.showTimeline && (
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Timeline</label>
-                      <input type="text" value={timeline} onChange={(e) => setTimeline(e.target.value)} placeholder="Target delivery window" className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--color-accent)] focus:outline-none" />
+                      <label htmlFor="contact-timeline" className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{language === 'ar' ? 'الجدول الزمني' : 'Timeline'}</label>
+                      <input id="contact-timeline" type="text" value={timeline} onChange={(e) => setTimeline(e.target.value)} placeholder={language === 'ar' ? 'موعد التسليم المستهدف' : 'Target delivery window'} className="w-full rounded-2xl border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--color-accent)] focus:outline-none" />
                     </div>
                   )}
 
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                    <label htmlFor="contact-message" className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
                       {t('contact.message')} *
                     </label>
                     <textarea
+                      id="contact-message"
                       required
                       rows={4}
                       value={message}

@@ -3,10 +3,9 @@ import { usePortfolio } from '../../context/PortfolioContext';
 import { User, FileText, Quote, Award, MapPin, CheckCircle, Flame } from 'lucide-react';
 
 export const AboutSection: React.FC = () => {
-  const { data, language, t } = usePortfolio();
+  const { data, isClientMode, language, t } = usePortfolio();
   const profile = data.profile;
 
-  const shortBio = profile.shortBio[language] || profile.shortBio.en;
   const longBio = profile.longBio[language] || profile.longBio.en;
   const philosophy = profile.philosophy[language] || profile.philosophy.en;
   const location = profile.location[language] || profile.location.en;
@@ -26,7 +25,9 @@ export const AboutSection: React.FC = () => {
             {t('about.badge')}
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-[var(--foreground)] font-syne tracking-[-0.05em]">
-            {t('about.title')}
+            {isClientMode
+              ? (language === 'ar' ? 'شريك إبداعي يركز على الوضوح والإيقاع' : 'A creative partner for clarity and momentum')
+              : t('about.title')}
           </h2>
         </div>
 
@@ -79,12 +80,24 @@ export const AboutSection: React.FC = () => {
 
           <div className="lg:col-span-7 space-y-8 text-start reveal reveal-delay-2">
             <div className="space-y-4">
-              <h3 className="text-2xl sm:text-3xl font-bold text-[var(--foreground)] font-syne tracking-[-0.05em]">
-                {shortBio}
-              </h3>
               <p className="text-[var(--muted)] text-sm sm:text-base leading-relaxed">
                 {longBio}
               </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 border-y border-[var(--border)] py-4 sm:grid-cols-3">
+              <div>
+                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{language === 'ar' ? 'الموقع' : 'Based in'}</p>
+                <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">{location}</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{language === 'ar' ? 'الخبرة' : 'Experience'}</p>
+                <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">{profile.yearsExperience}+ {language === 'ar' ? 'سنوات' : 'years'}</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{language === 'ar' ? 'طريقة العمل' : 'Working style'}</p>
+                <p className="mt-1 text-sm font-semibold text-[var(--foreground)]">{language === 'ar' ? 'دقيق وإنساني' : 'Precise, human'}</p>
+              </div>
             </div>
 
             <div className="space-y-4 border-t border-[var(--border)] pt-5">

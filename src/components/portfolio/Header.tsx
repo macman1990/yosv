@@ -5,7 +5,7 @@ import { ThemeToggle } from '../common/ThemeToggle';
 import { Menu, X, Play, Sparkles } from 'lucide-react';
 
 export const Header: React.FC = () => {
-  const { data, language, t } = usePortfolio();
+  const { data, isClientMode, language, t } = usePortfolio();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('#work');
@@ -19,7 +19,10 @@ export const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navItems = (data.navItems || []).filter((i) => i.visible).sort((a, b) => a.order - b.order);
+  const clientTargets = new Set(['#work', '#services', '#testimonials', '#contact']);
+  const navItems = (data.navItems || [])
+    .filter((i) => i.visible && (!isClientMode || clientTargets.has(i.target)))
+    .sort((a, b) => a.order - b.order);
   const name = data.profile.name[language] || data.profile.name.en;
   const showStartProject = data.siteFeatures?.startProject === true && data.siteFeatures?.projectInquiry === true;
 

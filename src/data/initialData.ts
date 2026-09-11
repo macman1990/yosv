@@ -948,9 +948,10 @@ A strong CTA should feel like the natural conclusion to the story, not an awkwar
     { id: 'content', order: 8, visible: true },
     { id: 'blog', order: 9, visible: true },
     { id: 'testimonials', order: 10, visible: true },
-    { id: 'custom', order: 11, visible: true },
-    { id: 'pricing', order: 12, visible: true },
-    { id: 'contact', order: 13, visible: true },
+    { id: 'clientLogos', order: 11, visible: true },
+    { id: 'custom', order: 12, visible: true },
+    { id: 'pricing', order: 13, visible: true },
+    { id: 'contact', order: 14, visible: true },
   ],
 
   appearance: {
@@ -978,6 +979,10 @@ A strong CTA should feel like the natural conclusion to the story, not an awkwar
     carouselAutoplay: false,
     carouselLoop: true,
     showCarouselControls: true,
+    clientMode: {
+      enabled: false,
+      presentation: 'standard',
+    },
     navigationMode: 'slider', // Default to cinematic scene slider mode
     heroStyle: 'cinematic',
   },

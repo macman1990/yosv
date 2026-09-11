@@ -10,13 +10,13 @@ import { Header } from './components/portfolio/Header';
 import { Footer } from './components/portfolio/Footer';
 import { SplashScreen } from './components/common/SplashScreen';
 import { BackgroundSystem } from './components/common/BackgroundSystem';
-import { getSectionDefinition, isSectionEnabled, normalizeSectionOrder, SectionRenderBoundary } from './lib/sectionRegistry';
+import { getSectionDefinition, getClientSectionOrder, isSectionEnabled, normalizeSectionOrder, SectionRenderBoundary } from './lib/sectionRegistry';
 
 const LazyAdminDashboard = React.lazy(() => import('./components/admin/AdminDashboard').then((module) => ({ default: module.AdminDashboard })));
 const LazyBlogHubPage = React.lazy(() => import('./components/portfolio/BlogHubPage').then((module) => ({ default: module.BlogHubPage })));
 
 const PortfolioApp: React.FC = () => {
-  const { data, isAdminMode, language, showAdminLogin, setShowAdminLogin } = usePortfolio();
+  const { data, isAdminMode, isClientMode, language, showAdminLogin, setShowAdminLogin } = usePortfolio();
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const [showSplash, setShowSplash] = useState(true);
 
@@ -93,7 +93,7 @@ const PortfolioApp: React.FC = () => {
           <Header />
           
           <main className="flex-grow pt-16 sm:pt-20">
-            {normalizeSectionOrder(data.sectionOrder).map((item) => {
+            {(isClientMode ? getClientSectionOrder(data.sectionOrder) : normalizeSectionOrder(data.sectionOrder)).map((item) => {
               const section = getSectionDefinition(item.id);
               if (!section || item.visible === false || !isSectionEnabled(data, section)) return null;
               return (
