@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { sanitizeExternalUrl } from '../../lib/security';
+import { getResponsiveImageUrl, sanitizeExternalUrl } from '../../lib/security';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { ParallaxMedia } from '../common/MotionPrimitives';
 import { Portfolio3D } from '../three/Portfolio3D';
@@ -227,8 +227,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
                   <div className="relative overflow-hidden rounded-[26px]">
                     <ParallaxMedia distance={10} className="h-full w-full">
                       <img
-                        src={sanitizeExternalUrl(featuredProject.thumbnail)}
+                        src={getResponsiveImageUrl(featuredProject.thumbnail, 800)}
                         alt={featuredProject.title[language] || featuredProject.title.en}
+                        width={800}
+                        height={860}
                         className="h-[360px] w-full object-cover transition-transform duration-700 hover:scale-[1.03] sm:h-[430px]"
                       />
                     </ParallaxMedia>

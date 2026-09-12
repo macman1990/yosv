@@ -45,6 +45,28 @@ export function sanitizeExternalUrl(url?: string | null): string {
 }
 
 /**
+ * Requests a context-appropriate Unsplash rendition without changing non-Unsplash URLs.
+ * Stored portfolio URLs remain untouched; this only reduces public image transfers.
+ */
+export function getResponsiveImageUrl(url: string | undefined | null, width: number, quality = 78): string {
+  const safeUrl = sanitizeExternalUrl(url);
+  if (safeUrl === '#') return safeUrl;
+
+  try {
+    const parsed = new URL(safeUrl);
+    if (parsed.hostname !== 'images.unsplash.com') return safeUrl;
+
+    parsed.searchParams.set('w', String(Math.max(1, Math.round(width))));
+    parsed.searchParams.set('q', String(Math.min(90, Math.max(45, Math.round(quality)))));
+    parsed.searchParams.set('auto', 'format');
+    parsed.searchParams.set('fit', 'crop');
+    return parsed.toString();
+  } catch {
+    return safeUrl;
+  }
+}
+
+/**
  * Checks whether an iframe URL belongs to an approved trusted embed provider.
  */
 export function isAllowedEmbedUrl(url?: string | null): boolean {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { User, FileText, Quote, Award, MapPin, CheckCircle, Flame } from 'lucide-react';
-import { sanitizeExternalUrl } from '../../lib/security';
+import { getResponsiveImageUrl, sanitizeExternalUrl } from '../../lib/security';
 
 export const AboutSection: React.FC = () => {
   const { data, isClientMode, language, t } = usePortfolio();
@@ -36,8 +36,10 @@ export const AboutSection: React.FC = () => {
           <div className="lg:col-span-5 space-y-6 reveal reveal-delay-1">
             <div className="glass-card overflow-hidden border border-[var(--border)] group">
               <img
-                src={sanitizeExternalUrl(profile.photoUrl)}
+                src={getResponsiveImageUrl(profile.photoUrl, 480)}
                 alt={profile.name[language] || profile.name.en}
+                width={480}
+                height={600}
                 className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
