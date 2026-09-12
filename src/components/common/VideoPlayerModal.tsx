@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { getNormalizedVideoConfig, getProjectVideo } from '../../lib/videoHelper';
 import { ProfessionalVideoPlayer } from './ProfessionalVideoPlayer';
@@ -7,6 +7,45 @@ import { X, ExternalLink, Sparkles, Film, CheckCircle2, Award } from 'lucide-rea
 export const VideoPlayerModal: React.FC = () => {
   const { activeVideoProject, setActiveVideoProject, setActiveCaseStudyProject, language, t } =
     usePortfolio();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!activeVideoProject) return;
+    returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setActiveVideoProject(null);
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      const dialog = document.querySelector('[data-video-modal="true"]');
+      if (!(dialog instanceof HTMLElement)) return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(
+        'button, a[href], iframe, video, [tabindex]:not([tabindex="-1"])'
+      )).filter((element) => !element.hasAttribute('disabled'));
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      returnFocusRef.current?.focus();
+    };
+  }, [activeVideoProject, setActiveVideoProject]);
 
   if (!activeVideoProject) return null;
 
@@ -21,8 +60,8 @@ export const VideoPlayerModal: React.FC = () => {
     : null;
 
   return (
-    <div className="fixed inset-0 z-[99990] flex items-center justify-center p-3 md:p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-200">
-      <div className="relative w-full max-w-5xl max-h-[92vh] flex flex-col glass-panel rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-start">
+    <div className="fixed inset-0 z-[99990] flex items-center justify-center p-3 md:p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-200" role="presentation">
+      <div data-video-modal="true" role="dialog" aria-modal="true" aria-labelledby="video-modal-title" className="relative w-full max-w-5xl max-h-[92vh] flex flex-col glass-panel rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-start">
         {/* Header bar */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)] bg-[var(--surface-muted)] backdrop-blur-md">
           <div className="flex items-center gap-3">
@@ -37,14 +76,17 @@ export const VideoPlayerModal: React.FC = () => {
               <Film className="w-3 h-3" />
               {activeVideoProject.platform}
             </span>
-            <h2 className="text-base md:text-lg font-bold text-[var(--foreground)] tracking-tight truncate max-w-md">
+            <h2 id="video-modal-title" className="text-base md:text-lg font-bold text-[var(--foreground)] tracking-tight truncate max-w-md">
               {title}
             </h2>
           </div>
           <button
+            ref={closeButtonRef}
+            type="button"
             onClick={() => setActiveVideoProject(null)}
             className="p-2 rounded-full bg-[var(--surface)] hover:bg-[var(--surface-elevated)] text-[var(--muted)] hover:text-[var(--foreground)] border border-[var(--border)] transition-colors cursor-pointer"
             title="Close"
+            aria-label="Close video player"
           >
             <X className="w-5 h-5" />
           </button>

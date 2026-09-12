@@ -35,17 +35,16 @@ export const ProfessionalVideoPlayer: React.FC<ProfessionalVideoPlayerProps> = (
 
   const activate = () => {
     setActivated(true);
-    if (video.playbackType === 'native-video') {
-      window.setTimeout(() => {
-        nativeVideoRef.current?.play().catch(() => {
-          setMuted(true);
-          if (nativeVideoRef.current) {
-            nativeVideoRef.current.muted = true;
-            void nativeVideoRef.current.play().catch(() => setError(true));
-          }
-        });
-      }, 0);
-    }
+  };
+
+  const assignNativeVideo = (element: HTMLVideoElement | null) => {
+    nativeVideoRef.current = element;
+    if (!element) return;
+    void element.play().catch(() => {
+      setMuted(true);
+      element.muted = true;
+      void element.play().catch(() => setError(true));
+    });
   };
 
   const toggleMute = () => {
@@ -68,7 +67,7 @@ export const ProfessionalVideoPlayer: React.FC<ProfessionalVideoPlayerProps> = (
 
       {activated && video.playbackType === 'native-video' && video.embedUrl && (
         <video
-          ref={nativeVideoRef}
+          ref={assignNativeVideo}
           src={video.embedUrl}
           poster={sanitizeExternalUrl(posterUrl)}
           controls={controls}

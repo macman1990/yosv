@@ -31,7 +31,10 @@ export function detectVideoPlatform(urlOrCode: string): VideoPlatform {
   return 'direct';
 }
 
-function sourceTypeFor(platform: VideoPlatform): VideoSourceType {
+function sourceTypeFor(platform: VideoPlatform, sourceUrl = ''): VideoSourceType {
+  if (getGoogleDriveId(sourceUrl)) return 'google-drive';
+  if (sourceUrl.includes('youtube.com') || sourceUrl.includes('youtu.be')) return 'youtube';
+  if (sourceUrl.includes('vimeo.com')) return 'vimeo';
   if (platform === 'google-drive') return 'google-drive';
   if (platform === 'youtube' || platform === 'vimeo') return platform;
   return 'direct';
@@ -90,7 +93,7 @@ export function normalizeVideoUrl(
 export function getProjectVideo(project: Project): ParsedVideoInfo {
   const config = project.video;
   const sourceUrl = config?.url || project.fullVideoUrl || project.previewVideoUrl || '';
-  const provider = config?.sourceType || sourceTypeFor(project.platform);
+  const provider = config?.sourceType || sourceTypeFor(project.platform, sourceUrl);
   return normalizeVideoUrl(sourceUrl, provider, config?.embedUrl, {
     autoplay: config?.autoplay ?? project.autoplay,
     muted: config?.muted ?? project.muted,
@@ -119,7 +122,7 @@ export function getNormalizedVideoConfig(project: Project): ProjectVideo {
   const video = project.video;
   return {
     enabled: video?.enabled ?? Boolean(project.fullVideoUrl || project.previewVideoUrl),
-    sourceType: video?.sourceType || sourceTypeFor(project.platform),
+    sourceType: video?.sourceType || sourceTypeFor(project.platform, video?.url || project.fullVideoUrl || project.previewVideoUrl || ''),
     url: video?.url || project.fullVideoUrl || project.previewVideoUrl,
     embedUrl: video?.embedUrl,
     posterUrl: video?.posterUrl || project.thumbnail,
