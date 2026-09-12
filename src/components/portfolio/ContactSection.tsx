@@ -4,6 +4,7 @@ import { usePortfolio } from '../../context/PortfolioContext';
 import { Mail, MessageCircle, Send, Sparkles, CheckCircle2, ArrowUpRight } from 'lucide-react';
 import { StorageService } from '../../lib/storage';
 import { sanitizeExternalUrl } from '../../lib/security';
+import { getAvailabilityPresentation } from '../../lib/availability';
 
 export const ContactSection: React.FC = () => {
   const { data, isClientMode, language, t, addToast } = usePortfolio();
@@ -36,16 +37,7 @@ export const ContactSection: React.FC = () => {
     .sort((a, b) => a.order - b.order);
   const showSocialButtons = getFeatureFlag('socialLinks') && visibleSocialLinks.length > 0;
   const isInquiryEnabled = getFeatureFlag('projectInquiry');
-  const availabilityStatusLabel = data.availability?.status === 'limited'
-    ? (language === 'ar' ? 'التوفر محدود' : 'Limited Availability')
-    : data.availability?.status === 'booked'
-      ? (language === 'ar' ? 'غير متاح حالياً' : 'Currently Unavailable')
-      : (language === 'ar' ? 'متاح' : 'Available');
-  const availabilityTone = data.availability?.status === 'limited'
-    ? 'amber'
-    : data.availability?.status === 'booked'
-      ? 'neutral'
-      : 'emerald';
+  const availability = getAvailabilityPresentation(data.availability, language);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -164,15 +156,15 @@ export const ContactSection: React.FC = () => {
               </p>
 
               {showAvailability && (
-                <div className={`mt-4 rounded-2xl border p-3 ${isClientMode ? 'p-4 shadow-[var(--shadow-soft)]' : ''} ${availabilityTone === 'amber' ? 'border-amber-400/40 bg-amber-400/10' : availabilityTone === 'neutral' ? 'border-[var(--border)] bg-[var(--surface-muted)]' : 'border-[var(--color-accent)]/35 bg-[var(--accent-muted)]'}`} role="status" aria-live="polite">
+                <div className={`availability-card mt-4 rounded-2xl border p-3 ${isClientMode ? 'p-4 shadow-[var(--shadow-soft)]' : ''} ${availability.tone === 'limited' ? 'border-amber-400/40 bg-amber-400/10' : availability.tone === 'booked' ? 'border-[var(--border)] bg-[var(--surface-muted)]' : 'border-[var(--color-accent)]/35 bg-[var(--accent-muted)]'}`} role="status" aria-live="polite">
                   <div className="flex items-center justify-between gap-3">
                     <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--foreground)]">
-                      {availabilityStatusLabel}
+                      {availability.label}
                     </span>
-                    <span className={`h-2.5 w-2.5 rounded-full ${availabilityTone === 'amber' ? 'bg-amber-400' : availabilityTone === 'neutral' ? 'bg-[var(--muted-foreground)]' : 'bg-emerald-400'}`} />
+                    <span className={`h-2.5 w-2.5 rounded-full ${availability.tone === 'limited' ? 'bg-amber-400' : availability.tone === 'booked' ? 'bg-[var(--muted-foreground)]' : 'bg-emerald-400'}`} />
                   </div>
                   <p className="mt-2 text-xs text-[var(--muted)] leading-relaxed">
-                    {data.availability.description?.[language] || data.availability.description?.en || data.availability.label?.[language] || data.availability.label?.en || ''}
+                    {availability.description}
                   </p>
                   {isClientMode && <p className="mt-2 text-[10px] font-mono uppercase tracking-[0.16em] text-[var(--color-accent)]">{language === 'ar' ? 'ابدأ من مسار التواصل أدناه' : 'Use the contact path below to start a conversation'}</p>}
                 </div>

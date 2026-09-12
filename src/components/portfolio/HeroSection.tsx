@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { getResponsiveImageUrl, sanitizeExternalUrl } from '../../lib/security';
+import { getAvailabilityPresentation } from '../../lib/availability';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { ParallaxMedia } from '../common/MotionPrimitives';
 import { Portfolio3D } from '../three/Portfolio3D';
@@ -17,6 +18,7 @@ import {
   Video,
   Instagram,
   Globe,
+  FileText,
 } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -28,6 +30,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
   const { data, isClientMode, language, t, setActiveVideoProject } = usePortfolio();
   const profile = data.profile;
   const shouldReduceMotion = useReducedMotion();
+  const availability = getAvailabilityPresentation(data.availability, language);
 
   const name = profile.name[language] || profile.name.en;
   const title = profile.title[language] || profile.title.en;
@@ -81,6 +84,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
     .sort((a, b) => a.order - b.order)
     .slice(0, 3);
   const showStartProject = data.siteFeatures?.startProject === true && data.siteFeatures?.projectInquiry === true;
+  const showAvailability = data.siteFeatures?.availability === true && data.availability?.visible !== false;
 
   return (
     <section
@@ -104,15 +108,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
               transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
               className="space-y-6 text-start"
             >
-              <motion.div
-                initial={false}
-                animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.6 }}
-                className="inline-flex items-center gap-2.5 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--muted)]"
-              >
-                <span className="h-2 w-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--color-accent)' }} />
-                {profile.availableForWork ? t('hero.badge') : 'In Post-Production'}
-              </motion.div>
+              {showAvailability && (
+                <motion.div
+                  initial={false}
+                  animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.6 }}
+                  className="availability-pill inline-flex items-center gap-2.5 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--muted)]"
+                >
+                  <span className={`h-2 w-2 rounded-full ${availability.tone === 'limited' ? 'bg-amber-400' : availability.tone === 'booked' ? 'bg-[var(--muted-foreground)]' : 'animate-pulse'}`} style={availability.tone === 'available' ? { backgroundColor: 'var(--color-accent)' } : undefined} />
+                  {availability.label}
+                </motion.div>
+              )}
 
               <div className="space-y-4">
                 <motion.p
@@ -222,7 +228,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
               transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="relative"
             >
-              <div className="glass-panel overflow-hidden rounded-[32px] border border-[var(--border)] p-2.5">
+              <div className="hero-media-shell glass-panel overflow-hidden rounded-[32px] border border-[var(--border)] p-2.5">
                 {featuredProject ? (
                   <div className="relative overflow-hidden rounded-[26px]">
                     <ParallaxMedia distance={10} className="h-full w-full">
@@ -235,7 +241,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
                       />
                     </ParallaxMedia>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
-                    <div className="absolute inset-x-0 bottom-0 p-5">
+                    <div className="hero-media-caption absolute inset-x-0 bottom-0 p-5">
                       <div className="mb-3 flex items-center justify-between gap-2 text-[10px] font-mono uppercase tracking-[0.18em] text-white/80">
                         <span>{featuredProject.client}</span>
                         <span>{featuredProject.date}</span>
@@ -255,6 +261,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
                         </button>
                       </div>
                     </div>
+                    {profile.cvUrl && (
+                      <a
+                        href={sanitizeExternalUrl(profile.cvUrl)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hero-cv-link absolute end-4 top-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/25 px-3.5 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md transition-transform hover:-translate-y-0.5"
+                      >
+                        <FileText className="h-3.5 w-3.5" />
+                        CV
+                      </a>
+                    )}
                   </div>
                 ) : null}
               </div>

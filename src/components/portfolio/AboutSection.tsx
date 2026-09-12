@@ -34,7 +34,7 @@ export const AboutSection: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <div className="lg:col-span-5 space-y-6 reveal reveal-delay-1">
-            <div className="glass-card overflow-hidden border border-[var(--border)] group">
+            <div className="profile-media-card glass-card overflow-hidden border border-[var(--border)] group">
               <img
                 src={getResponsiveImageUrl(profile.photoUrl, 480)}
                 alt={profile.name[language] || profile.name.en}
