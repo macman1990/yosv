@@ -96,7 +96,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
       </div>
 
       <div className="section-shell relative z-10">
-        <div className="glass-card reveal p-4 sm:p-6 md:p-8 lg:p-10 border border-[var(--border)] bg-[var(--surface)]/70">
+        <div className="glass-card p-4 sm:p-6 md:p-8 lg:p-10 border border-[var(--border)] bg-[var(--surface)]/70">
           <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 items-center">
             <motion.div
               initial={false}
