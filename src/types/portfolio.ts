@@ -9,13 +9,31 @@ export interface LocalizedString {
 export type VideoPlatform = 
   | 'youtube' 
   | 'vimeo' 
+  | 'google-drive'
   | 'tiktok' 
   | 'instagram' 
   | 'facebook' 
   | 'direct' 
   | 'embed';
 
-export type AspectRatio = '16:9' | '9:16' | '1:1' | '21:9' | '4:5';
+export type AspectRatio = '16:9' | '9:16' | '1:1' | '21:9' | '4:5' | '4:3' | 'auto';
+export type VideoSourceType = 'youtube' | 'vimeo' | 'google-drive' | 'direct';
+export type VideoOpenMode = 'inline' | 'modal';
+
+export interface ProjectVideo {
+  enabled: boolean;
+  sourceType: VideoSourceType;
+  url?: string;
+  embedUrl?: string;
+  posterUrl?: string;
+  aspectRatio?: AspectRatio;
+  autoplay?: boolean;
+  muted?: boolean;
+  controls?: boolean;
+  loop?: boolean;
+  fullscreen?: boolean;
+  openMode?: VideoOpenMode;
+}
 
 export type PortfolioThemeName = 'cinematic' | 'liquid' | 'liquid-glass' | 'editorial' | 'digital' | 'minimal' | 'luxury';
 export type BackgroundIntensity = 'off' | 'subtle' | 'medium' | 'strong';
@@ -77,6 +95,7 @@ export interface Project {
   order: number;
   caseStudy?: CaseStudy;
   viewsCount?: number;
+  video?: ProjectVideo;
 }
 
 export interface Category {

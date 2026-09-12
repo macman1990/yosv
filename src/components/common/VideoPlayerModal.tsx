@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
-import { parseVideoUrl, getAspectRatioClass } from '../../lib/videoHelper';
+import { getNormalizedVideoConfig, getProjectVideo } from '../../lib/videoHelper';
+import { ProfessionalVideoPlayer } from './ProfessionalVideoPlayer';
 import { X, ExternalLink, Sparkles, Film, CheckCircle2, Award } from 'lucide-react';
 
 export const VideoPlayerModal: React.FC = () => {
@@ -9,16 +10,8 @@ export const VideoPlayerModal: React.FC = () => {
 
   if (!activeVideoProject) return null;
 
-  const videoInfo = parseVideoUrl(
-    activeVideoProject.fullVideoUrl || activeVideoProject.previewVideoUrl || '',
-    activeVideoProject.platform,
-    {
-      autoplay: activeVideoProject.autoplay,
-      muted: activeVideoProject.muted,
-      loop: activeVideoProject.loop,
-      controls: activeVideoProject.controls,
-    }
-  );
+  const videoInfo = getProjectVideo(activeVideoProject);
+  const videoConfig = getNormalizedVideoConfig(activeVideoProject);
 
   const title = activeVideoProject.title[language] || activeVideoProject.title.en;
   const subtitle = activeVideoProject.subtitle[language] || activeVideoProject.subtitle.en;
@@ -58,36 +51,15 @@ export const VideoPlayerModal: React.FC = () => {
         </div>
 
         {/* Video Stage */}
-        <div className="relative w-full bg-black flex items-center justify-center overflow-hidden">
-          <div
-            className={`w-full max-h-[58vh] ${getAspectRatioClass(
-              activeVideoProject.aspectRatio
-            )} max-w-full flex items-center justify-center`}
-          >
-            {videoInfo.isDirect ? (
-              <video
-                src={videoInfo.embedUrl}
-                poster={activeVideoProject.thumbnail}
-                controls
-                autoPlay
-                preload="none"
-                playsInline
-                className="w-full h-full object-contain"
-              />
-            ) : videoInfo.isIframe ? (
-              <iframe
-                src={videoInfo.embedUrl}
-                title={title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full border-0"
-              />
-            ) : (
-              <div className="text-[var(--muted-foreground)] p-8 text-center text-sm">
-                No video stream available for this entry.
-              </div>
-            )}
-          </div>
+        <div className="relative max-h-[58vh] w-full overflow-hidden bg-black">
+          <ProfessionalVideoPlayer
+            video={videoInfo}
+            posterUrl={videoConfig.posterUrl}
+            aspectRatio={videoConfig.aspectRatio}
+            title={title}
+            controls={videoConfig.controls}
+            fullscreen={videoConfig.fullscreen}
+          />
         </div>
 
         {/* Metadata & Details Scrollable Footer */}

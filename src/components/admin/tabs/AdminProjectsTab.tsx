@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../../../context/PortfolioContext';
 import { Project, VideoPlatform, AspectRatio } from '../../../types/portfolio';
+import { getNormalizedVideoConfig, normalizeVideoUrl } from '../../../lib/videoHelper';
+import { ProfessionalVideoPlayer } from '../../common/ProfessionalVideoPlayer';
 import {
   Plus,
   Edit2,
@@ -495,20 +497,23 @@ export const AdminProjectsTab: React.FC = () => {
                     <div className="space-y-1">
                       <label className="text-xs font-mono text-zinc-400">Video Platform</label>
                       <select
-                        value={editingProject.platform}
+                        value={editingProject.video?.sourceType || editingProject.platform}
                         onChange={(e) =>
                           setEditingProject({
                             ...editingProject,
                             platform: e.target.value as VideoPlatform,
+                            video: {
+                              ...getNormalizedVideoConfig(editingProject),
+                              sourceType: e.target.value as 'youtube' | 'vimeo' | 'google-drive' | 'direct',
+                            },
                           })
                         }
                         className="w-full px-3.5 py-2.5 rounded-xl bg-[#14161f] border border-white/10 text-white text-xs"
                       >
                         <option value="youtube">YouTube</option>
                         <option value="vimeo">Vimeo</option>
-                        <option value="tiktok">TikTok</option>
-                        <option value="instagram">Instagram Reel</option>
-                        <option value="direct">Direct MP4 URL / Cloud Storage</option>
+                        <option value="google-drive">Google Drive</option>
+                        <option value="direct">Direct MP4 / WebM URL</option>
                       </select>
                     </div>
 
@@ -529,6 +534,8 @@ export const AdminProjectsTab: React.FC = () => {
                         <option value="21:9">21:9 (Cinematic Ultra-Wide)</option>
                         <option value="4:5">4:5 (Instagram Portrait)</option>
                         <option value="1:1">1:1 (Square)</option>
+                        <option value="4:3">4:3</option>
+                        <option value="auto">Auto (provider/native)</option>
                       </select>
                     </div>
                   </div>
@@ -549,17 +556,82 @@ export const AdminProjectsTab: React.FC = () => {
 
                   <div className="space-y-1">
                     <label className="text-xs font-mono text-zinc-400">
-                      Full Video Stream URL (YouTube, Vimeo, or MP4) *
+                      Video URL *
                     </label>
                     <input
                       type="url"
                       value={editingProject.fullVideoUrl || ''}
                       onChange={(e) =>
-                        setEditingProject({ ...editingProject, fullVideoUrl: e.target.value })
+                        setEditingProject({
+                          ...editingProject,
+                          fullVideoUrl: e.target.value,
+                          video: { ...getNormalizedVideoConfig(editingProject), url: e.target.value },
+                        })
                       }
                       className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 text-white text-xs"
                     />
                   </div>
+
+                  {(editingProject.video?.sourceType === 'google-drive' || editingProject.video?.sourceType === 'youtube' || editingProject.video?.sourceType === 'vimeo') && (
+                    <div className="space-y-1">
+                      <label className="text-xs font-mono text-zinc-400">Embed URL (optional advanced override)</label>
+                      <input
+                        type="url"
+                        value={editingProject.video?.embedUrl || ''}
+                        placeholder="Generated automatically for standard provider URLs"
+                        onChange={(e) =>
+                          setEditingProject({
+                            ...editingProject,
+                            video: { ...getNormalizedVideoConfig(editingProject), embedUrl: e.target.value || undefined },
+                          })
+                        }
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 text-white text-xs"
+                      />
+                      {editingProject.video?.sourceType === 'google-drive' && (
+                        <p className="text-[11px] text-zinc-500">Google Drive videos use the Drive preview player. Paste a standard share/view URL; the file ID and preview URL are derived automatically.</p>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="space-y-1">
+                    <label className="text-xs font-mono text-zinc-400">Poster / Thumbnail URL</label>
+                    <input
+                      type="url"
+                      value={editingProject.video?.posterUrl || editingProject.thumbnail}
+                      onChange={(e) =>
+                        setEditingProject({
+                          ...editingProject,
+                          thumbnail: e.target.value,
+                          video: { ...getNormalizedVideoConfig(editingProject), posterUrl: e.target.value },
+                        })
+                      }
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/10 text-white text-xs"
+                    />
+                  </div>
+
+                  {(() => {
+                    const config = getNormalizedVideoConfig(editingProject);
+                    const normalized = normalizeVideoUrl(config.url || '', config.sourceType, config.embedUrl);
+                    return normalized.embedUrl ? (
+                      <div className="space-y-2 rounded-xl border border-white/10 bg-black/30 p-3">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="text-xs font-mono text-zinc-400">Player Preview</span>
+                          <span className="text-[10px] uppercase tracking-wider text-emerald-300">{config.sourceType}</span>
+                        </div>
+                        <p className="break-all rounded-lg bg-black/40 px-2.5 py-2 text-[10px] text-zinc-500">
+                          Embed: {normalized.embedUrl}
+                        </p>
+                        <ProfessionalVideoPlayer
+                          video={normalized}
+                          posterUrl={config.posterUrl}
+                          aspectRatio={config.aspectRatio}
+                          title={editingProject.title.en || 'Project video'}
+                          controls={config.controls}
+                          fullscreen={config.fullscreen}
+                        />
+                      </div>
+                    ) : null;
+                  })()}
 
                   <div className="space-y-1">
                     <label className="text-xs font-mono text-zinc-400">

@@ -12,6 +12,7 @@ const ALLOWED_EMBED_HOSTS = [
   'tiktok.com',
   'www.instagram.com',
   'instagram.com',
+  'drive.google.com',
 ];
 
 /**
