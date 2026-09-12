@@ -99,13 +99,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
         <div className="glass-card reveal p-4 sm:p-6 md:p-8 lg:p-10 border border-[var(--border)] bg-[var(--surface)]/70">
           <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-8 items-center">
             <motion.div
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 26 }}
+              initial={false}
               animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
               className="space-y-6 text-start"
             >
               <motion.div
-                initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+                initial={false}
                 animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.6 }}
                 className="inline-flex items-center gap-2.5 rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3.5 py-1.5 text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--muted)]"
@@ -116,7 +116,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
 
               <div className="space-y-4">
                 <motion.p
-                  initial={shouldReduceMotion ? false : { opacity: 0, y: 18 }}
+                  initial={false}
                   animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                   transition={{ delay: 0.12, duration: 0.55 }}
                   className="text-[11px] uppercase tracking-[0.28em] text-[var(--muted)] font-mono"
@@ -124,7 +124,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
                   {title}
                 </motion.p>
                 <motion.h1
-                  initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+                  initial={false}
                   animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                   transition={{ delay: 0.18, duration: 0.7 }}
                   className="max-w-[700px] text-4xl sm:text-6xl lg:text-[5rem] leading-[0.94] tracking-[-0.06em] font-black font-syne text-[var(--foreground)]"
@@ -132,7 +132,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
                   {name}
                 </motion.h1>
                 <motion.p
-                  initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+                  initial={false}
                   animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                   transition={{ delay: 0.24, duration: 0.65 }}
                   className="max-w-xl text-lg sm:text-2xl text-[var(--foreground)]/90 leading-tight"
@@ -140,7 +140,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
                   {tagline}
                 </motion.p>
                 <motion.p
-                  initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+                  initial={false}
                   animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.65 }}
                   className="max-w-xl text-sm sm:text-base text-[var(--muted)] leading-relaxed"
@@ -161,7 +161,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
               </div>
 
               <motion.div
-                initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+                initial={false}
                 animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                 transition={{ delay: 0.36, duration: 0.6 }}
                 className="flex flex-wrap items-center gap-3 pt-2"
@@ -194,7 +194,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreWork, onConta
 
               {visibleSocialLinks.length > 0 && (
                 <motion.div
-                  initial={shouldReduceMotion ? false : { opacity: 0, y: 12 }}
+                  initial={false}
                   animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                   transition={{ delay: 0.42, duration: 0.5 }}
                   className="flex items-center gap-3 pt-1 text-[var(--muted)]"
