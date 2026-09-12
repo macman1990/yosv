@@ -21,7 +21,8 @@ const PortfolioApp: React.FC = () => {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    const timeout = window.setTimeout(() => setShowSplash(false), 1800);
+    const mobileOrTouch = window.matchMedia('(max-width: 768px), (pointer: coarse)').matches;
+    const timeout = window.setTimeout(() => setShowSplash(false), mobileOrTouch ? 600 : 1800);
     return () => window.clearTimeout(timeout);
   }, []);
 
