@@ -12,6 +12,7 @@ interface ProfessionalVideoPlayerProps {
   controls?: boolean;
   fullscreen?: boolean;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const ProfessionalVideoPlayer: React.FC<ProfessionalVideoPlayerProps> = ({
@@ -22,6 +23,7 @@ export const ProfessionalVideoPlayer: React.FC<ProfessionalVideoPlayerProps> = (
   controls = true,
   fullscreen = true,
   className = '',
+  style,
 }) => {
   const [activated, setActivated] = useState(false);
   const [error, setError] = useState(false);
@@ -55,7 +57,7 @@ export const ProfessionalVideoPlayer: React.FC<ProfessionalVideoPlayerProps> = (
   };
 
   return (
-    <div className={`relative w-full overflow-hidden bg-black ${getAspectRatioClass(aspectRatio)} ${className}`}>
+    <div style={{ flex: '0 0 auto', ...style }} className={`relative shrink-0 overflow-hidden bg-black ${getAspectRatioClass(aspectRatio)} ${className}`}>
       {!activated && posterUrl && (
         <img
           src={sanitizeExternalUrl(posterUrl)}

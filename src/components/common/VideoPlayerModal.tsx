@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { getNormalizedVideoConfig, getProjectVideo } from '../../lib/videoHelper';
 import { ProfessionalVideoPlayer } from './ProfessionalVideoPlayer';
@@ -9,6 +9,12 @@ export const VideoPlayerModal: React.FC = () => {
     usePortfolio();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [viewport, setViewport] = useState(() => ({
+    width: typeof window === 'undefined' ? 1024 : window.innerWidth,
+    height: typeof window === 'undefined' ? 768 : window.innerHeight,
+  }));
+  const [stageSize, setStageSize] = useState({ width: 320, height: 480 });
 
   useEffect(() => {
     if (!activeVideoProject) return;
@@ -47,11 +53,49 @@ export const VideoPlayerModal: React.FC = () => {
     };
   }, [activeVideoProject, setActiveVideoProject]);
 
+  useEffect(() => {
+    if (!activeVideoProject) return;
+    const updateViewport = () => setViewport({ width: window.innerWidth, height: window.innerHeight });
+    updateViewport();
+    window.addEventListener('resize', updateViewport);
+    return () => window.removeEventListener('resize', updateViewport);
+  }, [activeVideoProject]);
+
+  useEffect(() => {
+    if (!activeVideoProject || !stageRef.current) return;
+    const updateStage = () => {
+      if (!stageRef.current) return;
+      setStageSize({ width: stageRef.current.clientWidth, height: stageRef.current.clientHeight });
+    };
+    updateStage();
+    const observer = new ResizeObserver(updateStage);
+    observer.observe(stageRef.current);
+    return () => observer.disconnect();
+  }, [activeVideoProject]);
+
+  const videoConfig = activeVideoProject ? getNormalizedVideoConfig(activeVideoProject) : {
+    enabled: false,
+    sourceType: 'direct' as const,
+    aspectRatio: '16:9' as const,
+    controls: true,
+    fullscreen: true,
+  };
+  const ratioValue = videoConfig.aspectRatio === '9:16' ? 9 / 16
+    : videoConfig.aspectRatio === '1:1' ? 1
+      : videoConfig.aspectRatio === '4:3' ? 4 / 3
+        : videoConfig.aspectRatio === '4:5' ? 4 / 5
+          : videoConfig.aspectRatio === '21:9' ? 21 / 9
+            : 16 / 9;
+  const mediaSize = useMemo(() => {
+    const availableWidth = Math.max(1, stageSize.width);
+    const availableHeight = Math.max(1, stageSize.height);
+    const width = Math.min(availableWidth, availableHeight * ratioValue);
+    return { width: Math.max(1, Math.floor(width)), height: Math.max(1, Math.floor(width / ratioValue)) };
+  }, [ratioValue, stageSize, viewport]);
+
   if (!activeVideoProject) return null;
 
   const videoInfo = getProjectVideo(activeVideoProject);
-  const videoConfig = getNormalizedVideoConfig(activeVideoProject);
-
   const title = activeVideoProject.title[language] || activeVideoProject.title.en;
   const subtitle = activeVideoProject.subtitle[language] || activeVideoProject.subtitle.en;
   const description = activeVideoProject.description[language] || activeVideoProject.description.en;
@@ -60,8 +104,8 @@ export const VideoPlayerModal: React.FC = () => {
     : null;
 
   return (
-    <div className="fixed inset-0 z-[99990] flex items-center justify-center p-3 md:p-6 bg-black/80 backdrop-blur-xl animate-in fade-in duration-200" role="presentation">
-      <div data-video-modal="true" role="dialog" aria-modal="true" aria-labelledby="video-modal-title" className="relative w-full max-w-5xl max-h-[92vh] flex flex-col glass-panel rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 text-start">
+    <div className="fixed inset-0 z-[99990] flex items-center justify-center bg-black/80 p-[max(0.75rem,env(safe-area-inset-top))_max(0.75rem,env(safe-area-inset-right))_max(0.75rem,env(safe-area-inset-bottom))_max(0.75rem,env(safe-area-inset-left))] backdrop-blur-xl animate-in fade-in duration-200" role="presentation">
+      <div data-video-modal="true" role="dialog" aria-modal="true" aria-labelledby="video-modal-title" className="relative flex h-[calc(100dvh-1.5rem)] max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl glass-panel shadow-2xl animate-in zoom-in-95 duration-200 text-start md:rounded-3xl">
         {/* Header bar */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)] bg-[var(--surface-muted)] backdrop-blur-md">
           <div className="flex items-center gap-3">
@@ -93,7 +137,7 @@ export const VideoPlayerModal: React.FC = () => {
         </div>
 
         {/* Video Stage */}
-        <div className="relative max-h-[58vh] w-full overflow-hidden bg-black">
+        <div ref={stageRef} className="flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-black">
           <ProfessionalVideoPlayer
             video={videoInfo}
             posterUrl={videoConfig.posterUrl}
@@ -101,11 +145,12 @@ export const VideoPlayerModal: React.FC = () => {
             title={title}
             controls={videoConfig.controls}
             fullscreen={videoConfig.fullscreen}
+            style={{ width: `${mediaSize.width}px`, height: `${mediaSize.height}px` }}
           />
         </div>
 
         {/* Metadata & Details Scrollable Footer */}
-        <div className="p-6 overflow-y-auto max-h-[34vh] border-t border-[var(--border)] bg-[var(--surface)] space-y-4">
+        <div className="max-h-[22vh] shrink-0 overflow-y-auto border-t border-[var(--border)] bg-[var(--surface)] p-4 space-y-4 md:p-6">
           <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div className="space-y-1">
               <p
