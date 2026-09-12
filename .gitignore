@@ -9,3 +9,4 @@ coverage/
 supabase/.temp/
 
 .vercel
+*-production-trace.zip

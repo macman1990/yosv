@@ -53,7 +53,7 @@ export const AdminEducationTab: React.FC = () => {
               credentialId: 'BMD-9982',
               credentialUrl: 'https://blackmagicdesign.com',
               description: { en: 'Advanced editorial mastery', ar: 'إتقان متقدم للمونتاج' },
-              order: certs.length + 1,
+              featured: false,
               visible: true,
             })
           }

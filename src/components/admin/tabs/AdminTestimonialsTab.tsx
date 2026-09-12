@@ -54,7 +54,7 @@ export const AdminTestimonialsTab: React.FC = () => {
                 ar: 'مهارة فائقة في سرد القصص ودقة وسرعة في التسليم.',
               },
               rating: 5,
-              project: 'Commercial Reel',
+              projectRef: 'Commercial Reel',
               date: '2025',
               order: testimonials.length + 1,
               visible: true,

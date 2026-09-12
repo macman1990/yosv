@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../../../context/PortfolioContext';
-import { ContentItem } from '../../../types/portfolio';
+import { ContentItem, VideoPlatform } from '../../../types/portfolio';
 import { Plus, Trash2, Edit2, Video, X } from 'lucide-react';
 
 export const AdminContentTab: React.FC = () => {
@@ -53,7 +53,7 @@ export const AdminContentTab: React.FC = () => {
               },
               thumbnail: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=800&auto=format&fit=crop&q=80',
               mediaUrl: 'https://youtube.com',
-              platform: 'YouTube',
+              platform: 'youtube',
               date: '2025',
               views: '450K',
               order: contentItems.length + 1,
@@ -144,14 +144,32 @@ export const AdminContentTab: React.FC = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
                   <label className="text-xs font-mono text-zinc-400">Platform</label>
-                  <input
-                    type="text"
+                  <select
                     value={editingItem.platform}
-                    onChange={(e) =>
-                      setEditingItem({ ...editingItem, platform: e.target.value })
-                    }
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      switch (value) {
+                        case 'youtube':
+                        case 'vimeo':
+                        case 'tiktok':
+                        case 'instagram':
+                        case 'facebook':
+                        case 'direct':
+                        case 'embed':
+                          setEditingItem({ ...editingItem, platform: value });
+                          break;
+                      }
+                    }}
                     className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white text-xs"
-                  />
+                  >
+                    <option value="youtube">YouTube</option>
+                    <option value="vimeo">Vimeo</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="direct">Direct</option>
+                    <option value="embed">Embed</option>
+                  </select>
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-mono text-zinc-400">Views Counter</label>
