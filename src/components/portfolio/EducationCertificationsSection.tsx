@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { Award, GraduationCap, ExternalLink, ShieldCheck } from 'lucide-react';
+import { sanitizeExternalUrl } from '../../lib/security';
 
 export const EducationCertificationsSection: React.FC = () => {
   const { data, language, t } = usePortfolio();
@@ -76,7 +77,7 @@ export const EducationCertificationsSection: React.FC = () => {
                       )}
                       {cert.credentialUrl && (
                         <a
-                          href={cert.credentialUrl}
+                          href={sanitizeExternalUrl(cert.credentialUrl)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-1 text-xs font-semibold transition-opacity hover:opacity-80"

@@ -2,6 +2,7 @@ import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { Check, Sparkles } from 'lucide-react';
+import { sanitizeExternalUrl } from '../../lib/security';
 
 export const PricingSection: React.FC = () => {
   const { data, language } = usePortfolio();
@@ -87,7 +88,7 @@ export const PricingSection: React.FC = () => {
                 </ul>
 
                 <a
-                  href={pkg.ctaLink || '#contact'}
+                  href={sanitizeExternalUrl(pkg.ctaLink || '#contact')}
                   className="mt-6 inline-flex items-center justify-center rounded-full px-4 py-3 text-[10px] font-bold uppercase tracking-[0.18em] transition-all duration-300 hover:-translate-y-0.5"
                   style={{ backgroundColor: pkg.featured ? 'var(--color-accent)' : 'var(--surface-muted)', color: pkg.featured ? '#050816' : 'var(--foreground)' }}
                 >

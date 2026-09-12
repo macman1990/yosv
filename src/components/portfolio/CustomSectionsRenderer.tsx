@@ -1,5 +1,6 @@
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
+import { sanitizeExternalUrl } from '../../lib/security';
 import { CustomSection, CustomSectionBlock } from '../../types/portfolio';
 import { Sparkles, ArrowRight, ExternalLink } from 'lucide-react';
 
@@ -72,7 +73,7 @@ export const CustomSectionsRenderer: React.FC = () => {
                       {block.mediaUrl && (
                         <div className="aspect-video w-full rounded-2xl overflow-hidden bg-black mb-2">
                           <img
-                            src={block.mediaUrl}
+                            src={sanitizeExternalUrl(block.mediaUrl)}
                             alt=""
                             className="w-full h-full object-cover"
                           />
@@ -93,7 +94,7 @@ export const CustomSectionsRenderer: React.FC = () => {
 
                       {block.link && (
                         <a
-                          href={block.link}
+                          href={sanitizeExternalUrl(block.link)}
                           className="inline-flex items-center gap-1.5 text-xs font-mono uppercase font-bold transition-opacity hover:opacity-80 pt-2"
                           style={{ color: 'var(--color-accent)' }}
                         >

@@ -227,10 +227,10 @@ export const BlogHubPage: React.FC<BlogHubPageProps> = ({ initialSlug, onNavigat
             </div>
 
             {/* Media Cover or Embed */}
-            {activePost.embedUrl ? (
+            {activePost.embedUrl && getSafeEmbedUrl(activePost.embedUrl, activePost.platform) ? (
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-[var(--border)] bg-black shadow-2xl">
                 <iframe
-                  src={activePost.embedUrl}
+                  src={getSafeEmbedUrl(activePost.embedUrl, activePost.platform) || undefined}
                   title={activePost.title[language] || activePost.title.en}
                   className="w-full h-full border-0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -240,7 +240,7 @@ export const BlogHubPage: React.FC<BlogHubPageProps> = ({ initialSlug, onNavigat
             ) : activePost.coverImage || activePost.thumbnail ? (
               <div className="relative w-full aspect-[21/9] rounded-2xl overflow-hidden border border-[var(--border)] bg-black/40">
                 <img
-                  src={activePost.coverImage || activePost.thumbnail}
+                  src={sanitizeExternalUrl(activePost.coverImage || activePost.thumbnail)}
                   alt={activePost.title[language] || activePost.title.en}
                   className="w-full h-full object-cover"
                 />

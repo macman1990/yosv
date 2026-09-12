@@ -2,6 +2,7 @@ import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { Testimonial } from '../../types/portfolio';
 import { MessageSquare, Star, Quote } from 'lucide-react';
+import { sanitizeExternalUrl } from '../../lib/security';
 
 export const TestimonialsSection: React.FC = () => {
   const { data, language, t } = usePortfolio();
@@ -60,7 +61,7 @@ export const TestimonialsSection: React.FC = () => {
                 <div className="pt-4 border-t border-[var(--border-subtle)] flex items-center gap-3">
                   {test.photo ? (
                     <img
-                      src={test.photo}
+                      src={sanitizeExternalUrl(test.photo)}
                       alt={test.clientName}
                       className="w-11 h-11 rounded-full object-cover border shrink-0"
                       style={{ borderColor: 'var(--color-accent)' }}

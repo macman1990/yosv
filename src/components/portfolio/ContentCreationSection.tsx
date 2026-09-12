@@ -1,5 +1,6 @@
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
+import { sanitizeExternalUrl } from '../../lib/security';
 import { ContentItem } from '../../types/portfolio';
 import { Video, Youtube, Eye, ExternalLink, BookOpen, Sparkles, Film } from 'lucide-react';
 
@@ -51,7 +52,7 @@ export const ContentCreationSection: React.FC = () => {
                 {item.thumbnail && (
                   <div className="relative aspect-video w-full overflow-hidden bg-black">
                     <img
-                      src={item.thumbnail}
+                      src={sanitizeExternalUrl(item.thumbnail)}
                       alt={title}
                       loading="lazy"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -92,7 +93,7 @@ export const ContentCreationSection: React.FC = () => {
                     </span>
                     {item.mediaUrl && (
                       <a
-                        href={item.mediaUrl}
+                        href={sanitizeExternalUrl(item.mediaUrl)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 text-xs font-semibold text-[var(--muted)] hover:text-[var(--foreground)] transition-colors"

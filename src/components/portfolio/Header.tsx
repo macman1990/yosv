@@ -3,6 +3,7 @@ import { usePortfolio } from '../../context/PortfolioContext';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
 import { ThemeToggle } from '../common/ThemeToggle';
 import { Menu, X, Play, Sparkles } from 'lucide-react';
+import { sanitizeExternalUrl } from '../../lib/security';
 
 export const Header: React.FC = () => {
   const { data, isClientMode, language, t } = usePortfolio();
@@ -94,7 +95,7 @@ export const Header: React.FC = () => {
               return (
                 <a
                   key={item.id}
-                  href={item.target}
+                  href={sanitizeExternalUrl(item.target)}
                   aria-current={isActive ? 'page' : undefined}
                   className={`nav-item ${isActive ? 'nav-item-active' : ''}`}
                 >
@@ -142,7 +143,7 @@ export const Header: React.FC = () => {
               return (
                 <a
                   key={item.id}
-                  href={item.target}
+                  href={sanitizeExternalUrl(item.target)}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`rounded-2xl px-4 py-3 text-sm font-medium transition-all duration-300 ${
                     isActive

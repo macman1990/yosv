@@ -11,7 +11,7 @@ const getVisibleLogos = (logos: ClientLogo[]): ClientLogo[] => [...logos]
 const LogoMark: React.FC<{ logo: ClientLogo; decorative?: boolean }> = ({ logo, decorative = false }) => {
   const image = (
     <img
-      src={logo.logoUrl}
+      src={sanitizeExternalUrl(logo.logoUrl)}
       alt={decorative ? '' : logo.name}
       loading="lazy"
       className="client-logos-section__image"

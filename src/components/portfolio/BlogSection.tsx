@@ -215,7 +215,7 @@ export const BlogSection: React.FC = () => {
                   {/* Thumbnail / Cover */}
                   <div className="relative w-full aspect-[16/10] overflow-hidden bg-black/40">
                     <img
-                      src={post.thumbnail || post.coverImage}
+                      src={sanitizeExternalUrl(post.thumbnail || post.coverImage)}
                       alt={title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { Project, Category } from '../../types/portfolio';
 import { getAspectRatioClass } from '../../lib/videoHelper';
+import { sanitizeExternalUrl } from '../../lib/security';
 import { Play, Sparkles, Film, CheckCircle2, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 
 export const FeaturedWorkSection: React.FC = () => {
@@ -88,7 +89,7 @@ export const FeaturedWorkSection: React.FC = () => {
       return (
         <article key={project.id} className="group grid grid-cols-[96px_1fr_auto] items-center gap-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--surface)] p-3 shadow-[var(--shadow-sm)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[var(--border-hover)] sm:grid-cols-[132px_1fr_auto]">
           <div className={`relative overflow-hidden rounded-[var(--radius-sm)] bg-black ${getAspectRatioClass(project.aspectRatio)}`}>
-            <img src={project.thumbnail} alt={title} loading="lazy" className="h-full w-full object-cover" />
+            <img src={sanitizeExternalUrl(project.thumbnail)} alt={title} loading="lazy" className="h-full w-full object-cover" />
             <button type="button" onClick={() => setActiveVideoProject(project)} className="absolute inset-0 m-auto flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-accent)] text-black" aria-label={`Play ${title}`}><Play className="h-3.5 w-3.5 fill-black" /></button>
           </div>
           <div className="min-w-0 space-y-1 text-start">
@@ -104,8 +105,8 @@ export const FeaturedWorkSection: React.FC = () => {
     return (
       <article key={project.id} data-cursor="video" onMouseEnter={() => setHoveredProjectId(project.id)} onMouseLeave={() => setHoveredProjectId(null)} className="group relative flex h-full flex-col overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-lg)] transition-all duration-[var(--motion-duration)] hover:-translate-y-1 hover:border-[var(--border-hover)] reveal">
         <div className={`relative w-full overflow-hidden bg-black ${getAspectRatioClass(project.aspectRatio)}`}>
-          <img src={project.thumbnail} alt={title} loading="lazy" className={`h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${isHovered && project.previewVideoUrl && project.autoplay !== false ? 'opacity-0' : 'opacity-100'}`} />
-          {project.previewVideoUrl && isHovered && project.autoplay !== false && <video src={project.previewVideoUrl} autoPlay muted loop={project.loop} playsInline preload="none" poster={project.thumbnail} className="absolute inset-0 h-full w-full object-cover" />}
+          <img src={sanitizeExternalUrl(project.thumbnail)} alt={title} loading="lazy" className={`h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${isHovered && project.previewVideoUrl && project.autoplay !== false ? 'opacity-0' : 'opacity-100'}`} />
+          {project.previewVideoUrl && isHovered && project.autoplay !== false && <video src={sanitizeExternalUrl(project.previewVideoUrl)} autoPlay muted loop={project.loop} playsInline preload="none" poster={sanitizeExternalUrl(project.thumbnail)} className="absolute inset-0 h-full w-full object-cover" />}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/15 to-transparent" />
           <div className="absolute inset-x-3 top-3 z-10 flex items-center justify-between gap-2"><span className="rounded-full border border-white/20 bg-black/50 px-2.5 py-1 text-[9px] font-mono uppercase tracking-[0.18em] text-white/80 backdrop-blur-sm">{project.platform}</span>{project.featured && <span className="rounded-full bg-[var(--color-accent)] px-2.5 py-1 text-[9px] font-mono uppercase tracking-[0.18em] text-black font-bold">Featured</span>}</div>
           <button type="button" onClick={() => setActiveVideoProject(project)} className="absolute inset-0 z-10 m-auto flex h-14 w-14 scale-90 items-center justify-center rounded-full bg-[var(--color-accent)] text-black opacity-90 shadow-lg transition-all duration-300 group-hover:scale-100 focus-visible:scale-100" aria-label={`Play ${title}`}><Play className="h-5 w-5 fill-black" /></button>

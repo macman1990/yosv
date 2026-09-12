@@ -1,6 +1,7 @@
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { User, FileText, Quote, Award, MapPin, CheckCircle, Flame } from 'lucide-react';
+import { sanitizeExternalUrl } from '../../lib/security';
 
 export const AboutSection: React.FC = () => {
   const { data, isClientMode, language, t } = usePortfolio();
@@ -35,7 +36,7 @@ export const AboutSection: React.FC = () => {
           <div className="lg:col-span-5 space-y-6 reveal reveal-delay-1">
             <div className="glass-card overflow-hidden border border-[var(--border)] group">
               <img
-                src={profile.photoUrl}
+                src={sanitizeExternalUrl(profile.photoUrl)}
                 alt={profile.name[language] || profile.name.en}
                 className="aspect-[4/5] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
               />
@@ -56,7 +57,7 @@ export const AboutSection: React.FC = () => {
                   </div>
                   {profile.cvUrl && (
                     <a
-                      href={profile.cvUrl}
+                      href={sanitizeExternalUrl(profile.cvUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-2 text-[9px] font-bold uppercase tracking-[0.18em] text-black"

@@ -51,7 +51,7 @@ export const BlogPostModal: React.FC<BlogPostModalProps> = ({ post, onClose, onS
   const currentTitle = post.title[activeLang] || post.title.en || post.title.ar;
   const currentExcerpt = post.excerpt[activeLang] || post.excerpt.en || post.excerpt.ar;
   const currentContent = post.content ? (post.content[activeLang] || post.content.en || post.content.ar || '') : '';
-  const safeEmbed = post.embedUrl || (post.externalUrl ? getSafeEmbedUrl(post.externalUrl, post.platform) : null);
+  const safeEmbed = post.embedUrl ? getSafeEmbedUrl(post.embedUrl, post.platform) : (post.externalUrl ? getSafeEmbedUrl(post.externalUrl, post.platform) : null);
 
   const handleShare = () => {
     const postUrl = `${window.location.origin}/blog/${post.slug}`;
@@ -188,7 +188,7 @@ export const BlogPostModal: React.FC<BlogPostModalProps> = ({ post, onClose, onS
           ) : post.coverImage || post.thumbnail ? (
             <div className="relative w-full aspect-video sm:aspect-[21/9] rounded-xl overflow-hidden border border-[var(--border)] bg-black/40">
               <img
-                src={post.coverImage || post.thumbnail}
+                src={sanitizeExternalUrl(post.coverImage || post.thumbnail)}
                 alt={currentTitle}
                 className="w-full h-full object-cover"
                 loading="lazy"
