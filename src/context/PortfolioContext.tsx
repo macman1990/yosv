@@ -4,6 +4,7 @@ import { initialPortfolioData } from '../data/initialData';
 import { StorageService } from '../lib/storage';
 import { UI_TRANSLATIONS } from '../lib/translations';
 import { getThemePreset, normalizeThemeName, resolveColorMode } from '../lib/themeRegistry';
+import { getThemeTokenVariables } from '../lib/themeTokens';
 
 export interface ToastMessage {
   id: string;
@@ -130,6 +131,9 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     document.documentElement.style.setProperty('--projects-gap', `${Number(data.appearance?.projectGap ?? 24)}px`);
     document.documentElement.style.setProperty('--glass-intensity', data.appearance?.glassIntensity || 'medium');
     document.documentElement.style.setProperty('--background-mode', data.appearance?.backgroundMode || 'subtle');
+    Object.entries(getThemeTokenVariables(data.appearance)).forEach(([key, value]) => {
+      document.documentElement.style.setProperty(key, value);
+    });
 
     const shell = currentThemeMode === 'light' ? 'rgba(255,255,255,0.68)' : 'rgba(9, 12, 17, 0.92)';
     const panel = currentThemeMode === 'light' ? 'rgba(255,255,255,0.72)' : 'rgba(21, 26, 35, 0.82)';

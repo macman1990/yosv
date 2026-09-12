@@ -45,15 +45,19 @@ export type AdminTabId =
   | 'appearance'
   | 'media'
   | 'backup'
-  | 'security';
+  | 'security'
+  | 'guide';
 
 interface AdminSidebarProps {
   activeTab: AdminTabId;
   setActiveTab: (tab: AdminTabId) => void;
   collapsed?: boolean;
+  mobileOpen?: boolean;
+  onCloseMobile?: () => void;
+  navigationInteractive?: boolean;
 }
 
-export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActiveTab }) => {
+export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActiveTab, mobileOpen = false, onCloseMobile, navigationInteractive = true }) => {
   const { language } = usePortfolio();
 
   const labelMap: Record<AdminTabId, { en: string; ar: string }> = {
@@ -82,6 +86,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     media: { en: 'Media Library', ar: 'مكتبة الوسائط' },
     backup: { en: 'Backup & JSON', ar: 'النسخ الاحتياطي والـ JSON' },
     security: { en: 'Security & Auth', ar: 'الأمان والمصادقة' },
+    guide: { en: 'Dashboard Guide', ar: 'دليل لوحة التحكم' },
   };
 
   const menuItems: { id: AdminTabId; icon: React.ReactNode }[] = [
@@ -110,10 +115,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
     { id: 'media', icon: <ImageIcon className="h-4 w-4" /> },
     { id: 'backup', icon: <Database className="h-4 w-4" /> },
     { id: 'security', icon: <ShieldAlert className="h-4 w-4" /> },
+    { id: 'guide', icon: <FileText className="h-4 w-4" /> },
   ];
 
   return (
-    <aside className="h-full w-64 shrink-0 overflow-y-auto border-r border-[var(--border)] bg-[var(--surface)]">
+    <aside id="admin-navigation" aria-label="Admin navigation" className={`fixed inset-y-0 start-0 z-[91000] h-full w-72 shrink-0 overflow-y-auto border-e border-[var(--border)] bg-[var(--surface)] transition-transform duration-300 md:relative md:z-auto md:block md:w-64 md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full md:translate-x-0'}`}>
       <div className="space-y-1 p-4">
         <div className="mb-2 flex items-center gap-2 px-3 py-3">
           <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--color-accent)]" />
@@ -129,7 +135,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
             <button
               key={item.id}
               type="button"
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => { setActiveTab(item.id); onCloseMobile?.(); }}
+              tabIndex={navigationInteractive ? 0 : -1}
               className={`flex w-full cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-medium transition-all ${
                 isActive
                   ? 'bg-[var(--color-accent)] text-black shadow-[0_0_15px_rgba(16,185,129,0.3)]'

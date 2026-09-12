@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { AvailabilityStatusValue, PortfolioData, AnalyticsEvent, ProjectInquiry } from '../types/portfolio';
 import { initialPortfolioData } from '../data/initialData';
+import { normalizeThemeTokens } from './themeTokens';
 import { normalizeSectionOrder } from './sectionRegistry';
 
 const STORAGE_KEY = 'aetheria_portfolio_data_v1';
@@ -113,6 +114,12 @@ export const normalizePortfolioData = (input: Partial<PortfolioData> | null | un
     viewMoreEnabled: typeof payload.appearance?.viewMoreEnabled === 'boolean' ? payload.appearance.viewMoreEnabled : (base.appearance.viewMoreEnabled ?? true),
     viewMoreLabelEn: payload.appearance?.viewMoreLabelEn || base.appearance.viewMoreLabelEn || 'View More',
     viewMoreLabelAr: payload.appearance?.viewMoreLabelAr || base.appearance.viewMoreLabelAr || 'المزيد',
+    customTheme: payload.appearance?.customTheme
+      ? {
+          enabled: payload.appearance.customTheme.enabled === true,
+          tokens: normalizeThemeTokens(payload.appearance.customTheme.tokens),
+        }
+      : base.appearance.customTheme,
   } as PortfolioData['appearance'];
 
   const normalized: PortfolioData = {
@@ -125,7 +132,14 @@ export const normalizePortfolioData = (input: Partial<PortfolioData> | null | un
     sectionOrder: normalizeSectionOrder(payload.sectionOrder),
     clientLogos: normalizeClientLogos((payload as any).clientLogos),
     socialLinks: Array.isArray(payload.socialLinks) ? payload.socialLinks : base.socialLinks,
-    servicePackages: Array.isArray(payload.servicePackages) ? payload.servicePackages : base.servicePackages,
+    servicePackages: Array.isArray(payload.servicePackages)
+      ? payload.servicePackages.map((pkg) => ({
+          ...pkg,
+          presentation: (['basic', 'standard', 'premium', 'professional'] as const).includes(pkg.presentation)
+            ? pkg.presentation
+            : pkg.featured ? 'premium' : 'standard',
+        }))
+      : base.servicePackages,
     testimonials: Array.isArray(payload.testimonials) ? payload.testimonials : base.testimonials,
     blogPosts: Array.isArray(payload.blogPosts) ? payload.blogPosts : base.blogPosts,
     blogCategories: Array.isArray(payload.blogCategories) ? payload.blogCategories : base.blogCategories,

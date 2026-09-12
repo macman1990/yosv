@@ -3,6 +3,7 @@ import { usePortfolio } from '../../../context/PortfolioContext';
 import { AppearanceSettings, ThemeMode } from '../../../types/portfolio';
 import { Save, Palette, MousePointer, SunMedium, Moon, Sparkles } from 'lucide-react';
 import { THEME_REGISTRY, normalizeThemeName } from '../../../lib/themeRegistry';
+import { AdminThemeStudio } from '../AdminThemeStudio';
 
 export const AdminAppearanceTab: React.FC = () => {
   const { data, saveData, addToast } = usePortfolio();
@@ -54,6 +55,7 @@ export const AdminAppearanceTab: React.FC = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-200">
+      <AdminThemeStudio />
       <div className="flex items-center justify-between border-b border-white/10 pb-4">
         <div>
           <h2 className="text-xl font-bold text-white font-syne">Visual Aesthetics & Theme Tokens</h2>

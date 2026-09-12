@@ -1,11 +1,13 @@
 import React from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { useAdminAuth } from '../../context/AdminAuthContext';
-import { ExternalLink, Save, LogOut, Globe, Sparkles } from 'lucide-react';
+import { ExternalLink, Save, LogOut, Globe, Sparkles, Menu, X } from 'lucide-react';
 
-export const AdminHeader: React.FC<{ onSave: () => void; isSaving?: boolean }> = ({
+export const AdminHeader: React.FC<{ onSave: () => void; isSaving?: boolean; onMenu?: () => void; menuOpen?: boolean }> = ({
   onSave,
   isSaving,
+  onMenu,
+  menuOpen = false,
 }) => {
   const { setIsAdminMode, language, setLanguage, addToast } = usePortfolio();
   const labels = {
@@ -44,6 +46,9 @@ export const AdminHeader: React.FC<{ onSave: () => void; isSaving?: boolean }> =
     <header className="h-16 shrink-0 border-b border-[var(--border)] bg-[var(--glass-bg)] px-6 backdrop-blur-xl">
       <div className="flex h-full items-center justify-between gap-3">
         <div className="flex items-center gap-3">
+          <button type="button" onClick={onMenu} aria-expanded={menuOpen} aria-controls="admin-navigation" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} className="rounded-xl border border-[var(--border)] p-2 text-[var(--foreground)] md:hidden">
+            {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
           <button
             type="button"
             onClick={handleExitToSite}

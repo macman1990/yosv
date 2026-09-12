@@ -3,21 +3,21 @@
 @layer base {
   :root,
   .dark {
-    --background: #0a0d12;
-    --background-elevated: #111722;
+    --background: #0d0e10;
+    --background-elevated: #17181b;
     --foreground: #edf2f8;
     --foreground-soft: #d8e1ef;
     --muted: #a9b3c7;
     --muted-foreground: #8691a7;
-    --surface: rgba(18, 23, 31, 0.88);
-    --surface-elevated: rgba(24, 30, 39, 0.96);
-    --surface-muted: rgba(13, 17, 24, 0.8);
-    --card: rgba(19, 24, 33, 0.92);
-    --card-hover: rgba(25, 31, 41, 0.96);
-    --border: rgba(200, 214, 232, 0.12);
-    --border-subtle: rgba(200, 214, 232, 0.08);
-    --border-hover: rgba(200, 214, 232, 0.2);
-    --hero-background: #0b0f15;
+    --surface: rgba(23, 24, 27, 0.9);
+    --surface-elevated: rgba(31, 32, 36, 0.96);
+    --surface-muted: rgba(15, 16, 18, 0.82);
+    --card: rgba(25, 26, 29, 0.94);
+    --card-hover: rgba(34, 35, 39, 0.97);
+    --border: rgba(218, 221, 228, 0.13);
+    --border-subtle: rgba(218, 221, 228, 0.08);
+    --border-hover: rgba(218, 221, 228, 0.22);
+    --hero-background: #101113;
     --hero-foreground: #f6f8fb;
     --card-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.75);
     --cursor-border: rgba(255, 255, 255, 0.25);
@@ -158,6 +158,55 @@
   body[data-theme-name="minimal"]::before {
     background-image: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.06), transparent 30%);
     opacity: 0.5;
+  }
+
+  .pricing-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--theme-custom-radius, 30px);
+  }
+
+  .pricing-card::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: var(--border);
+    opacity: 0.7;
+  }
+
+  .pricing-card-basic {
+    box-shadow: 0 18px 42px -30px rgba(0, 0, 0, 0.5);
+  }
+
+  .pricing-card-standard {
+    box-shadow: 0 24px 56px -32px rgba(0, 0, 0, 0.62);
+  }
+
+  .pricing-card-standard::before {
+    background: var(--color-accent-secondary);
+  }
+
+  .pricing-card-premium {
+    box-shadow: 0 28px 70px -34px color-mix(in srgb, var(--color-accent) 48%, transparent);
+  }
+
+  .pricing-card-premium::before,
+  .pricing-card-professional::before {
+    background: linear-gradient(90deg, var(--color-accent-secondary), var(--color-accent));
+  }
+
+  .pricing-card-professional {
+    box-shadow: 0 32px 82px -36px color-mix(in srgb, var(--color-accent) 58%, transparent);
+  }
+
+  .pricing-card-professional::after {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border: 1px solid color-mix(in srgb, var(--color-accent) 24%, transparent);
+    border-radius: inherit;
+    pointer-events: none;
   }
 
   html.light body::before {

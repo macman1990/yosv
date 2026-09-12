@@ -45,6 +45,10 @@ export const PricingSection: React.FC = () => {
             const description = pkg.description[language] || pkg.description.en;
             const billing = pkg.billing[language] || pkg.billing.en;
             const ctaText = pkg.ctaText[language] || pkg.ctaText.en;
+            const variant = ['basic', 'standard', 'premium', 'professional'].includes(pkg.presentation || '')
+              ? pkg.presentation!
+              : (pkg.featured ? 'premium' : idx === 0 ? 'basic' : idx === 1 ? 'standard' : 'professional');
+            const badge = pkg.badge?.[language] || pkg.badge?.en || (pkg.featured ? 'Most popular' : variant === 'professional' ? 'Executive tier' : '');
 
             return (
               <motion.div
@@ -53,17 +57,18 @@ export const PricingSection: React.FC = () => {
                 whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.6, delay: idx * 0.08, ease: [0.22, 1, 0.36, 1] }}
-                className={`group relative flex flex-col rounded-[30px] border p-6 shadow-[var(--card-shadow)] transition-all duration-500 hover:-translate-y-1 ${pkg.featured ? 'border-[var(--color-accent)] bg-[var(--surface)]' : 'border-[var(--border)] bg-[var(--surface)]/80'}`}
+                data-pricing-variant={variant}
+                className={`pricing-card pricing-card-${variant} group relative flex flex-col rounded-[30px] border p-6 shadow-[var(--card-shadow)] transition-all duration-500 hover:-translate-y-1 ${pkg.featured ? 'border-[var(--color-accent)] bg-[var(--surface)]' : 'border-[var(--border)] bg-[var(--surface)]/80'}`}
               >
-                {pkg.featured && (
+                {badge && (
                   <div className="absolute right-5 top-5 rounded-full border border-[var(--color-accent)] bg-[var(--accent-muted)] px-2.5 py-1 text-[9px] font-mono uppercase tracking-[0.18em] text-[var(--color-accent)]">
-                    Most popular
+                    {badge}
                   </div>
                 )}
 
                 <div className="space-y-5">
                   <div className="space-y-3">
-                    <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--muted)]">{pkg.featured ? 'Featured' : 'Package'}</p>
+                    <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-[var(--muted)]">{variant}</p>
                     <h3 className="text-2xl font-bold font-syne text-[var(--foreground)]">{name}</h3>
                     <p className="text-sm text-[var(--muted)] leading-relaxed">{tagline}</p>
                   </div>

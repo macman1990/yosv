@@ -27,6 +27,7 @@ export const AdminPricingTab: React.FC = () => {
       features: ['Monthly content planning', '2 short-form edits', 'Brand-safe captions'],
       ctaText: { en: 'Book package', ar: 'احجز الباقة' },
       featured: false,
+      presentation: 'standard',
       order: packages.length + 1,
       visible: true,
       status: 'published',
@@ -139,6 +140,12 @@ export const AdminPricingTab: React.FC = () => {
               <div className="space-y-1">
                 <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">Currency</label>
                 <input value={editing.currency} onChange={(e) => setEditing({ ...editing, currency: e.target.value.toUpperCase() })} className="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-2 text-xs text-white" />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-mono uppercase tracking-[0.18em] text-zinc-400">Presentation variant</label>
+                <select value={editing.presentation || (editing.featured ? 'premium' : 'standard')} onChange={(e) => setEditing({ ...editing, presentation: e.target.value as ServicePackage['presentation'] })} className="w-full rounded-xl border border-white/10 bg-black/50 px-3 py-2 text-xs text-white">
+                  <option value="basic">Basic</option><option value="standard">Standard / Mid</option><option value="premium">Premium</option><option value="professional">Professional</option>
+                </select>
               </div>
 
               <div className="space-y-1">

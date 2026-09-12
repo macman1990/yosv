@@ -131,6 +131,8 @@ export interface ServicePackage {
   ctaText: LocalizedString;
   ctaLink?: string;
   featured: boolean;
+  presentation?: 'basic' | 'standard' | 'premium' | 'professional';
+  badge?: LocalizedString;
   order: number;
   visible: boolean;
   status: ContentStatus;
@@ -463,6 +465,34 @@ export interface AppearanceSettings {
   navigationMode?: 'slider' | 'scroll';
   heroStyle?: 'cinematic' | 'editorial' | 'studio' | 'luxury';
   clientMode?: ClientModeSettings;
+  customTheme?: {
+    enabled: boolean;
+    tokens: ThemeTokenSettings;
+  };
+}
+
+export interface ThemeTokenSettings {
+  background: string;
+  surface: string;
+  surfaceElevated: string;
+  text: string;
+  textMuted: string;
+  border: string;
+  accent: string;
+  accentSecondary: string;
+  success: string;
+  warning: string;
+  danger: string;
+  heroBackground: string;
+  sectionBackground: string;
+  cardBackground: string;
+  heading: string;
+  body: string;
+  radius: number;
+  surfaceOpacity: number;
+  shadowIntensity: number;
+  borderIntensity: number;
+  blurIntensity: number;
 }
 
 export interface SEOSettings {
