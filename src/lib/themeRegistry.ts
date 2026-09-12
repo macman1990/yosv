@@ -64,13 +64,13 @@ export const normalizeThemeName = (themeName?: string): PortfolioThemeName => {
   const value = String(themeName || 'cinematic').toLowerCase();
   if (value === 'liquid' || value === 'liquid-glass') return 'liquid-glass';
   if (value === 'luxury') return 'minimal';
-  if (['cinematic', 'liquid-glass', 'editorial', 'digital', 'minimal'].includes(value)) {
+  if (['cinematic', 'liquid-glass', 'editorial', 'digital', 'minimal', 'obsidian', 'nocturne', 'monolith'].includes(value)) {
     return value as PortfolioThemeName;
   }
   return 'cinematic';
 };
 
-export const THEME_REGISTRY: Record<PortfolioThemeName, ThemeSemanticTokens> = {
+export const THEME_REGISTRY = {
   cinematic: {
     id: 'cinematic',
     name: 'Cinematic Film',
@@ -563,22 +563,22 @@ export const THEME_REGISTRY: Record<PortfolioThemeName, ThemeSemanticTokens> = {
       '--font-body': 'var(--font-sans)',
       '--space-section': '7rem',
       '--space-content': '2.5rem',
-      '--surface-primary': 'rgba(248, 246, 242, 0.86)',
-      '--surface-secondary': 'rgba(255,255,255,0.72)',
-      '--surface-glass': 'rgba(255,255,255,0.44)',
+      '--surface-primary': 'rgba(25, 25, 24, 0.9)',
+      '--surface-secondary': 'rgba(34, 34, 32, 0.78)',
+      '--surface-glass': 'rgba(46, 44, 40, 0.52)',
       '--surface-overlay': 'rgba(24, 20, 16, 0.42)',
-      '--border-subtle': 'rgba(24, 20, 16, 0.08)',
-      '--border-strong': 'rgba(24, 20, 16, 0.14)',
+      '--border-subtle': 'rgba(236, 230, 218, 0.1)',
+      '--border-strong': 'rgba(236, 230, 218, 0.18)',
       '--shadow-sm': '0 18px 32px -24px rgba(24,20,16,0.22)',
       '--shadow-lg': '0 30px 64px -34px rgba(24,20,16,0.24)',
       '--radius-sm': '10px',
       '--radius-md': '18px',
       '--radius-lg': '24px',
-      '--text-primary': '#17140e',
-      '--text-secondary': '#5f554f',
+      '--text-primary': '#f3eee4',
+      '--text-secondary': '#b8afa1',
       '--accent-primary': '#d4a574',
       '--accent-secondary': '#a67c5b',
-      '--background-base': '#f4f0ea',
+      '--background-base': '#141412',
       '--background-atmosphere': 'radial-gradient(circle at 50% 0%, rgba(212,165,116,0.16), transparent 28%)',
       '--motion-duration': '0.8s',
       '--motion-ease': 'cubic-bezier(0.22, 1, 0.36, 1)',
@@ -649,22 +649,22 @@ export const THEME_REGISTRY: Record<PortfolioThemeName, ThemeSemanticTokens> = {
       '--font-body': 'var(--font-sans)',
       '--space-section': '7rem',
       '--space-content': '2.5rem',
-      '--surface-primary': 'rgba(248, 246, 242, 0.86)',
-      '--surface-secondary': 'rgba(255,255,255,0.72)',
-      '--surface-glass': 'rgba(255,255,255,0.44)',
+      '--surface-primary': 'rgba(25, 25, 24, 0.9)',
+      '--surface-secondary': 'rgba(34, 34, 32, 0.78)',
+      '--surface-glass': 'rgba(46, 44, 40, 0.52)',
       '--surface-overlay': 'rgba(24, 20, 16, 0.42)',
-      '--border-subtle': 'rgba(24, 20, 16, 0.08)',
-      '--border-strong': 'rgba(24, 20, 16, 0.14)',
+      '--border-subtle': 'rgba(236, 230, 218, 0.1)',
+      '--border-strong': 'rgba(236, 230, 218, 0.18)',
       '--shadow-sm': '0 18px 32px -24px rgba(24,20,16,0.22)',
       '--shadow-lg': '0 30px 64px -34px rgba(24,20,16,0.24)',
       '--radius-sm': '10px',
       '--radius-md': '18px',
       '--radius-lg': '24px',
-      '--text-primary': '#17140e',
-      '--text-secondary': '#5f554f',
+      '--text-primary': '#f3eee4',
+      '--text-secondary': '#b8afa1',
       '--accent-primary': '#d4a574',
       '--accent-secondary': '#a67c5b',
-      '--background-base': '#f4f0ea',
+      '--background-base': '#141412',
       '--background-atmosphere': 'radial-gradient(circle at 50% 0%, rgba(212,165,116,0.16), transparent 28%)',
       '--motion-duration': '0.8s',
       '--motion-ease': 'cubic-bezier(0.22, 1, 0.36, 1)',
@@ -673,17 +673,49 @@ export const THEME_REGISTRY: Record<PortfolioThemeName, ThemeSemanticTokens> = {
       '--nav-height': '72px',
     },
   },
-};
+} as unknown as Record<PortfolioThemeName, ThemeSemanticTokens>;
+
+const createDarkTheme = (
+  id: PortfolioThemeName,
+  name: string,
+  description: string,
+  accent: string,
+  secondary: string,
+  background: string,
+  surface: string,
+  radius: string,
+  atmosphere: string,
+): ThemeSemanticTokens => ({
+  id, name, description,
+  material: 'Dark-only surfaces with a focused editorial material system',
+  motion: 'Subtle transform and opacity transitions with reduced-motion support',
+  typography: { display: 'confident editorial display', headingScale: 'clear high-contrast hierarchy', bodyDensity: 'comfortable reading rhythm', label: 'restrained micro-labels', letterSpacing: '-0.04em to 0.14em', hierarchy: 'title > supporting copy > metadata' },
+  layout: { sectionSpacing: 'generous vertical rhythm', contentWidth: 'focused reading width', cardDensity: 'balanced', gridBehavior: 'responsive editorial grid', heroComposition: 'media-led creative introduction', navGeometry: 'compact floating navigation' },
+  surfaces: { panelOpacity: 'opaque charcoal surfaces', blur: 'controlled blur', borderStrength: 'quiet neutral borders', radius, shadow: 'restrained layered depth', highlight: 'subtle accent highlight' },
+  componentGeometry: { buttons: 'compact rounded controls', cards: 'material editorial panels', pills: 'small status pills', navigation: 'floating dark shell', projectCards: 'image-led cards', overlays: 'dark readable overlays' },
+  background: { family: 'dark neutral field', atmosphere, texture: 'low-noise texture', lighting: 'controlled ambient light' },
+  motionProfile: { transition: '0.35s to 0.65s', reveal: 'fade and lift', hover: 'subtle elevation', parallax: 'limited', scroll: 'calm' },
+  projectPresentation: { preferredCard: 'premium media card', mediaEmphasis: 'strong', metadataDensity: 'compact', featuredBehavior: 'clear lead treatment' },
+  cssVars: {
+    '--font-display': 'var(--font-syne)', '--font-body': 'var(--font-sans)', '--surface-primary': surface,
+    '--surface-secondary': surface, '--surface-glass': `${surface}cc`, '--surface-overlay': `${background}ee`,
+    '--border-subtle': `${accent}24`, '--border-strong': `${accent}42`, '--shadow-sm': '0 18px 40px -28px rgba(0,0,0,0.72)',
+    '--shadow-lg': '0 30px 70px -34px rgba(0,0,0,0.86)', '--radius-sm': radius, '--radius-md': radius,
+    '--radius-lg': radius, '--text-primary': '#f1f3f5', '--text-secondary': '#aeb4bc',
+    '--accent-primary': accent, '--accent-secondary': secondary, '--background-base': background,
+    '--background-atmosphere': atmosphere, '--motion-duration': '0.55s', '--motion-ease': 'cubic-bezier(0.22, 1, 0.36, 1)',
+    '--hero-density': 'high-impact', '--card-density': 'balanced', '--nav-height': '72px',
+  },
+});
+
+Object.assign(THEME_REGISTRY, {
+  obsidian: createDarkTheme('obsidian', 'Obsidian', 'Volcanic black surfaces with silver precision for high-end studio work.', '#d7dde5', '#8f9baa', '#08090b', '#15171a', '12px', 'radial-gradient(circle at 70% 0%, rgba(215,221,229,0.08), transparent 30%)'),
+  nocturne: createDarkTheme('nocturne', 'Nocturne', 'Charcoal and muted plum for an artistic cinematic-editorial presence.', '#c08aab', '#8e6b91', '#110d12', '#211820', '20px', 'radial-gradient(circle at 18% 0%, rgba(192,138,171,0.14), transparent 32%)'),
+  monolith: createDarkTheme('monolith', 'Monolith', 'Brutalist graphite geometry with hard-edged hierarchy and minimal ornament.', '#d0c6b2', '#8d887d', '#111110', '#1b1b19', '4px', 'linear-gradient(135deg, rgba(208,198,178,0.07), transparent 42%)'),
+} as Record<string, ThemeSemanticTokens>);
 
 export const getThemePreset = (themeName?: string): ThemeSemanticTokens => {
   return THEME_REGISTRY[normalizeThemeName(themeName)];
 };
 
-export const resolveColorMode = (mode?: ThemeMode): 'dark' | 'light' => {
-  if (mode === 'light') return 'light';
-  if (mode === 'dark') return 'dark';
-  if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    return 'light';
-  }
-  return 'dark';
-};
+export const resolveColorMode = (_mode?: ThemeMode | string): 'dark' => 'dark';

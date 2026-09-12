@@ -34,9 +34,8 @@ export const AdminThemeStudio: React.FC = () => {
   const [draft, setDraft] = useState<ThemeTokenSettings>(savedTokens);
   const [enabled, setEnabled] = useState(data.appearance.customTheme?.enabled === true);
   const [themeName, setThemeName] = useState(data.appearance.themeName);
-  const [defaultTheme, setDefaultTheme] = useState(data.appearance.defaultTheme);
   const [dirty, setDirty] = useState(false);
-  const appearance = useMemo(() => ({ ...data.appearance, themeName, defaultTheme, customTheme: { enabled, tokens: draft } }), [data.appearance, defaultTheme, draft, enabled, themeName]);
+  const appearance = useMemo(() => ({ ...data.appearance, themeName, defaultTheme: 'dark' as const, customTheme: { enabled, tokens: draft } }), [data.appearance, draft, enabled, themeName]);
 
   useEffect(() => {
     applyPreview(appearance);
@@ -49,7 +48,6 @@ export const AdminThemeStudio: React.FC = () => {
     setDraft(normalizeThemeTokens(data.appearance.customTheme?.tokens));
     setEnabled(data.appearance.customTheme?.enabled === true);
     setThemeName(data.appearance.themeName);
-    setDefaultTheme(data.appearance.defaultTheme);
     setDirty(false);
   }, [data.appearance]);
 
@@ -67,7 +65,7 @@ export const AdminThemeStudio: React.FC = () => {
 
   const handleSave = async () => {
     const normalized = normalizeThemeTokens(draft);
-    const ok = await saveData({ ...data, appearance: { ...data.appearance, themeName, defaultTheme, customTheme: { enabled, tokens: normalized } } });
+    const ok = await saveData({ ...data, appearance: { ...data.appearance, themeName, defaultTheme: 'dark', customTheme: { enabled, tokens: normalized } } });
     if (ok) {
       setDraft(normalized);
       setDirty(false);
@@ -97,17 +95,13 @@ export const AdminThemeStudio: React.FC = () => {
         <div className="mt-4 flex items-center gap-2 text-xs text-[var(--muted)]"><Eye className="h-4 w-4 text-[var(--color-accent)]" /> Live preview is active while you edit.</div>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2">
-        <label className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-sm text-[var(--foreground)]">Named theme
-          <select value={themeName} onChange={(e) => { setThemeName(e.target.value as AppearanceSettings['themeName']); setDirty(true); }} className="mt-2 w-full rounded-xl border border-[var(--border)] bg-[var(--input-bg)] px-3 py-2 text-sm">
-            {Object.values(THEME_REGISTRY).map((theme) => <option key={theme.id} value={theme.id}>{theme.name}</option>)}
-          </select>
-        </label>
-        <label className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 text-sm text-[var(--foreground)]">Default color mode
-          <select value={defaultTheme} onChange={(e) => { setDefaultTheme(e.target.value as AppearanceSettings['defaultTheme']); setDirty(true); }} className="mt-2 w-full rounded-xl border border-[var(--border)] bg-[var(--input-bg)] px-3 py-2 text-sm">
-            <option value="dark">Dark</option><option value="light">Light</option><option value="system">System</option>
-          </select>
-        </label>
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {Object.values(THEME_REGISTRY).map((theme) => <button key={theme.id} type="button" onClick={() => { setThemeName(theme.id); setDirty(true); }} className={`theme-preview-tile text-start ${themeName === theme.id ? 'theme-preview-tile-active' : ''}`} style={{ background: theme.cssVars['--background-atmosphere'], backgroundColor: theme.cssVars['--background-base'], borderColor: themeName === theme.id ? theme.cssVars['--accent-primary'] : undefined }} aria-pressed={themeName === theme.id}>
+          <span className="theme-preview-tile__swatch" style={{ background: theme.cssVars['--accent-primary'] }} />
+          <span className="mt-4 block text-sm font-semibold text-white">{theme.name}</span>
+          <span className="mt-1 block text-[11px] leading-5 text-white/65">{theme.description}</span>
+          {themeName === theme.id && <span className="mt-3 inline-flex rounded-full bg-white/15 px-2 py-1 text-[10px] uppercase tracking-widest text-white">Active</span>}
+        </button>)}
       </section>
 
       <section className="grid gap-6 xl:grid-cols-2">

@@ -46,6 +46,7 @@ export const AdminDashboard: React.FC = () => {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => localStorage.getItem('aetheria_admin_sidebar_collapsed') === 'true');
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 767px)');
@@ -54,6 +55,10 @@ export const AdminDashboard: React.FC = () => {
     media.addEventListener('change', update);
     return () => media.removeEventListener('change', update);
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('aetheria_admin_sidebar_collapsed', String(sidebarCollapsed));
+  }, [sidebarCollapsed]);
 
   useEffect(() => {
     if (!mobileNavOpen) return;
@@ -82,7 +87,7 @@ export const AdminDashboard: React.FC = () => {
 
       <div className="flex flex-1 overflow-hidden">
         {mobileNavOpen && <button type="button" aria-label="Close navigation" onClick={() => setMobileNavOpen(false)} className="fixed inset-0 z-[90500] bg-black/60 md:hidden" />}
-        <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} mobileOpen={mobileNavOpen} navigationInteractive={!isMobile || mobileNavOpen} onCloseMobile={() => setMobileNavOpen(false)} />
+        <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} collapsed={sidebarCollapsed} onToggleCollapsed={() => setSidebarCollapsed((value) => !value)} mobileOpen={mobileNavOpen} navigationInteractive={!isMobile || mobileNavOpen} onCloseMobile={() => setMobileNavOpen(false)} />
 
         <main className="flex-1 overflow-y-auto bg-[var(--background)] p-6 md:p-10">
           <div className="mx-auto max-w-6xl pb-16">

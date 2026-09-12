@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { usePortfolio } from '../../context/PortfolioContext';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
-import { ThemeToggle } from '../common/ThemeToggle';
 import { Menu, X, Play, Sparkles } from 'lucide-react';
 import { sanitizeExternalUrl } from '../../lib/security';
 
@@ -107,7 +106,6 @@ export const Header: React.FC = () => {
 
           <div className="hidden items-center gap-2.5 sm:flex">
             <LanguageSwitcher />
-            <ThemeToggle />
             {showStartProject && <a
               href="#contact"
               className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent)] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-black shadow-[0_16px_40px_rgba(63,124,255,0.28)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_44px_rgba(63,124,255,0.34)]"
@@ -119,7 +117,6 @@ export const Header: React.FC = () => {
 
           <div className="flex items-center gap-2 sm:hidden">
             <LanguageSwitcher compact />
-            <ThemeToggle compact />
             <button
               type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}

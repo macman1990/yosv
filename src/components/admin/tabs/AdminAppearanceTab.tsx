@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { usePortfolio } from '../../../context/PortfolioContext';
-import { AppearanceSettings, ThemeMode } from '../../../types/portfolio';
+import { AppearanceSettings } from '../../../types/portfolio';
 import { Save, Palette, MousePointer, SunMedium, Moon, Sparkles } from 'lucide-react';
 import { THEME_REGISTRY, normalizeThemeName } from '../../../lib/themeRegistry';
 import { AdminThemeStudio } from '../AdminThemeStudio';
@@ -345,29 +345,6 @@ export const AdminAppearanceTab: React.FC = () => {
                 <label className="space-y-1 text-xs font-mono text-zinc-400"><span>Intensity</span><select value={appearance.threeDIntensity || 'subtle'} onChange={(e) => setAppearance({ ...appearance, threeDIntensity: e.target.value as 'off' | 'subtle' | 'medium' | 'strong' })} className="w-full rounded-xl bg-[#0f1015] border border-white/10 px-3 py-1.5 text-white text-xs"><option value="off">Off</option><option value="subtle">Subtle</option><option value="medium">Medium</option><option value="strong">Strong</option></select></label>
                 <label className="space-y-1 text-xs font-mono text-zinc-400"><span>Quality</span><select value={appearance.threeDQuality || 'auto'} onChange={(e) => setAppearance({ ...appearance, threeDQuality: e.target.value as 'auto' | 'high' | 'medium' | 'low' })} className="w-full rounded-xl bg-[#0f1015] border border-white/10 px-3 py-1.5 text-white text-xs"><option value="auto">Auto</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></label>
               </div>
-            </div>
-
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/5 border border-white/5">
-              <div className="space-y-0.5">
-                <h4 className="text-sm font-bold text-white">Default Theme Mode</h4>
-                <p className="text-xs text-zinc-400">
-                  Atmosphere loaded when a client first visits
-                </p>
-              </div>
-              <select
-                value={appearance.defaultTheme}
-                onChange={(e) =>
-                  setAppearance({
-                    ...appearance,
-                    defaultTheme: e.target.value as ThemeMode,
-                  })
-                }
-                className="px-3 py-1.5 rounded-xl bg-[#0f1015] border border-white/10 text-white text-xs font-mono"
-              >
-                <option value="system">System</option>
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-              </select>
             </div>
 
             <div className="flex items-center justify-between p-3.5 rounded-2xl bg-white/5 border border-white/5">

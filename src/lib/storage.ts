@@ -92,7 +92,7 @@ export const normalizePortfolioData = (input: Partial<PortfolioData> | null | un
     accentColor: payload.appearance?.accentColor || base.appearance.accentColor,
     secondaryAccent: payload.appearance?.secondaryAccent || base.appearance.secondaryAccent,
     themeName: payload.appearance?.themeName || base.appearance.themeName,
-    defaultTheme: payload.appearance?.defaultTheme || base.appearance.defaultTheme,
+    defaultTheme: 'dark',
     backgroundIntensity: payload.appearance?.backgroundIntensity || base.appearance.backgroundIntensity,
     projectDisplayMode: payload.appearance?.projectDisplayMode || base.appearance.projectDisplayMode,
     projectsInitialCount: Number(payload.appearance?.projectsInitialCount ?? base.appearance.projectsInitialCount),

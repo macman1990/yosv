@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { PortfolioData, Language, ThemeMode, Project, PresentationMode } from '../types/portfolio';
+import { PortfolioData, Language, Project, PresentationMode } from '../types/portfolio';
 import { initialPortfolioData } from '../data/initialData';
 import { StorageService } from '../lib/storage';
 import { UI_TRANSLATIONS } from '../lib/translations';
-import { getThemePreset, normalizeThemeName, resolveColorMode } from '../lib/themeRegistry';
+import { getThemePreset, normalizeThemeName } from '../lib/themeRegistry';
 import { getThemeTokenVariables } from '../lib/themeTokens';
 
 export interface ToastMessage {
@@ -17,9 +17,7 @@ interface PortfolioContextType {
   loading: boolean;
   language: Language;
   setLanguage: (lang: Language) => void;
-  theme: 'dark' | 'light';
-  setTheme: (theme: 'dark' | 'light') => void;
-  toggleTheme: () => void;
+  theme: 'dark';
   t: (key: string) => string;
   saveData: (updated: PortfolioData) => Promise<boolean>;
   updateData: (updated: Partial<PortfolioData> | PortfolioData) => Promise<boolean>;
@@ -45,7 +43,6 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const [data, setData] = useState<PortfolioData>(initialPortfolioData);
   const [loading, setLoading] = useState(true);
   const [language, setLanguageState] = useState<Language>('en');
-  const [theme, setThemeState] = useState<'dark' | 'light'>('dark');
   const [activeVideoProject, setActiveVideoProject] = useState<Project | null>(null);
   const [activeCaseStudyProject, setActiveCaseStudyProject] = useState<Project | null>(null);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
@@ -63,10 +60,6 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   useEffect(() => {
     StorageService.getPortfolioData().then((loaded) => {
       setData(loaded);
-      const defaultMode = resolveColorMode(loaded.appearance?.defaultTheme || 'dark');
-      const savedTheme = localStorage.getItem('aetheria_preferred_theme') as 'dark' | 'light' | null;
-      const nextTheme = savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : defaultMode;
-      setThemeState(nextTheme);
       setLoading(false);
     });
 
@@ -76,11 +69,6 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setLanguageState(savedLang);
     }
 
-    // Theme preference
-    const savedTheme = localStorage.getItem('aetheria_preferred_theme') as 'dark' | 'light';
-    if (savedTheme === 'dark' || savedTheme === 'light') {
-      setThemeState(savedTheme);
-    }
   }, []);
 
   // Update HTML tag dir & lang attributes on language change
@@ -98,20 +86,15 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   useEffect(() => {
     const themeName = normalizeThemeName(data.appearance?.themeName || 'cinematic');
     const preset = getThemePreset(themeName);
-    const currentThemeMode = theme === 'light' ? 'light' : 'dark';
+    const currentThemeMode = 'dark';
 
     document.documentElement.setAttribute('data-theme', currentThemeMode);
     document.documentElement.setAttribute('data-theme-name', themeName);
     document.body.setAttribute('data-theme-name', themeName);
     document.documentElement.setAttribute('data-motion-mode', data.appearance?.motionMode || 'full');
 
-    if (currentThemeMode === 'light') {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.add('light');
-    } else {
-      document.documentElement.classList.remove('light');
-      document.documentElement.classList.add('dark');
-    }
+    document.documentElement.classList.remove('light');
+    document.documentElement.classList.add('dark');
 
     if (data.appearance?.accentColor) {
       document.documentElement.style.setProperty('--color-accent', data.appearance.accentColor);
@@ -135,16 +118,16 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       document.documentElement.style.setProperty(key, value);
     });
 
-    const shell = currentThemeMode === 'light' ? 'rgba(255,255,255,0.68)' : 'rgba(9, 12, 17, 0.92)';
-    const panel = currentThemeMode === 'light' ? 'rgba(255,255,255,0.72)' : 'rgba(21, 26, 35, 0.82)';
-    const border = currentThemeMode === 'light' ? 'rgba(15, 22, 31, 0.09)' : 'rgba(255,255,255,0.08)';
-    const shadow = currentThemeMode === 'light' ? '0 24px 60px -32px rgba(16,22,32,0.18)' : '0 24px 60px -28px rgba(0,0,0,0.8)';
+    const shell = 'rgba(9, 12, 17, 0.92)';
+    const panel = 'rgba(21, 26, 35, 0.82)';
+    const border = 'rgba(255,255,255,0.08)';
+    const shadow = '0 24px 60px -28px rgba(0,0,0,0.8)';
 
     document.documentElement.style.setProperty('--theme-shell-bg', shell);
     document.documentElement.style.setProperty('--theme-panel-bg', panel);
     document.documentElement.style.setProperty('--theme-panel-border', border);
     document.documentElement.style.setProperty('--theme-shadow', shadow);
-  }, [theme, data.appearance]);
+  }, [data.appearance]);
 
   useEffect(() => {
     if (typeof document === 'undefined') return;
@@ -218,19 +201,6 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     localStorage.setItem('aetheria_preferred_lang', lang);
   }, []);
 
-  const setTheme = useCallback((newTheme: 'dark' | 'light') => {
-    setThemeState(newTheme);
-    localStorage.setItem('aetheria_preferred_theme', newTheme);
-  }, []);
-
-  const toggleTheme = useCallback(() => {
-    setThemeState((prev) => {
-      const next = prev === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('aetheria_preferred_theme', next);
-      return next;
-    });
-  }, []);
-
   const t = useCallback(
     (key: string): string => {
       return UI_TRANSLATIONS[language]?.[key] || UI_TRANSLATIONS['en']?.[key] || key;
@@ -294,9 +264,7 @@ export const PortfolioProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         loading,
         language,
         setLanguage,
-        theme,
-        setTheme,
-        toggleTheme,
+        theme: 'dark',
         t,
         saveData,
         updateData,

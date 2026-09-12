@@ -55,9 +55,10 @@ interface AdminSidebarProps {
   mobileOpen?: boolean;
   onCloseMobile?: () => void;
   navigationInteractive?: boolean;
+  onToggleCollapsed?: () => void;
 }
 
-export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActiveTab, mobileOpen = false, onCloseMobile, navigationInteractive = true }) => {
+export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActiveTab, mobileOpen = false, onCloseMobile, navigationInteractive = true, collapsed = false, onToggleCollapsed }) => {
   const { language } = usePortfolio();
 
   const labelMap: Record<AdminTabId, { en: string; ar: string }> = {
@@ -119,13 +120,16 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
   ];
 
   return (
-    <aside id="admin-navigation" aria-label="Admin navigation" className={`fixed inset-y-0 start-0 z-[91000] h-full w-72 shrink-0 overflow-y-auto border-e border-[var(--border)] bg-[var(--surface)] transition-transform duration-300 md:relative md:z-auto md:block md:w-64 md:translate-x-0 ${mobileOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full md:translate-x-0'}`}>
-      <div className="space-y-1 p-4">
-        <div className="mb-2 flex items-center gap-2 px-3 py-3">
+    <aside id="admin-navigation" aria-label="Admin navigation" className={`fixed inset-y-0 start-0 z-[91000] h-full shrink-0 overflow-y-auto border-e border-[var(--border)] bg-[var(--surface)] transition-[width,transform] duration-300 md:relative md:z-auto md:block md:translate-x-0 ${collapsed ? 'md:w-20' : 'md:w-64'} w-72 ${mobileOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full md:translate-x-0'}`}>
+      <div className={`space-y-1 p-4 ${collapsed ? 'md:px-2' : ''}`}>
+        <div className={`mb-2 flex items-center gap-2 px-3 py-3 ${collapsed ? 'md:justify-center md:px-0' : ''}`}>
           <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--color-accent)]" />
-          <span className="text-xs font-mono font-bold uppercase tracking-[0.24em] text-[var(--muted)]">
+          <span className={`text-xs font-mono font-bold uppercase tracking-[0.24em] text-[var(--muted)] ${collapsed ? 'md:hidden' : ''}`}>
             Studio CMS v3.4
           </span>
+          <button type="button" onClick={onToggleCollapsed} aria-expanded={!collapsed} aria-controls="admin-navigation" aria-label={collapsed ? 'Expand dashboard navigation' : 'Collapse dashboard navigation'} title={collapsed ? 'Expand navigation' : 'Collapse navigation'} className="ms-auto hidden rounded-lg border border-[var(--border)] p-1.5 text-[var(--muted)] hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] md:block">
+            {collapsed ? '→' : '←'}
+          </button>
         </div>
 
         {menuItems.map((item) => {
@@ -137,7 +141,8 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
               type="button"
               onClick={() => { setActiveTab(item.id); onCloseMobile?.(); }}
               tabIndex={navigationInteractive ? 0 : -1}
-              className={`flex w-full cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-medium transition-all ${
+              title={collapsed ? label : undefined}
+              className={`flex w-full cursor-pointer items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-medium transition-all ${collapsed ? 'md:justify-center md:px-2' : ''} ${
                 isActive
                   ? 'bg-[var(--color-accent)] text-black shadow-[0_0_15px_rgba(16,185,129,0.3)]'
                   : 'text-[var(--muted)] hover:bg-[var(--surface-muted)] hover:text-[var(--foreground)]'
@@ -145,7 +150,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
             >
               <div className="flex items-center gap-2.5">
                 {item.icon}
-                <span>{label}</span>
+                <span className={collapsed ? 'md:hidden' : ''}>{label}</span>
               </div>
             </button>
           );

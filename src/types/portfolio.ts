@@ -1,5 +1,5 @@
 export type Language = 'en' | 'ar';
-export type ThemeMode = 'dark' | 'light' | 'system';
+export type ThemeMode = 'dark';
 
 export interface LocalizedString {
   en: string;
@@ -35,7 +35,7 @@ export interface ProjectVideo {
   openMode?: VideoOpenMode;
 }
 
-export type PortfolioThemeName = 'cinematic' | 'liquid' | 'liquid-glass' | 'editorial' | 'digital' | 'minimal' | 'luxury';
+export type PortfolioThemeName = 'cinematic' | 'liquid' | 'liquid-glass' | 'editorial' | 'digital' | 'minimal' | 'luxury' | 'obsidian' | 'nocturne' | 'monolith';
 export type BackgroundIntensity = 'off' | 'subtle' | 'medium' | 'strong';
 export type MotionMode = 'full' | 'reduced' | 'off';
 export type ThreeDQuality = 'auto' | 'high' | 'medium' | 'low';

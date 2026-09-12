@@ -30,7 +30,7 @@ interface BlogHubPageProps {
 }
 
 export const BlogHubPage: React.FC<BlogHubPageProps> = ({ initialSlug, onNavigateHome }) => {
-  const { data, language, setLanguage, theme, toggleTheme, t } = usePortfolio();
+  const { data, language, setLanguage, t } = usePortfolio();
   const [activeSlug, setActiveSlug] = useState<string | null>(initialSlug || null);
   const [searchQuery, setSearchQuery] = useState('');
   const [platformFilter, setPlatformFilter] = useState<string>('all');
