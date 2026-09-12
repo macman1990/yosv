@@ -25,8 +25,8 @@ export const Portfolio3D: React.FC = () => {
       return undefined;
     }
     const mobile = navigator.maxTouchPoints > 1 || window.innerWidth < 768;
-    const lowPower = (navigator.hardwareConcurrency || 8) <= 4;
-    if (mobile && (quality === 'low' || (quality === 'auto' && lowPower))) {
+    const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    if (mobile || coarsePointer) {
       setCanRender(false);
       return undefined;
     }
