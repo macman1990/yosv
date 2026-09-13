@@ -12,7 +12,7 @@ export interface BackgroundPreset {
   layerCount: number;
 }
 
-type CanonicalThemeName = 'cinematic' | 'liquid-glass' | 'editorial' | 'digital' | 'minimal';
+type CanonicalThemeName = 'cinematic' | 'liquid-glass' | 'editorial' | 'digital' | 'minimal' | 'obsidian' | 'nocturne' | 'monolith';
 
 export const BACKGROUND_PRESETS: Record<CanonicalThemeName, BackgroundPreset> = {
   cinematic: {
@@ -63,6 +63,36 @@ export const BACKGROUND_PRESETS: Record<CanonicalThemeName, BackgroundPreset> = 
     light: 'radial-gradient(circle at 50% 0%, rgba(212,165,116,0.15), transparent 31%)',
     mobileLight: 'radial-gradient(circle at 50% 0%, rgba(212,165,116,0.10), transparent 34%)',
     grainOpacity: 0.018,
+    layerCount: 1,
+  },
+  obsidian: {
+    theme: 'obsidian',
+    family: 'volcanic graphite atmosphere',
+    texture: 'subtle mineral grain',
+    atmosphere: 'silver edge light over near-black depth',
+    light: 'radial-gradient(circle at 72% 8%, rgba(215,221,229,0.09), transparent 30%)',
+    mobileLight: 'radial-gradient(circle at 70% 8%, rgba(215,221,229,0.06), transparent 34%)',
+    grainOpacity: 0.02,
+    layerCount: 1,
+  },
+  nocturne: {
+    theme: 'nocturne',
+    family: 'plum night atmosphere',
+    texture: 'soft artistic grain',
+    atmosphere: 'muted wine and charcoal depth',
+    light: 'radial-gradient(circle at 18% 0%, rgba(192,138,171,0.13), transparent 32%), radial-gradient(circle at 86% 24%, rgba(142,107,145,0.08), transparent 28%)',
+    mobileLight: 'radial-gradient(circle at 18% 0%, rgba(192,138,171,0.09), transparent 34%)',
+    grainOpacity: 0.045,
+    layerCount: 2,
+  },
+  monolith: {
+    theme: 'monolith',
+    family: 'brutalist concrete atmosphere',
+    texture: 'hard-edged architectural grain',
+    atmosphere: 'restrained concrete geometry',
+    light: 'linear-gradient(135deg, rgba(208,198,178,0.06), transparent 42%)',
+    mobileLight: 'linear-gradient(135deg, rgba(208,198,178,0.045), transparent 48%)',
+    grainOpacity: 0.03,
     layerCount: 1,
   },
 };
