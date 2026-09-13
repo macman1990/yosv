@@ -4,7 +4,8 @@ import { ToolItem, Skill } from '../../../types/portfolio';
 import { Plus, Trash2, Edit2, Cpu, Flame, X } from 'lucide-react';
 
 export const AdminToolsSkillsTab: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
 
   const [activeSection, setActiveSection] = useState<'tools' | 'skills'>('tools');
   const [editingTool, setEditingTool] = useState<ToolItem | null>(null);
@@ -25,14 +26,14 @@ export const AdminToolsSkillsTab: React.FC = () => {
     }
     await saveData({ ...data, tools: updated });
     setEditingTool(null);
-    addToast('Software tool saved!', 'success');
+    addToast(tx('Software tool saved!', 'تم حفظ أداة البرنامج.'), 'success');
   };
 
   const handleDeleteTool = async (id: string) => {
-    if (!window.confirm('Delete this tool?')) return;
+    if (!window.confirm(tx('Delete this tool?', 'هل تريد حذف هذه الأداة؟'))) return;
     const filtered = tools.filter((t) => t.id !== id);
     await saveData({ ...data, tools: filtered });
-    addToast('Tool deleted', 'info');
+    addToast(tx('Tool deleted', 'تم حذف الأداة.'), 'info');
   };
 
   const handleSaveSkill = async () => {
@@ -47,14 +48,14 @@ export const AdminToolsSkillsTab: React.FC = () => {
     }
     await saveData({ ...data, skills: updated });
     setEditingSkill(null);
-    addToast('Skill saved!', 'success');
+    addToast(tx('Skill saved!', 'تم حفظ المهارة.'), 'success');
   };
 
   const handleDeleteSkill = async (id: string) => {
-    if (!window.confirm('Delete this skill?')) return;
+    if (!window.confirm(tx('Delete this skill?', 'هل تريد حذف هذه المهارة؟'))) return;
     const filtered = skills.filter((s) => s.id !== id);
     await saveData({ ...data, skills: filtered });
-    addToast('Skill deleted', 'info');
+    addToast(tx('Skill deleted', 'تم حذف المهارة.'), 'info');
   };
 
   return (
@@ -72,7 +73,7 @@ export const AdminToolsSkillsTab: React.FC = () => {
             }`}
           >
             <Cpu className="w-4 h-4" />
-            <span>Software Applications ({tools.length})</span>
+            <span>{tx('Software Applications', 'تطبيقات البرامج')} ({tools.length})</span>
           </button>
           <button
             type="button"
@@ -84,7 +85,7 @@ export const AdminToolsSkillsTab: React.FC = () => {
             }`}
           >
             <Flame className="w-4 h-4" />
-            <span>Core Disciplines ({skills.length})</span>
+            <span>{tx('Core Disciplines', 'التخصصات الأساسية')} ({skills.length})</span>
           </button>
         </div>
 
@@ -107,7 +108,7 @@ export const AdminToolsSkillsTab: React.FC = () => {
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Add Tool</span>
+            <span>{tx('Add Tool', 'إضافة أداة')}</span>
           </button>
         ) : (
           <button
@@ -125,7 +126,7 @@ export const AdminToolsSkillsTab: React.FC = () => {
             className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Add Skill</span>
+            <span>{tx('Add Skill', 'إضافة مهارة')}</span>
           </button>
         )}
       </div>

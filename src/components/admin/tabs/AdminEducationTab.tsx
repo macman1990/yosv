@@ -4,7 +4,8 @@ import { Certification, Education } from '../../../types/portfolio';
 import { Plus, Trash2, Edit2, Award, GraduationCap, X } from 'lucide-react';
 
 export const AdminEducationTab: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
 
   const [editingCert, setEditingCert] = useState<Certification | null>(null);
   const certs = [...(data.certifications || [])];
@@ -22,14 +23,14 @@ export const AdminEducationTab: React.FC = () => {
     }
     await saveData({ ...data, certifications: updated });
     setEditingCert(null);
-    addToast('Certification updated!', 'success');
+    addToast(tx('Certification updated!', 'تم تحديث الشهادة.'), 'success');
   };
 
   const handleDeleteCert = async (id: string) => {
-    if (!window.confirm('Delete this certification?')) return;
+    if (!window.confirm(tx('Delete this certification?', 'هل تريد حذف هذه الشهادة؟'))) return;
     const filtered = certs.filter((c) => c.id !== id);
     await saveData({ ...data, certifications: filtered });
-    addToast('Certification deleted', 'info');
+    addToast(tx('Certification deleted', 'تم حذف الشهادة.'), 'info');
   };
 
   return (
@@ -37,10 +38,8 @@ export const AdminEducationTab: React.FC = () => {
       {/* Certifications header */}
       <div className="flex items-center justify-between border-b border-white/10 pb-4">
         <div>
-          <h2 className="text-xl font-bold text-white font-syne">Certifications & Accreditations</h2>
-          <p className="text-xs text-zinc-400">
-            Showcase verified training from Blackmagic Design, Adobe, and universities
-          </p>
+          <h2 className="text-xl font-bold text-white font-syne">{tx('Certifications & Accreditations', 'الشهادات والاعتمادات')}</h2>
+          <p className="text-xs text-zinc-400">{tx('Showcase verified training from Blackmagic Design, Adobe, and universities', 'اعرض التدريب الموثق من Blackmagic Design وAdobe والجامعات')}</p>
         </div>
         <button
           type="button"
@@ -60,7 +59,7 @@ export const AdminEducationTab: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider"
         >
           <Plus className="w-4 h-4" />
-          <span>New Certification</span>
+          <span>{tx('New Certification', 'شهادة جديدة')}</span>
         </button>
       </div>
 
@@ -82,14 +81,14 @@ export const AdminEducationTab: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
-              <button
+              <button aria-label={tx('Edit certification', 'تعديل الشهادة')} title={tx('Edit certification', 'تعديل الشهادة')}
                 type="button"
                 onClick={() => setEditingCert(cert)}
                 className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300"
               >
                 <Edit2 className="w-3.5 h-3.5" />
               </button>
-              <button
+              <button aria-label={tx('Delete certification', 'حذف الشهادة')} title={tx('Delete certification', 'حذف الشهادة')}
                 type="button"
                 onClick={() => handleDeleteCert(cert.id)}
                 className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400"
@@ -106,7 +105,7 @@ export const AdminEducationTab: React.FC = () => {
         <div className="fixed inset-0 z-[100000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
           <div className="bg-[#0f1015] border border-white/15 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 className="text-base font-bold text-white">Edit Certification</h3>
+              <h3 className="text-base font-bold text-white">{tx('Edit Certification', 'تعديل الشهادة')}</h3>
               <button
                 type="button"
                 onClick={() => setEditingCert(null)}
@@ -118,7 +117,7 @@ export const AdminEducationTab: React.FC = () => {
 
             <div className="space-y-3">
               <div className="space-y-1">
-                <label className="text-xs font-mono text-zinc-400">Certification Name (EN)</label>
+                <label className="text-xs font-mono text-zinc-400">{tx('Certification Name (EN)', 'اسم الشهادة (EN)')}</label>
                 <input
                   type="text"
                   value={editingCert.name.en}
@@ -134,7 +133,7 @@ export const AdminEducationTab: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-mono text-zinc-400">Issuing Organization</label>
+                  <label className="text-xs font-mono text-zinc-400">{tx('Issuing Organization', 'الجهة المانحة')}</label>
                   <input
                     type="text"
                     value={editingCert.organization}
@@ -145,7 +144,7 @@ export const AdminEducationTab: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-mono text-zinc-400">Year</label>
+                  <label className="text-xs font-mono text-zinc-400">{tx('Year', 'السنة')}</label>
                   <input
                     type="text"
                     value={editingCert.date}
@@ -156,7 +155,7 @@ export const AdminEducationTab: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-mono text-zinc-400">Credential Verification URL</label>
+                <label className="text-xs font-mono text-zinc-400">{tx('Credential Verification URL', 'رابط التحقق من الاعتماد')}</label>
                 <input
                   type="url"
                   value={editingCert.credentialUrl || ''}
@@ -174,14 +173,14 @@ export const AdminEducationTab: React.FC = () => {
                 onClick={() => setEditingCert(null)}
                 className="px-4 py-2 rounded-xl text-xs text-zinc-400 hover:text-white"
               >
-                Cancel
+                {tx('Cancel', 'إلغاء')}
               </button>
               <button
                 type="button"
                 onClick={handleSaveCert}
                 className="px-4 py-2 rounded-xl text-xs font-bold uppercase bg-emerald-500 hover:bg-emerald-400 text-black"
               >
-                Save
+                {tx('Save', 'حفظ')}
               </button>
             </div>
           </div>

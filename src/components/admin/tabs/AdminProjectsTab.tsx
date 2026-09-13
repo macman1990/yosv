@@ -22,6 +22,7 @@ import {
 
 export const AdminProjectsTab: React.FC = () => {
   const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [activeFormTab, setActiveFormTab] = useState<'basic' | 'video' | 'caseStudy'>('basic');
 
@@ -84,14 +85,14 @@ export const AdminProjectsTab: React.FC = () => {
     const updatedData = { ...data, projects: updatedProjects };
     await saveData(updatedData);
     setEditingProject(null);
-    addToast('Project saved successfully!', 'success');
+    addToast(tx('Project saved successfully!', 'تم حفظ المشروع بنجاح.'), 'success');
   };
 
   const handleDeleteProject = async (id: string) => {
-    if (!window.confirm('Delete this project permanently?')) return;
+    if (!window.confirm(tx('Delete this project permanently?', 'هل تريد حذف المشروع نهائيًا؟'))) return;
     const filtered = projects.filter((p) => p.id !== id);
     await saveData({ ...data, projects: filtered });
-    addToast('Project deleted', 'info');
+    addToast(tx('Project deleted', 'تم حذف المشروع.'), 'info');
   };
 
   const handleDuplicateProject = async (proj: Project) => {
@@ -106,7 +107,7 @@ export const AdminProjectsTab: React.FC = () => {
     };
     const updated = [...projects, duplicated];
     await saveData({ ...data, projects: updated });
-    addToast('Project duplicated', 'success');
+    addToast(tx('Project duplicated', 'تم نسخ المشروع.'), 'success');
   };
 
   const handleMove = async (index: number, direction: 'up' | 'down') => {
@@ -150,9 +151,9 @@ export const AdminProjectsTab: React.FC = () => {
       {/* Top action bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-white font-syne">Projects & Video Library</h2>
+          <h2 className="text-xl font-bold text-white font-syne">{tx('Projects & Video Library', 'المشاريع ومكتبة الفيديو')}</h2>
           <p className="text-xs text-zinc-400">
-            Total {projects.length} project showcases in portfolio
+            {tx(`Total ${projects.length} project showcases in portfolio`, `إجمالي عروض المشاريع في ملف الأعمال: ${projects.length}`)}
           </p>
         </div>
 
@@ -162,7 +163,7 @@ export const AdminProjectsTab: React.FC = () => {
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider transition-all shadow-[0_0_15px_rgba(16,185,129,0.3)] cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          <span>New Project</span>
+          <span>{tx('New Project', 'مشروع جديد')}</span>
         </button>
       </div>
 
@@ -214,7 +215,7 @@ export const AdminProjectsTab: React.FC = () => {
                 onClick={() => handleMove(idx, 'up')}
                 disabled={idx === 0}
                 className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white disabled:opacity-20"
-                title="Move Up"
+                title={tx('Move Up', 'تحريك لأعلى')}
               >
                 <MoveUp className="w-3.5 h-3.5" />
               </button>
@@ -223,7 +224,7 @@ export const AdminProjectsTab: React.FC = () => {
                 onClick={() => handleMove(idx, 'down')}
                 disabled={idx === projects.length - 1}
                 className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white disabled:opacity-20"
-                title="Move Down"
+                title={tx('Move Down', 'تحريك لأسفل')}
               >
                 <MoveDown className="w-3.5 h-3.5" />
               </button>
@@ -235,7 +236,7 @@ export const AdminProjectsTab: React.FC = () => {
                     ? 'bg-amber-500/20 border-amber-500/40 text-amber-300'
                     : 'bg-white/5 border-transparent text-zinc-400 hover:text-white'
                 }`}
-                title="Toggle Featured"
+                title={tx('Toggle Featured', 'تبديل حالة مميز')}
               >
                 <Star className="w-3.5 h-3.5" />
               </button>
@@ -243,7 +244,7 @@ export const AdminProjectsTab: React.FC = () => {
                 type="button"
                 onClick={() => handleToggleStatus(proj.id)}
                 className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white"
-                title="Toggle Published / Draft"
+                title={tx('Toggle Published / Draft', 'تبديل منشور / مسودة')}
               >
                 {proj.status === 'published' ? (
                   <Eye className="w-3.5 h-3.5 text-emerald-400" />
@@ -255,7 +256,7 @@ export const AdminProjectsTab: React.FC = () => {
                 type="button"
                 onClick={() => handleDuplicateProject(proj)}
                 className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white"
-                title="Duplicate"
+                title={tx('Duplicate', 'تكرار')}
               >
                 <Copy className="w-3.5 h-3.5" />
               </button>
@@ -263,7 +264,7 @@ export const AdminProjectsTab: React.FC = () => {
                 type="button"
                 onClick={() => setEditingProject(proj)}
                 className="p-2 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                title="Edit Project"
+                title={tx('Edit Project', 'تحرير المشروع')}
               >
                 <Edit2 className="w-3.5 h-3.5" />
               </button>
@@ -271,7 +272,7 @@ export const AdminProjectsTab: React.FC = () => {
                 type="button"
                 onClick={() => handleDeleteProject(proj.id)}
                 className="p-2 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/25"
-                title="Delete Project"
+                title={tx('Delete Project', 'حذف المشروع')}
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>

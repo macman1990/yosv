@@ -4,7 +4,8 @@ import { Experience } from '../../../types/portfolio';
 import { Plus, Trash2, Edit2, Briefcase, X } from 'lucide-react';
 
 export const AdminExperienceTab: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
   const [editingExp, setEditingExp] = useState<Experience | null>(null);
 
   const experiences = [...(data.experience || [])].sort((a, b) => a.order - b.order);
@@ -21,24 +22,22 @@ export const AdminExperienceTab: React.FC = () => {
     }
     await saveData({ ...data, experience: updated });
     setEditingExp(null);
-    addToast('Experience saved successfully!', 'success');
+    addToast(tx('Experience saved successfully!', 'تم حفظ الخبرة بنجاح.'), 'success');
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this career experience?')) return;
+    if (!window.confirm(tx('Delete this career experience?', 'هل تريد حذف هذه الخبرة المهنية؟'))) return;
     const filtered = experiences.filter((e) => e.id !== id);
     await saveData({ ...data, experience: filtered });
-    addToast('Experience removed', 'info');
+    addToast(tx('Experience removed', 'تم حذف الخبرة.'), 'info');
   };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white font-syne">Experience & Career History</h2>
-          <p className="text-xs text-zinc-400">
-            Timeline of studio positions, leadership roles, and client milestones
-          </p>
+          <h2 className="text-xl font-bold text-white font-syne">{tx('Experience & Career History', 'الخبرة والسجل المهني')}</h2>
+          <p className="text-xs text-zinc-400">{tx('Timeline of studio positions, leadership roles, and client milestones', 'خط زمني للمناصب والأدوار القيادية وإنجازات العملاء')}</p>
         </div>
         <button
           type="button"
@@ -65,7 +64,7 @@ export const AdminExperienceTab: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Position</span>
+          <span>{tx('Add Position', 'إضافة منصب')}</span>
         </button>
       </div>
 
@@ -78,20 +77,20 @@ export const AdminExperienceTab: React.FC = () => {
             <div>
               <h4 className="text-base font-bold text-white">{exp.position.en}</h4>
               <p className="text-xs font-mono text-emerald-400">
-                {exp.company} • {exp.startDate} — {exp.currentPosition ? 'Present' : exp.endDate}
+                {exp.company} • {exp.startDate} — {exp.currentPosition ? tx('Present', 'حاليًا') : exp.endDate}
               </p>
               <p className="text-xs text-zinc-400 mt-1 max-w-xl">{exp.description.en}</p>
             </div>
 
             <div className="flex items-center gap-2 self-end md:self-center">
-              <button
+              <button aria-label={tx('Edit position', 'تعديل المنصب')} title={tx('Edit position', 'تعديل المنصب')}
                 type="button"
                 onClick={() => setEditingExp(exp)}
                 className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300"
               >
                 <Edit2 className="w-4 h-4" />
               </button>
-              <button
+              <button aria-label={tx('Delete position', 'حذف المنصب')} title={tx('Delete position', 'حذف المنصب')}
                 type="button"
                 onClick={() => handleDelete(exp.id)}
                 className="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400"
@@ -107,7 +106,7 @@ export const AdminExperienceTab: React.FC = () => {
         <div className="fixed inset-0 z-[100000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
           <div className="bg-[#0f1015] border border-white/15 rounded-3xl max-w-lg w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 className="text-base font-bold text-white">Edit Career Experience</h3>
+              <h3 className="text-base font-bold text-white">{tx('Edit Career Experience', 'تعديل الخبرة المهنية')}</h3>
               <button
                 type="button"
                 onClick={() => setEditingExp(null)}
@@ -120,7 +119,7 @@ export const AdminExperienceTab: React.FC = () => {
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-mono text-zinc-400">Company / Studio</label>
+                  <label className="text-xs font-mono text-zinc-400">{tx('Company / Studio', 'الشركة / الاستوديو')}</label>
                   <input
                     type="text"
                     value={editingExp.company}
@@ -129,7 +128,7 @@ export const AdminExperienceTab: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-mono text-zinc-400">Location</label>
+                  <label className="text-xs font-mono text-zinc-400">{tx('Location', 'الموقع')}</label>
                   <input
                     type="text"
                     value={editingExp.location || ''}
@@ -140,7 +139,7 @@ export const AdminExperienceTab: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-mono text-zinc-400">Position Title (EN)</label>
+                <label className="text-xs font-mono text-zinc-400">{tx('Position Title (EN)', 'المسمى الوظيفي (EN)')}</label>
                 <input
                   type="text"
                   value={editingExp.position.en}
@@ -156,7 +155,7 @@ export const AdminExperienceTab: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-mono text-zinc-400">Start Date</label>
+                  <label className="text-xs font-mono text-zinc-400">{tx('Start Date', 'تاريخ البدء')}</label>
                   <input
                     type="text"
                     value={editingExp.startDate}
@@ -165,7 +164,7 @@ export const AdminExperienceTab: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-mono text-zinc-400">End Date</label>
+                  <label className="text-xs font-mono text-zinc-400">{tx('End Date', 'تاريخ الانتهاء')}</label>
                   <input
                     type="text"
                     value={editingExp.endDate}

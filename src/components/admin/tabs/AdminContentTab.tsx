@@ -4,7 +4,8 @@ import { ContentItem, VideoPlatform } from '../../../types/portfolio';
 import { Plus, Trash2, Edit2, Video, X } from 'lucide-react';
 
 export const AdminContentTab: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
   const [editingItem, setEditingItem] = useState<ContentItem | null>(null);
 
   const contentItems = [...(data.contentItems || [])].sort((a, b) => a.order - b.order);
@@ -21,24 +22,22 @@ export const AdminContentTab: React.FC = () => {
     }
     await saveData({ ...data, contentItems: updated });
     setEditingItem(null);
-    addToast('Content item updated!', 'success');
+    addToast(tx('Content item updated!', 'تم تحديث عنصر المحتوى.'), 'success');
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this content item?')) return;
+    if (!window.confirm(tx('Delete this content item?', 'هل تريد حذف عنصر المحتوى هذا؟'))) return;
     const filtered = contentItems.filter((c) => c.id !== id);
     await saveData({ ...data, contentItems: filtered });
-    addToast('Content item deleted', 'info');
+    addToast(tx('Content item deleted', 'تم حذف عنصر المحتوى.'), 'info');
   };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white font-syne">Content Creator Hub</h2>
-          <p className="text-xs text-zinc-400">
-            Publish and manage YouTube essays, TikTok series, viral breakdowns, and scripts
-          </p>
+          <h2 className="text-xl font-bold text-white font-syne">{tx('Content Creator Hub', 'مركز محتوى المنصة')}</h2>
+          <p className="text-xs text-zinc-400">{tx('Publish and manage YouTube essays, TikTok series, viral breakdowns, and scripts', 'انشر وأدر مقالات YouTube وسلاسل TikTok والتحليلات الفيروسية والنصوص')}</p>
         </div>
         <button
           type="button"
@@ -64,7 +63,7 @@ export const AdminContentTab: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider"
         >
           <Plus className="w-4 h-4" />
-          <span>New Content Piece</span>
+          <span>{tx('New Content Piece', 'قطعة محتوى جديدة')}</span>
         </button>
       </div>
 
@@ -115,7 +114,7 @@ export const AdminContentTab: React.FC = () => {
         <div className="fixed inset-0 z-[100000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
           <div className="bg-[#0f1015] border border-white/15 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h3 className="text-base font-bold text-white">Edit Content Piece</h3>
+              <h3 className="text-base font-bold text-white">{tx('Edit Content Piece', 'تعديل قطعة المحتوى')}</h3>
               <button
                 type="button"
                 onClick={() => setEditingItem(null)}
@@ -127,7 +126,7 @@ export const AdminContentTab: React.FC = () => {
 
             <div className="space-y-3">
               <div className="space-y-1">
-                <label className="text-xs font-mono text-zinc-400">Title (EN)</label>
+                <label className="text-xs font-mono text-zinc-400">{tx('Title (EN)', 'العنوان (EN)')}</label>
                 <input
                   type="text"
                   value={editingItem.title.en}
@@ -143,7 +142,7 @@ export const AdminContentTab: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1">
-                  <label className="text-xs font-mono text-zinc-400">Platform</label>
+                  <label className="text-xs font-mono text-zinc-400">{tx('Platform', 'المنصة')}</label>
                   <select
                     value={editingItem.platform}
                     onChange={(e) => {

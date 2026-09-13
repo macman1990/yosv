@@ -4,7 +4,8 @@ import { CustomSection, CustomSectionBlock } from '../../../types/portfolio';
 import { Plus, Trash2, Edit2, Component, Eye, EyeOff, X, Layers } from 'lucide-react';
 
 export const AdminCustomSectionsTab: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
   const [editingSection, setEditingSection] = useState<CustomSection | null>(null);
 
   const sections = [...(data.customSections || [])].sort((a, b) => a.order - b.order);
@@ -42,14 +43,14 @@ export const AdminCustomSectionsTab: React.FC = () => {
     }
     await saveData({ ...data, customSections: updated });
     setEditingSection(null);
-    addToast('Custom section saved!', 'success');
+    addToast(tx('Custom section saved!', 'تم حفظ القسم المخصص.'), 'success');
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this custom section?')) return;
+    if (!window.confirm(tx('Delete this custom section?', 'هل تريد حذف هذا القسم المخصص؟'))) return;
     const filtered = sections.filter((s) => s.id !== id);
     await saveData({ ...data, customSections: filtered });
-    addToast('Custom section deleted', 'info');
+    addToast(tx('Custom section deleted', 'تم حذف القسم المخصص.'), 'info');
   };
 
   const handleToggleVisible = async (sec: CustomSection) => {
@@ -91,7 +92,7 @@ export const AdminCustomSectionsTab: React.FC = () => {
     }));
 
     await saveData({ ...data, customSections: updated });
-    addToast('Section order saved.', 'success');
+    addToast(tx('Section order saved.', 'تم حفظ ترتيب الأقسام.'), 'success');
   };
 
   const handleDeleteBlock = (blockId: string) => {
@@ -106,10 +107,8 @@ export const AdminCustomSectionsTab: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white font-syne">Custom Section Builder</h2>
-          <p className="text-xs text-zinc-400">
-            Create modular, future-proof sections with text, media, and interactive cards
-          </p>
+          <h2 className="text-xl font-bold text-white font-syne">{tx('Custom Section Builder', 'منشئ الأقسام المخصصة')}</h2>
+          <p className="text-xs text-zinc-400">{tx('Create modular, future-proof sections with text, media, and interactive cards', 'أنشئ أقسامًا مرنة قابلة للتطوير مع النصوص والوسائط والبطاقات التفاعلية')}</p>
         </div>
         <button
           type="button"
@@ -117,7 +116,7 @@ export const AdminCustomSectionsTab: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider"
         >
           <Plus className="w-4 h-4" />
-          <span>New Section</span>
+          <span>{tx('New Section', 'قسم جديد')}</span>
         </button>
       </div>
 
@@ -125,7 +124,7 @@ export const AdminCustomSectionsTab: React.FC = () => {
         {sections.length === 0 ? (
           <div className="p-12 text-center rounded-3xl bg-white/[0.02] border border-white/5 space-y-3">
             <Component className="w-10 h-10 text-zinc-600 mx-auto" />
-            <p className="text-xs text-zinc-400">No custom sections created yet.</p>
+            <p className="text-xs text-zinc-400">{tx('No custom sections created yet.', 'لم يتم إنشاء أقسام مخصصة بعد.')}</p>
           </div>
         ) : (
           sections.map((sec) => (
@@ -137,7 +136,7 @@ export const AdminCustomSectionsTab: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <h4 className="text-base font-bold text-white">{sec.title.en}</h4>
                   <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-white/5 text-zinc-400">
-                    {sec.blocks?.length || 0} Blocks
+                    {sec.blocks?.length || 0} {tx('Blocks', 'كتل')}
                   </span>
                 </div>
                 {sec.subtitle && (
@@ -150,7 +149,7 @@ export const AdminCustomSectionsTab: React.FC = () => {
                   type="button"
                   onClick={() => handleMoveSection(sec.id, 'up')}
                   className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300"
-                  title="Move Up"
+                  title={tx('Move Up', 'تحريك لأعلى')}
                   disabled={sections.findIndex((s) => s.id === sec.id) === 0}
                 >
                   ↑
@@ -159,7 +158,7 @@ export const AdminCustomSectionsTab: React.FC = () => {
                   type="button"
                   onClick={() => handleMoveSection(sec.id, 'down')}
                   className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300"
-                  title="Move Down"
+                  title={tx('Move Down', 'تحريك لأسفل')}
                   disabled={sections.findIndex((s) => s.id === sec.id) === sections.length - 1}
                 >
                   ↓
@@ -168,7 +167,7 @@ export const AdminCustomSectionsTab: React.FC = () => {
                   type="button"
                   onClick={() => handleToggleVisible(sec)}
                   className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-zinc-300"
-                  title="Toggle Visibility"
+                  title={tx('Toggle Visibility', 'تبديل الظهور')}
                 >
                   {sec.visible ? (
                     <Eye className="w-3.5 h-3.5 text-emerald-400" />

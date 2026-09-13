@@ -4,24 +4,23 @@ import { ProfileData, ContactSettings } from '../../../types/portfolio';
 import { Save, User, FileText, MapPin, Mail, Phone } from 'lucide-react';
 
 export const AdminProfileTab: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
 
   const [profile, setProfile] = useState<ProfileData>({ ...data.profile });
   const [contact, setContact] = useState<ContactSettings>({ ...data.contact });
 
   const handleSave = async () => {
     await saveData({ ...data, profile, contact });
-    addToast('Profile & Contact details updated!', 'success');
+    addToast(tx('Profile & Contact details updated!', 'تم تحديث بيانات الملف الشخصي والتواصل.'), 'success');
   };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-200">
       <div className="flex items-center justify-between border-b border-white/10 pb-4">
         <div>
-          <h2 className="text-xl font-bold text-white font-syne">Identity & Biography Settings</h2>
-          <p className="text-xs text-zinc-400">
-            Configure primary personal brand info, bilingual statements, and direct channels
-          </p>
+          <h2 className="text-xl font-bold text-white font-syne">{tx('Identity & Biography Settings', 'إعدادات الهوية والسيرة')}</h2>
+          <p className="text-xs text-zinc-400">{tx('Configure primary personal brand info, bilingual statements, and direct channels', 'اضبط معلومات العلامة الشخصية والبيانات الثنائية اللغة وقنوات التواصل المباشر')}</p>
         </div>
         <button
           type="button"
@@ -29,7 +28,7 @@ export const AdminProfileTab: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider shadow-md cursor-pointer"
         >
           <Save className="w-4 h-4" />
-          <span>Save Profile</span>
+          <span>{tx('Save Profile', 'حفظ الملف الشخصي')}</span>
         </button>
       </div>
 
@@ -37,12 +36,12 @@ export const AdminProfileTab: React.FC = () => {
         {/* Basic Identification */}
         <div className="p-6 rounded-3xl bg-[#12141c] border border-white/10 space-y-4">
           <h3 className="text-sm font-bold uppercase tracking-wider text-emerald-400 font-mono">
-            Identity & Naming
+            {tx('Identity & Naming', 'الهوية والتسمية')}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-xs font-mono text-zinc-400">Full Name (English)</label>
+              <label className="text-xs font-mono text-zinc-400">{tx('Full Name (English)', 'الاسم الكامل (الإنجليزية)')}</label>
               <input
                 type="text"
                 value={profile.name.en}
@@ -64,7 +63,7 @@ export const AdminProfileTab: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-xs font-mono text-zinc-400">Professional Title (EN)</label>
+              <label className="text-xs font-mono text-zinc-400">{tx('Professional Title (EN)', 'المسمى المهني (EN)')}</label>
               <input
                 type="text"
                 value={profile.title.en}
@@ -86,7 +85,7 @@ export const AdminProfileTab: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-xs font-mono text-zinc-400">Profile Image URL</label>
+              <label className="text-xs font-mono text-zinc-400">{tx('Profile Image URL', 'رابط صورة الملف الشخصي')}</label>
               <input
                 type="url"
                 value={profile.photoUrl}
@@ -95,7 +94,7 @@ export const AdminProfileTab: React.FC = () => {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-mono text-zinc-400">CV / Resume PDF URL</label>
+              <label className="text-xs font-mono text-zinc-400">{tx('CV / Resume PDF URL', 'رابط ملف السيرة الذاتية PDF')}</label>
               <input
                 type="url"
                 value={profile.cvUrl || ''}
@@ -107,7 +106,7 @@ export const AdminProfileTab: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-xs font-mono text-zinc-400">Years Experience</label>
+              <label className="text-xs font-mono text-zinc-400">{tx('Years Experience', 'سنوات الخبرة')}</label>
               <input
                 type="number"
                 min="0"
@@ -117,7 +116,7 @@ export const AdminProfileTab: React.FC = () => {
               />
             </div>
             <div className="space-y-1">
-              <label className="text-xs font-mono text-zinc-400">Location</label>
+              <label className="text-xs font-mono text-zinc-400">{tx('Location', 'الموقع')}</label>
               <input
                 type="text"
                 value={profile.location.en}
@@ -136,11 +135,11 @@ export const AdminProfileTab: React.FC = () => {
         {/* Contact Information */}
         <div className="p-6 rounded-3xl bg-[#12141c] border border-white/10 space-y-4">
           <h3 className="text-sm font-bold uppercase tracking-wider text-cyan-400 font-mono">
-            Direct Booking & Channels
+            {tx('Direct Booking & Channels', 'الحجز المباشر وقنوات التواصل')}
           </h3>
 
           <div className="space-y-1">
-            <label className="text-xs font-mono text-zinc-400">Primary Contact Email</label>
+            <label className="text-xs font-mono text-zinc-400">{tx('Primary Contact Email', 'البريد الإلكتروني الأساسي')}</label>
             <input
               type="email"
               value={contact.email}
@@ -150,7 +149,7 @@ export const AdminProfileTab: React.FC = () => {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-mono text-zinc-400">WhatsApp Direct Number</label>
+            <label className="text-xs font-mono text-zinc-400">{tx('WhatsApp Direct Number', 'رقم واتساب المباشر')}</label>
             <input
               type="text"
               value={contact.whatsapp}
@@ -160,7 +159,7 @@ export const AdminProfileTab: React.FC = () => {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-mono text-zinc-400">Form CTA Headline (EN)</label>
+            <label className="text-xs font-mono text-zinc-400">{tx('Form CTA Headline (EN)', 'عنوان زر النموذج (EN)')}</label>
             <input
               type="text"
               value={contact.ctaText.en}
@@ -175,7 +174,7 @@ export const AdminProfileTab: React.FC = () => {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-mono text-zinc-400">Confirmation Success Message (EN)</label>
+            <label className="text-xs font-mono text-zinc-400">{tx('Confirmation Success Message (EN)', 'رسالة التأكيد عند النجاح (EN)')}</label>
             <textarea
               rows={2}
               value={contact.successMessage.en}
@@ -193,12 +192,12 @@ export const AdminProfileTab: React.FC = () => {
         {/* Biographies */}
         <div className="p-6 rounded-3xl bg-[#12141c] border border-white/10 space-y-4 lg:col-span-2">
           <h3 className="text-sm font-bold uppercase tracking-wider text-amber-400 font-mono">
-            Editorial Story & Philosophy
+            {tx('Editorial Story & Philosophy', 'القصة التحريرية والفلسفة')}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-xs font-mono text-zinc-400">Short Bio (EN)</label>
+              <label className="text-xs font-mono text-zinc-400">{tx('Short Bio (EN)', 'نبذة مختصرة (EN)')}</label>
               <textarea
                 rows={2}
                 value={profile.shortBio.en}
@@ -229,7 +228,7 @@ export const AdminProfileTab: React.FC = () => {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-mono text-zinc-400">Long Bio / Creative Background (EN)</label>
+            <label className="text-xs font-mono text-zinc-400">{tx('Long Bio / Creative Background (EN)', 'السيرة المطولة / الخلفية الإبداعية (EN)')}</label>
             <textarea
               rows={4}
               value={profile.longBio.en}
@@ -244,7 +243,7 @@ export const AdminProfileTab: React.FC = () => {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-mono text-zinc-400">Personal Editing Philosophy Quote (EN)</label>
+            <label className="text-xs font-mono text-zinc-400">{tx('Personal Editing Philosophy Quote (EN)', 'اقتباس فلسفة المونتاج الشخصية (EN)')}</label>
             <input
               type="text"
               value={profile.philosophy.en}

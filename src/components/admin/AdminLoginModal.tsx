@@ -24,12 +24,12 @@ export const AdminLoginModal: React.FC = () => {
         setShowAdminLogin(false);
         setIsAdminMode(true);
         setPassword('');
-        addToast('Admin authentication established.', 'success');
+        addToast(language === 'ar' ? 'تم تأكيد مصادقة الإدارة.' : 'Admin authentication established.', 'success');
       } else {
-        setError(result.error || 'Authentication denied. Invalid credentials.');
+        setError(result.error || (language === 'ar' ? 'تم رفض المصادقة. بيانات الاعتماد غير صالحة.' : 'Authentication denied. Invalid credentials.'));
       }
     } catch (err) {
-      setError('Internal authentication failure.');
+      setError(language === 'ar' ? 'فشل داخلي في المصادقة.' : 'Internal authentication failure.');
     } finally {
       setLoading(false);
     }

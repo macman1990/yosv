@@ -5,7 +5,8 @@ import { Download, Upload, RotateCcw, Database, Cloud, CheckCircle2, AlertTriang
 import { ConfirmDialog } from '../../common/ConfirmDialog';
 
 export const AdminBackupSyncTab: React.FC = () => {
-  const { data, saveData, resetData, addToast } = usePortfolio();
+  const { data, saveData, resetData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [importJsonText, setImportJsonText] = useState('');
   const [showImportArea, setShowImportArea] = useState(false);
@@ -28,7 +29,7 @@ export const AdminBackupSyncTab: React.FC = () => {
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
-    addToast('Portfolio backup exported to JSON!', 'success');
+    addToast(tx('Portfolio backup exported to JSON!', 'تم تصدير نسخة الموقع الاحتياطية إلى JSON.'), 'success');
   };
 
   const handleImportJSON = async () => {
@@ -40,9 +41,9 @@ export const AdminBackupSyncTab: React.FC = () => {
       await saveData(parsed);
       setShowImportArea(false);
       setImportJsonText('');
-      addToast('Data successfully restored from JSON!', 'success');
+      addToast(tx('Data successfully restored from JSON!', 'تمت استعادة البيانات من JSON بنجاح.'), 'success');
     } catch (err) {
-      addToast('Failed to parse JSON. Please check file format.', 'error');
+      addToast(tx('Failed to parse JSON. Please check file format.', 'تعذر تحليل JSON. تحقق من تنسيق الملف.'), 'error');
     }
   };
 
@@ -55,9 +56,9 @@ export const AdminBackupSyncTab: React.FC = () => {
         const text = event.target?.result as string;
         const parsed = JSON.parse(text);
         await saveData(parsed);
-        addToast('File imported successfully!', 'success');
+        addToast(tx('File imported successfully!', 'تم استيراد الملف بنجاح.'), 'success');
       } catch (err) {
-        addToast('Invalid JSON file format.', 'error');
+        addToast(tx('Invalid JSON file format.', 'تنسيق ملف JSON غير صالح.'), 'error');
       }
     };
     reader.readAsText(file);
@@ -66,10 +67,8 @@ export const AdminBackupSyncTab: React.FC = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-200">
       <div className="border-b border-white/10 pb-4">
-        <h2 className="text-xl font-bold text-white font-syne">Data Sync & Backup Architecture</h2>
-        <p className="text-xs text-zinc-400">
-          Vercel-compatible cloud persistence, JSON snapshots, and disaster recovery
-        </p>
+        <h2 className="text-xl font-bold text-white font-syne">{tx('Data Sync & Backup Architecture', 'بنية مزامنة البيانات والنسخ الاحتياطي')}</h2>
+        <p className="text-xs text-zinc-400">{tx('Vercel-compatible cloud persistence, JSON snapshots, and disaster recovery', 'تخزين سحابي متوافق مع Vercel ولقطات JSON واستعادة البيانات')}</p>
       </div>
 
       {/* Cloud Status Card */}
@@ -77,7 +76,7 @@ export const AdminBackupSyncTab: React.FC = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <Cloud className="w-5 h-5 text-emerald-400" />
-            <h3 className="text-base font-bold text-white">Storage Engine Health</h3>
+            <h3 className="text-base font-bold text-white">{tx('Storage Engine Health', 'حالة محرك التخزين')}</h3>
           </div>
           <span
             className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-medium ${
@@ -89,12 +88,12 @@ export const AdminBackupSyncTab: React.FC = () => {
             {hasSupabaseConfig ? (
               <>
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                Supabase Connected
+                {tx('Supabase Connected', 'Supabase متصل')}
               </>
             ) : (
               <>
                 <AlertTriangle className="w-3.5 h-3.5" />
-                Local Cache Storage Active
+                {tx('Local Cache Storage Active', 'التخزين المحلي النشط')}
               </>
             )}
           </span>
@@ -102,8 +101,8 @@ export const AdminBackupSyncTab: React.FC = () => {
 
         <p className="text-xs text-zinc-300 leading-relaxed">
           {hasSupabaseConfig
-            ? 'All updates in this CMS automatically synchronize across sessions with your Supabase database.'
-            : 'Running in zero-friction browser persistence. Every change is stored locally. To connect Supabase, configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.'}
+            ? tx('All updates in this CMS automatically synchronize across sessions with your Supabase database.', 'تتزامن كل التحديثات في لوحة الإدارة تلقائيًا عبر الجلسات مع قاعدة بيانات Supabase.')
+            : tx('Running in zero-friction browser persistence. Every change is stored locally. To connect Supabase, configure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.', 'يعمل التخزين السلس داخل المتصفح؛ تُحفظ كل التغييرات محليًا. لربط Supabase اضبط VITE_SUPABASE_URL وVITE_SUPABASE_ANON_KEY.')}
         </p>
       </div>
 
@@ -115,9 +114,9 @@ export const AdminBackupSyncTab: React.FC = () => {
             <div className="w-10 h-10 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
               <Download className="w-5 h-5" />
             </div>
-            <h4 className="text-base font-bold text-white">Export Full Snapshot</h4>
+            <h4 className="text-base font-bold text-white">{tx('Export Full Snapshot', 'تصدير لقطة كاملة')}</h4>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              Downloads all projects, videos, services, career history, and theme settings as a single portable JSON file.
+              {tx('Downloads all projects, videos, services, career history, and theme settings as a single portable JSON file.', 'ينزّل كل المشاريع والفيديوهات والخدمات والسجل المهني وإعدادات السمة في ملف JSON واحد قابل للنقل.')}
             </p>
           </div>
 
@@ -127,7 +126,7 @@ export const AdminBackupSyncTab: React.FC = () => {
             className="w-full py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <Download className="w-4 h-4" />
-            <span>Download JSON Snapshot</span>
+            <span>{tx('Download JSON Snapshot', 'تنزيل لقطة JSON')}</span>
           </button>
         </div>
 
@@ -137,16 +136,16 @@ export const AdminBackupSyncTab: React.FC = () => {
             <div className="w-10 h-10 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center">
               <Upload className="w-5 h-5" />
             </div>
-            <h4 className="text-base font-bold text-white">Import JSON Backup</h4>
+            <h4 className="text-base font-bold text-white">{tx('Import JSON Backup', 'استيراد نسخة JSON احتياطية')}</h4>
             <p className="text-xs text-zinc-400 leading-relaxed">
-              Restore previously exported portfolio snapshots or paste raw JSON.
+              {tx('Restore previously exported portfolio snapshots or paste raw JSON.', 'استعد لقطات الموقع المصدرة سابقًا أو الصق JSON خامًا.')}
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <label className="flex-1 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer text-center">
               <Upload className="w-4 h-4" />
-              <span>Upload .JSON File</span>
+              <span>{tx('Upload .JSON File', 'رفع ملف .JSON')}</span>
               <input
                 type="file"
                 accept=".json"
@@ -159,7 +158,7 @@ export const AdminBackupSyncTab: React.FC = () => {
               onClick={() => setShowImportArea(!showImportArea)}
               className="px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-400 hover:text-white text-xs font-mono"
             >
-              Paste
+              {tx('Paste', 'لصق')}
             </button>
           </div>
         </div>
@@ -168,13 +167,13 @@ export const AdminBackupSyncTab: React.FC = () => {
       {showImportArea && (
         <div className="p-6 rounded-3xl bg-[#12141c] border border-white/10 space-y-3 animate-in fade-in duration-200">
           <h4 className="text-xs font-mono uppercase text-zinc-400 font-bold">
-            Paste JSON Content Here
+            {tx('Paste JSON Content Here', 'الصق محتوى JSON هنا')}
           </h4>
           <textarea
             rows={6}
             value={importJsonText}
             onChange={(e) => setImportJsonText(e.target.value)}
-            placeholder="Paste raw JSON structure..."
+            placeholder={tx('Paste raw JSON structure...', 'الصق بنية JSON الخام...')}
             className="w-full p-4 rounded-xl bg-black/60 border border-white/10 font-mono text-xs text-emerald-300"
           />
           <div className="flex justify-end gap-2">
@@ -183,14 +182,14 @@ export const AdminBackupSyncTab: React.FC = () => {
               onClick={() => setShowImportArea(false)}
               className="px-4 py-2 rounded-xl text-xs text-zinc-400"
             >
-              Cancel
+              {tx('Cancel', 'إلغاء')}
             </button>
             <button
               type="button"
               onClick={handleImportJSON}
               className="px-5 py-2 rounded-xl text-xs font-bold uppercase bg-emerald-500 text-black"
             >
-              Apply JSON
+              {tx('Apply JSON', 'تطبيق JSON')}
             </button>
           </div>
         </div>
@@ -218,7 +217,7 @@ export const AdminBackupSyncTab: React.FC = () => {
 
       <ConfirmDialog
         isOpen={showResetConfirm}
-        title="Reset Portfolio to Default?"
+        title={tx('Reset Portfolio to Default?', 'إعادة ملف الأعمال إلى الإعدادات الافتراضية؟')}
         message="This will overwrite all customized projects, services, and profile settings with the initial high-yield dataset."
         confirmText="Yes, Reset Data"
         cancelText="Cancel"

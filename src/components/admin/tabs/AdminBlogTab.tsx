@@ -92,7 +92,7 @@ export const AdminBlogTab: React.FC = () => {
   };
 
   const handleDeletePost = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this post?')) {
+    if (window.confirm(language === 'ar' ? 'هل تريد حذف هذا المنشور؟' : 'Are you sure you want to delete this post?')) {
       const updated = blogPosts.filter((p) => p.id !== id);
       updateData({ blogPosts: updated });
     }

@@ -26,6 +26,26 @@ export const DEFAULT_THEME_TOKENS: ThemeTokenSettings = {
 
 const HEX_COLOR = /^#[0-9a-f]{6}$/i;
 
+const relativeLuminance = (hex: string): number => {
+  const channels = [1, 3, 5].map((index) => parseInt(hex.slice(index, index + 2), 16) / 255)
+    .map((channel) => (channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4));
+  return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+};
+
+export const contrastRatio = (foreground: string, background: string): number => {
+  const lighter = Math.max(relativeLuminance(foreground), relativeLuminance(background));
+  const darker = Math.min(relativeLuminance(foreground), relativeLuminance(background));
+  return (lighter + 0.05) / (darker + 0.05);
+};
+
+export const getThemeContrastWarnings = (tokens: ThemeTokenSettings): string[] => {
+  const warnings: string[] = [];
+  if (contrastRatio(tokens.text, tokens.background) < 4.5) warnings.push('Primary text may be difficult to read against the page background.');
+  if (contrastRatio(tokens.textMuted, tokens.background) < 3) warnings.push('Muted text may be difficult to read against the page background.');
+  if (contrastRatio(tokens.accent, tokens.background) < 3) warnings.push('The accent may not be readable against the page background.');
+  return warnings;
+};
+
 export const normalizeHex = (value: unknown, fallback: string): string => {
   const normalized = String(value || '').trim();
   return HEX_COLOR.test(normalized) ? normalized.toLowerCase() : fallback;

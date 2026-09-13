@@ -6,7 +6,8 @@ import { THEME_REGISTRY, normalizeThemeName } from '../../../lib/themeRegistry';
 import { AdminThemeStudio } from '../AdminThemeStudio';
 
 export const AdminAppearanceTab: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
 
   const [appearance, setAppearance] = useState<AppearanceSettings>({
     ...data.appearance,
@@ -42,7 +43,7 @@ export const AdminAppearanceTab: React.FC = () => {
 
   const handleSave = async () => {
     await saveData({ ...data, appearance });
-    addToast('Design tokens & appearance settings saved!', 'success');
+    addToast(tx('Design tokens & appearance settings saved!', 'تم حفظ رموز التصميم وإعدادات المظهر.'), 'success');
   };
 
   const presetColors = [
@@ -58,10 +59,8 @@ export const AdminAppearanceTab: React.FC = () => {
       <AdminThemeStudio />
       <div className="flex items-center justify-between border-b border-white/10 pb-4">
         <div>
-          <h2 className="text-xl font-bold text-white font-syne">Visual Aesthetics & Theme Tokens</h2>
-          <p className="text-xs text-zinc-400">
-            Customize futuristic accent colors, interactive cursor physics, and default theme
-          </p>
+          <h2 className="text-xl font-bold text-white font-syne">{tx('Visual Aesthetics & Theme Tokens', 'الجماليات البصرية ورموز السمة')}</h2>
+          <p className="text-xs text-zinc-400">{tx('Customize futuristic accent colors, interactive cursor physics, and default theme', 'خصص ألوان التمييز والمؤشر التفاعلي والسمة الافتراضية')}</p>
         </div>
         <button
           type="button"
@@ -69,7 +68,7 @@ export const AdminAppearanceTab: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider shadow-md cursor-pointer"
         >
           <Save className="w-4 h-4" />
-          <span>Save Appearance</span>
+          <span>{tx('Save Appearance', 'حفظ المظهر')}</span>
         </button>
       </div>
 
@@ -77,17 +76,17 @@ export const AdminAppearanceTab: React.FC = () => {
         <div className="p-6 rounded-3xl bg-[#12141c] border border-white/10 space-y-4">
           <div className="flex items-center gap-2 text-violet-400 font-mono text-xs uppercase font-bold tracking-wider">
             <Sparkles className="w-4 h-4" />
-            <span>Visual Theme</span>
+            <span>{tx('Visual Theme', 'السمة البصرية')}</span>
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-white/5 p-3 space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-mono">Current system</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-mono">{tx('Current system', 'النظام الحالي')}</p>
                 <h3 className="mt-1 text-lg font-semibold text-white">{selectedTheme.name}</h3>
               </div>
               <span className="rounded-full border border-[var(--color-accent)] bg-[var(--accent-muted)] px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-[var(--color-accent)]">
-                Active
+                {tx('Active', 'مفعلة')}
               </span>
             </div>
             <p className="text-sm text-zinc-300">{selectedTheme.description}</p>
@@ -117,32 +116,32 @@ export const AdminAppearanceTab: React.FC = () => {
           </div>
 
           <div className="space-y-2 pt-2">
-            <label className="text-xs font-mono text-zinc-400">Background Intensity</label>
+            <label className="text-xs font-mono text-zinc-400">{tx('Background Intensity', 'شدة الخلفية')}</label>
             <select
               value={appearance.backgroundIntensity || 'medium'}
               onChange={(e) => setAppearance({ ...appearance, backgroundIntensity: e.target.value as any })}
               className="w-full rounded-xl bg-black/50 border border-white/10 px-3 py-2 text-sm text-white"
             >
-              <option value="off">Off</option>
-              <option value="subtle">Subtle</option>
-              <option value="medium">Medium</option>
-              <option value="strong">Strong</option>
+              <option value="off">{tx('Off', 'إيقاف')}</option>
+              <option value="subtle">{tx('Subtle', 'خفيفة')}</option>
+              <option value="medium">{tx('Medium', 'متوسطة')}</option>
+              <option value="strong">{tx('Strong', 'قوية')}</option>
             </select>
           </div>
 
           <div className="space-y-2">
-            <label className="text-xs font-mono text-zinc-400">Project Display Mode</label>
+            <label className="text-xs font-mono text-zinc-400">{tx('Project Display Mode', 'نمط عرض المشاريع')}</label>
             <select
               value={appearance.projectDisplayMode || 'view-more'}
               onChange={(e) => setAppearance({ ...appearance, projectDisplayMode: e.target.value as any })}
               className="w-full rounded-xl bg-black/50 border border-white/10 px-3 py-2 text-sm text-white"
             >
-              <option value="grid">Grid</option>
-              <option value="view-more">View More</option>
-              <option value="carousel">Carousel</option>
-              <option value="horizontal">Horizontal Scroll</option>
-              <option value="featured-secondary">Featured + Secondary</option>
-              <option value="compact">Compact List</option>
+              <option value="grid">{tx('Grid', 'شبكة')}</option>
+              <option value="view-more">{tx('View More', 'عرض المزيد')}</option>
+              <option value="carousel">{tx('Carousel', 'شريط تمرير')}</option>
+              <option value="horizontal">{tx('Horizontal Scroll', 'تمرير أفقي')}</option>
+              <option value="featured-secondary">{tx('Featured + Secondary', 'مميزة وثانوية')}</option>
+              <option value="compact">{tx('Compact List', 'قائمة مضغوطة')}</option>
             </select>
           </div>
 
@@ -172,7 +171,7 @@ export const AdminAppearanceTab: React.FC = () => {
           </div>
 
           <div className="space-y-3 border-t border-white/10 pt-4">
-            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase font-bold tracking-wider"><Sparkles className="w-4 h-4" /><span>Project Presentation</span></div>
+            <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase font-bold tracking-wider"><Sparkles className="w-4 h-4" /><span>{tx('Project Presentation', 'عرض المشاريع')}</span></div>
             <div className="grid grid-cols-2 gap-3">
               <label className="space-y-1 text-xs font-mono text-zinc-400"><span>Card Size</span><select value={appearance.projectCardSize || 'standard'} onChange={(e) => setAppearance({ ...appearance, projectCardSize: e.target.value as 'compact' | 'standard' | 'large' })} className="w-full rounded-xl bg-black/50 border border-white/10 px-3 py-2 text-sm text-white"><option value="compact">Compact</option><option value="standard">Standard</option><option value="large">Large</option></select></label>
               <label className="space-y-1 text-xs font-mono text-zinc-400"><span>Project Gap</span><input type="number" min={8} max={64} value={appearance.projectGap || 24} onChange={(e) => setAppearance({ ...appearance, projectGap: Number(e.target.value) || 24 })} className="w-full rounded-xl bg-black/50 border border-white/10 px-3 py-2 text-sm text-white" /></label>
@@ -187,7 +186,7 @@ export const AdminAppearanceTab: React.FC = () => {
               <label className="space-y-1 text-xs font-mono text-zinc-400"><span>Secondary Count</span><input type="number" min={1} max={12} value={appearance.secondaryCount || 4} onChange={(e) => setAppearance({ ...appearance, secondaryCount: Number(e.target.value) || 4 })} className="w-full rounded-xl bg-black/50 border border-white/10 px-3 py-2 text-sm text-white" /></label>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <label className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-zinc-300"><span>View More</span><input type="checkbox" checked={appearance.viewMoreEnabled !== false} onChange={(e) => setAppearance({ ...appearance, viewMoreEnabled: e.target.checked })} className="h-4 w-4 accent-emerald-500" /></label>
+              <label className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-zinc-300"><span>{tx('View More', 'عرض المزيد')}</span><input type="checkbox" checked={appearance.viewMoreEnabled !== false} onChange={(e) => setAppearance({ ...appearance, viewMoreEnabled: e.target.checked })} className="h-4 w-4 accent-emerald-500" /></label>
               <label className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-zinc-300"><span>Carousel Controls</span><input type="checkbox" checked={appearance.showCarouselControls !== false} onChange={(e) => setAppearance({ ...appearance, showCarouselControls: e.target.checked })} className="h-4 w-4 accent-emerald-500" /></label>
               <label className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-zinc-300"><span>Carousel Autoplay</span><input type="checkbox" checked={appearance.carouselAutoplay === true} onChange={(e) => setAppearance({ ...appearance, carouselAutoplay: e.target.checked })} className="h-4 w-4 accent-emerald-500" /></label>
               <label className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-zinc-300"><span>Carousel Loop</span><input type="checkbox" checked={appearance.carouselLoop !== false} onChange={(e) => setAppearance({ ...appearance, carouselLoop: e.target.checked })} className="h-4 w-4 accent-emerald-500" /></label>

@@ -74,7 +74,7 @@ export const AdminDashboard: React.FC = () => {
     await saveData(data);
     setTimeout(() => {
       setIsSaving(false);
-      addToast('All studio data committed and synced!', 'success');
+      addToast(language === 'ar' ? 'تم حفظ ومزامنة كل بيانات الاستوديو.' : 'All studio data committed and synced!', 'success');
     }, 400);
   };
 
@@ -86,7 +86,7 @@ export const AdminDashboard: React.FC = () => {
       <AdminHeader onSave={handleGlobalSave} isSaving={isSaving} onMenu={() => setMobileNavOpen(true)} menuOpen={mobileNavOpen} />
 
       <div className="flex flex-1 overflow-hidden">
-        {mobileNavOpen && <button type="button" aria-label="Close navigation" onClick={() => setMobileNavOpen(false)} className="fixed inset-0 z-[90500] bg-black/60 md:hidden" />}
+        {mobileNavOpen && <button type="button" aria-label={language === 'ar' ? 'إغلاق التنقل' : 'Close navigation'} onClick={() => setMobileNavOpen(false)} className="fixed inset-0 z-[90500] bg-black/60 md:hidden" />}
         <AdminSidebar activeTab={activeTab} setActiveTab={setActiveTab} collapsed={sidebarCollapsed} onToggleCollapsed={() => setSidebarCollapsed((value) => !value)} mobileOpen={mobileNavOpen} navigationInteractive={!isMobile || mobileNavOpen} onCloseMobile={() => setMobileNavOpen(false)} />
 
         <main className="flex-1 overflow-y-auto bg-[var(--background)] p-6 md:p-10">
@@ -116,7 +116,7 @@ export const AdminDashboard: React.FC = () => {
             {activeTab === 'media' && <AdminMediaLibraryTab />}
             {activeTab === 'backup' && <AdminBackupSyncTab />}
             {activeTab === 'security' && <AdminSecurityTab />}
-            {activeTab === 'guide' && <GuideErrorBoundary><React.Suspense fallback={<div className="p-6 text-sm text-[var(--muted)]">Loading guide…</div>}><LazyAdminGuideTab /></React.Suspense></GuideErrorBoundary>}
+            {activeTab === 'guide' && <GuideErrorBoundary><React.Suspense fallback={<div className="p-6 text-sm text-[var(--muted)]">{language === 'ar' ? 'جارٍ تحميل الدليل…' : 'Loading guide…'}</div>}><LazyAdminGuideTab /></React.Suspense></GuideErrorBoundary>}
           </div>
         </main>
       </div>

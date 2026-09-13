@@ -120,14 +120,14 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ activeTab, setActive
   ];
 
   return (
-    <aside id="admin-navigation" aria-label="Admin navigation" className={`fixed inset-y-0 start-0 z-[91000] h-full shrink-0 overflow-y-auto border-e border-[var(--border)] bg-[var(--surface)] transition-[width,transform] duration-300 md:relative md:z-auto md:block md:translate-x-0 ${collapsed ? 'md:w-20' : 'md:w-64'} w-72 ${mobileOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full md:translate-x-0'}`}>
+    <aside id="admin-navigation" aria-label={language === 'ar' ? 'تنقل لوحة الإدارة' : 'Admin navigation'} className={`fixed inset-y-0 start-0 z-[91000] h-full shrink-0 overflow-y-auto border-e border-[var(--border)] bg-[var(--surface)] transition-[width,transform] duration-300 md:relative md:z-auto md:block md:translate-x-0 ${collapsed ? 'md:w-20' : 'md:w-64'} w-72 ${mobileOpen ? 'translate-x-0' : '-translate-x-full rtl:translate-x-full md:translate-x-0'}`}>
       <div className={`space-y-1 p-4 ${collapsed ? 'md:px-2' : ''}`}>
         <div className={`mb-2 flex items-center gap-2 px-3 py-3 ${collapsed ? 'md:justify-center md:px-0' : ''}`}>
           <div className="h-2.5 w-2.5 animate-pulse rounded-full bg-[var(--color-accent)]" />
           <span className={`text-xs font-mono font-bold uppercase tracking-[0.24em] text-[var(--muted)] ${collapsed ? 'md:hidden' : ''}`}>
             Studio CMS v3.4
           </span>
-          <button type="button" onClick={onToggleCollapsed} aria-expanded={!collapsed} aria-controls="admin-navigation" aria-label={collapsed ? 'Expand dashboard navigation' : 'Collapse dashboard navigation'} title={collapsed ? 'Expand navigation' : 'Collapse navigation'} className="ms-auto hidden rounded-lg border border-[var(--border)] p-1.5 text-[var(--muted)] hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] md:block">
+          <button type="button" onClick={onToggleCollapsed} aria-expanded={!collapsed} aria-controls="admin-navigation" aria-label={collapsed ? (language === 'ar' ? 'توسيع تنقل لوحة التحكم' : 'Expand dashboard navigation') : (language === 'ar' ? 'طي تنقل لوحة التحكم' : 'Collapse dashboard navigation')} title={collapsed ? (language === 'ar' ? 'توسيع التنقل' : 'Expand navigation') : (language === 'ar' ? 'طي التنقل' : 'Collapse navigation')} className="ms-auto hidden rounded-lg border border-[var(--border)] p-1.5 text-[var(--muted)] hover:text-[var(--foreground)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--color-accent)] md:block">
             {collapsed ? '→' : '←'}
           </button>
         </div>

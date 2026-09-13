@@ -4,7 +4,8 @@ import { Testimonial } from '../../../types/portfolio';
 import { Plus, Trash2, Edit2, Star, MessageSquare, X } from 'lucide-react';
 
 export const AdminTestimonialsTab: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
   const [editingTest, setEditingTest] = useState<Testimonial | null>(null);
 
   const testimonials = [...(data.testimonials || [])];
@@ -21,24 +22,22 @@ export const AdminTestimonialsTab: React.FC = () => {
     }
     await saveData({ ...data, testimonials: updated });
     setEditingTest(null);
-    addToast('Testimonial saved!', 'success');
+    addToast(tx('Testimonial saved!', 'تم حفظ رأي العميل.'), 'success');
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this testimonial?')) return;
+    if (!window.confirm(tx('Delete this testimonial?', 'هل تريد حذف رأي العميل هذا؟'))) return;
     const filtered = testimonials.filter((t) => t.id !== id);
     await saveData({ ...data, testimonials: filtered });
-    addToast('Testimonial deleted', 'info');
+    addToast(tx('Testimonial deleted', 'تم حذف رأي العميل.'), 'info');
   };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white font-syne">Client Testimonials</h2>
-          <p className="text-xs text-zinc-400">
-            Reviews and endorsements from creators, founders, and directors
-          </p>
+          <h2 className="text-xl font-bold text-white font-syne">{tx('Client Testimonials', 'آراء العملاء')}</h2>
+          <p className="text-xs text-zinc-400">{tx('Reviews and endorsements from creators, founders, and directors', 'مراجعات وتزكيات من المبدعين والمؤسسين والمخرجين')}</p>
         </div>
         <button
           type="button"
@@ -63,7 +62,7 @@ export const AdminTestimonialsTab: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider"
         >
           <Plus className="w-4 h-4" />
-          <span>New Review</span>
+          <span>{tx('New Review', 'رأي جديد')}</span>
         </button>
       </div>
 

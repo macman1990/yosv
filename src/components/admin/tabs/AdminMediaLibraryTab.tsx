@@ -4,7 +4,8 @@ import { MediaAsset } from '../../../types/portfolio';
 import { Image as ImageIcon, Video, Plus, Copy, Trash2, Check, ExternalLink } from 'lucide-react';
 
 export const AdminMediaLibraryTab: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [showAddModal, setShowAddModal] = useState(false);
   const [search, setSearch] = useState('');
@@ -25,7 +26,7 @@ export const AdminMediaLibraryTab: React.FC = () => {
 
   const handleAddMedia = async () => {
     if (!newUrl.trim()) {
-      addToast('Please enter a valid URL', 'error');
+      addToast(tx('Please enter a valid URL', 'أدخل رابطًا صالحًا.'), 'error');
       return;
     }
 
@@ -43,20 +44,20 @@ export const AdminMediaLibraryTab: React.FC = () => {
     setShowAddModal(false);
     setNewTitle('');
     setNewUrl('');
-    addToast('Asset added to library!', 'success');
+    addToast(tx('Asset added to library!', 'تمت إضافة الأصل إلى المكتبة.'), 'success');
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Remove this asset from media library?')) return;
+    if (!window.confirm(tx('Remove this asset from media library?', 'هل تريد إزالة هذا الأصل من مكتبة الوسائط؟'))) return;
     const filtered = mediaList.filter((m) => m.id !== id);
     await saveData({ ...data, media: filtered });
-    addToast('Media asset deleted', 'info');
+    addToast(tx('Media asset deleted', 'تم حذف أصل الوسائط.'), 'info');
   };
 
   const handleCopy = (url: string, id: string) => {
     navigator.clipboard.writeText(url);
     setCopiedId(id);
-    addToast('Media URL copied to clipboard', 'info');
+    addToast(tx('Media URL copied to clipboard', 'تم نسخ رابط الوسائط.'), 'info');
     setTimeout(() => setCopiedId(null), 2000);
   };
 
@@ -64,10 +65,8 @@ export const AdminMediaLibraryTab: React.FC = () => {
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white font-syne">Media Library</h2>
-          <p className="text-xs text-zinc-400">
-            Catalog of video clips, poster thumbnails, client logos, and production stills
-          </p>
+          <h2 className="text-xl font-bold text-white font-syne">{tx('Media Library', 'مكتبة الوسائط')}</h2>
+          <p className="text-xs text-zinc-400">{tx('Catalog of video clips, poster thumbnails, client logos, and production stills', 'فهرس مقاطع الفيديو والصور المصغرة وشعارات العملاء ولقطات الإنتاج')}</p>
         </div>
         <button
           type="button"
@@ -75,7 +74,7 @@ export const AdminMediaLibraryTab: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider"
         >
           <Plus className="w-4 h-4" />
-          <span>Add Media Asset</span>
+          <span>{tx('Add Media Asset', 'إضافة أصل وسائط')}</span>
         </button>
       </div>
 
@@ -84,7 +83,7 @@ export const AdminMediaLibraryTab: React.FC = () => {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search assets..."
+          placeholder={tx('Search assets...', 'ابحث في الأصول...')}
           className="w-full sm:max-w-xs px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white text-xs"
         />
         <select
@@ -92,10 +91,10 @@ export const AdminMediaLibraryTab: React.FC = () => {
           onChange={(e) => setFilter(e.target.value as 'all' | 'image' | 'video' | 'other')}
           className="px-3 py-2 rounded-xl bg-[#14161f] border border-white/10 text-white text-xs"
         >
-          <option value="all">All</option>
-          <option value="image">Images</option>
-          <option value="video">Videos</option>
-          <option value="other">Other</option>
+          <option value="all">{tx('All', 'الكل')}</option>
+          <option value="image">{tx('Images', 'صور')}</option>
+          <option value="video">{tx('Videos', 'فيديوهات')}</option>
+          <option value="other">{tx('Other', 'أخرى')}</option>
         </select>
       </div>
 
@@ -140,14 +139,15 @@ export const AdminMediaLibraryTab: React.FC = () => {
                   className="inline-flex items-center gap-1 text-[11px] font-mono text-zinc-300 hover:text-emerald-400 transition-colors"
                 >
                   {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{isCopied ? 'Copied' : 'Copy Link'}</span>
+                  <span>{isCopied ? tx('Copied', 'تم النسخ') : tx('Copy Link', 'نسخ الرابط')}</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => handleDelete(asset.id)}
                   className="p-1 rounded-lg text-rose-400 hover:text-rose-300"
-                  title="Delete"
+                  title={tx('Delete', 'حذف')}
+                  aria-label={tx('Delete media asset', 'حذف أصل الوسائط')}
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -160,14 +160,14 @@ export const AdminMediaLibraryTab: React.FC = () => {
       {showAddModal && (
         <div className="fixed inset-0 z-[100000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
           <div className="bg-[#0f1015] border border-white/15 rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <h3 className="text-base font-bold text-white">Add Media URL</h3>
+            <h3 className="text-base font-bold text-white">{tx('Add Media URL', 'إضافة رابط وسائط')}</h3>
 
             <div className="space-y-3">
               <div className="space-y-1">
-                <label className="text-xs font-mono text-zinc-400">Media Title</label>
+                <label className="text-xs font-mono text-zinc-400">{tx('Media Title', 'عنوان الوسائط')}</label>
                 <input
                   type="text"
-                  placeholder="e.g. Nike Commercial 4K Still"
+                  placeholder={tx('e.g. Nike Commercial 4K Still', 'مثال: لقطة ثابتة لإعلان Nike بدقة 4K')}
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   className="w-full px-3 py-2 rounded-xl bg-black/50 border border-white/10 text-white text-xs"
@@ -175,14 +175,14 @@ export const AdminMediaLibraryTab: React.FC = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-mono text-zinc-400">Asset Type</label>
+                <label className="text-xs font-mono text-zinc-400">{tx('Asset Type', 'نوع الأصل')}</label>
                 <select
                   value={newType}
                   onChange={(e) => setNewType(e.target.value as 'image' | 'video')}
                   className="w-full px-3 py-2 rounded-xl bg-[#14161f] border border-white/10 text-white text-xs"
                 >
-                  <option value="image">Image / Poster</option>
-                  <option value="video">Direct MP4 Video</option>
+                  <option value="image">{tx('Image / Poster', 'صورة / ملصق')}</option>
+                  <option value="video">{tx('Direct MP4 Video', 'فيديو MP4 مباشر')}</option>
                 </select>
               </div>
 

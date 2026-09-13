@@ -4,7 +4,8 @@ import { Service } from '../../../types/portfolio';
 import { Plus, Edit2, Trash2, Layers, X } from 'lucide-react';
 
 export const AdminServicesTab: React.FC = () => {
-  const { data, saveData, addToast } = usePortfolio();
+  const { data, saveData, addToast, language } = usePortfolio();
+  const tx = (en: string, ar: string) => language === 'ar' ? ar : en;
   const [editingService, setEditingService] = useState<Service | null>(null);
 
   const services = [...(data.services || [])].sort((a, b) => a.order - b.order);
@@ -38,24 +39,22 @@ export const AdminServicesTab: React.FC = () => {
     }
     await saveData({ ...data, services: updated });
     setEditingService(null);
-    addToast('Service saved successfully!', 'success');
+    addToast(tx('Service saved successfully!', 'تم حفظ الخدمة بنجاح.'), 'success');
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this service?')) return;
+    if (!window.confirm(tx('Delete this service?', 'هل تريد حذف هذه الخدمة؟'))) return;
     const filtered = services.filter((s) => s.id !== id);
     await saveData({ ...data, services: filtered });
-    addToast('Service deleted', 'info');
+    addToast(tx('Service deleted', 'تم حذف الخدمة.'), 'info');
   };
 
   return (
     <div className="space-y-6 animate-in fade-in duration-200">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white font-syne">Services Management</h2>
-          <p className="text-xs text-zinc-400">
-            Define your client packages, capabilities, and retainers
-          </p>
+          <h2 className="text-xl font-bold text-white font-syne">{tx('Services Management', 'إدارة الخدمات')}</h2>
+          <p className="text-xs text-zinc-400">{tx('Define your client packages, capabilities, and retainers', 'حدد باقات العملاء وقدراتك وخدماتك المتكررة')}</p>
         </div>
         <button
           type="button"
@@ -63,7 +62,7 @@ export const AdminServicesTab: React.FC = () => {
           className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold uppercase tracking-wider transition-all"
         >
           <Plus className="w-4 h-4" />
-          <span>New Service</span>
+          <span>{tx('New Service', 'خدمة جديدة')}</span>
         </button>
       </div>
 
